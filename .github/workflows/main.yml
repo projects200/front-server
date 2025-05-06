@@ -28,15 +28,6 @@ jobs:
           npm install
           npm run build
           
-      - name: Check build folder contents
-        run: |
-          echo "Current working directory:"
-          pwd
-          echo "Root directory listing:"
-          ls -al
-          echo "Contents of build directory:"
-          ls -al ./build
-
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: aws-actions/configure-aws-credentials@v3
