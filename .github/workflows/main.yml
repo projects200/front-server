@@ -23,6 +23,10 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
+      - name: Create .env.production
+        run: |
+          echo "PUBLIC_GTM_ID=${{ secrets.PUBLIC_GTM_ID }}" > .env.production
+
       - name: Build and Export
         run: |
           npm install
