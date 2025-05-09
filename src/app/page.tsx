@@ -1,7 +1,21 @@
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { userManager } from '@/lib/auth'
+
 export default function Home() {
-  return (
-    <div>
-      운다방 홈페이지입니다
-    </div>
-  );
+  const router = useRouter()
+
+  useEffect(() => {
+    userManager.getUser().then((user) => {
+      if (!user || user.expired) {
+        router.push('/login')
+      } else {
+        router.replace('/temp')
+      }
+    })
+  }, [])
+
+  return <div></div>
 }

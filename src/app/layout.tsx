@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import './reset.css'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: "운다방",
@@ -22,7 +12,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gtmId = process.env.PUBLIC_GTM_ID;
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
   return (
     <html lang="en">
@@ -37,12 +27,14 @@ export default function RootLayout({
         }}/>
 
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>
         {/* GTM NoScript */}
         <noscript>
           <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`} height="0" width="0" style={{ display: "none", visibility: "hidden" }}></iframe>
         </noscript>
-        {children}
+        <div className="responsive-container">
+          {children}
+        </div>
       </body>
     </html>
   );
