@@ -9,8 +9,9 @@ export default function CallbackPage() {
   useEffect(() => {
     userManager
       .signinRedirectCallback()
-      .then(() => {
-        router.push('/')
+      .then((user) => {
+        
+        // router.push('/')
       })
       .catch((error) => {
         console.error('Error in callback handling:', error)

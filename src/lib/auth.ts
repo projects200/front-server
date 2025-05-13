@@ -1,4 +1,8 @@
-import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
+import {
+  UserManager,
+  WebStorageStateStore,
+  InMemoryWebStorage,
+} from 'oidc-client-ts'
 
 const isBrowser = typeof window !== 'undefined'
 
@@ -9,8 +13,11 @@ const cognitoAuthConfig = {
   silent_redirect_uri: `${process.env.NEXT_PUBLIC_UNDABANG_URI}/silentRenew.html`,
   response_type: 'code',
   scope: 'openid profile email phone',
-  ...(isBrowser && {
-    userStore: new WebStorageStateStore({ store: window.localStorage }),
+  // ...(isBrowser && {
+  //   userStore: new WebStorageStateStore({ store: window.localStorage }),
+  // }),
+  userStore: new WebStorageStateStore({
+    store: new InMemoryWebStorage(),
   }),
   automaticSilentRenew: true,
 }
