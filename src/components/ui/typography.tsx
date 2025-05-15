@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import styles from './Typography.module.css'
+import styles from './typography.module.css'
 import clsx from 'clsx'
 
 type TypographyVariant =
