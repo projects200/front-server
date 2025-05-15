@@ -1,7 +1,16 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  output: "export",
-};
+  reactStrictMode: false,
+  output: 'export',
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://api.undabang.store/dev/:path*',
+      },
+    ]
+  },
+}
 
-export default nextConfig;
+export default nextConfig

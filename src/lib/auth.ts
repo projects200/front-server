@@ -1,8 +1,4 @@
-import {
-  UserManager,
-  WebStorageStateStore,
-  InMemoryWebStorage,
-} from 'oidc-client-ts'
+import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
 
 const isBrowser = typeof window !== 'undefined'
 
@@ -13,21 +9,34 @@ const cognitoAuthConfig = {
   silent_redirect_uri: `${process.env.NEXT_PUBLIC_UNDABANG_URI}/silentRenew.html`,
   response_type: 'code',
   scope: 'openid profile email phone',
-  // ...(isBrowser && {
-  //   userStore: new WebStorageStateStore({ store: window.localStorage }),
-  // }),
-  userStore: new WebStorageStateStore({
-    store: new InMemoryWebStorage(),
+  ...(isBrowser && {
+    userStore: new WebStorageStateStore({ store: window.sessionStorage }),
   }),
   automaticSilentRenew: true,
 }
 
 export const userManager = new UserManager(cognitoAuthConfig)
 
+if (isBrowser) {
+  userManager.events.addSilentRenewError((error) => {
+    console.error('Silent renew error:', error)
+    userManager.removeUser().then(() => {
+      window.location.href = '/login' // 원하는 로그인 페이지로 이동
+    })
+  })
+
+  userManager.events.addAccessTokenExpired(() => {
+    console.log('Access token expired')
+    userManager.removeUser().then(() => {
+      window.location.href = '/login'
+    })
+  })
+}
+
 export async function signOutRedirect() {
   await userManager.removeUser()
 
-  const logoutUri = process.env.NEXT_PUBLIC_UNDABANG_URI!
+  const logoutUri = `${process.env.NEXT_PUBLIC_UNDABANG_URI}/login`
   const logoutDomain = `https://ap-northeast-2${process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID}.auth.ap-northeast-2.amazoncognito.com`
   const clientId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID!
   window.location.href = `${logoutDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
@@ -39,6 +48,7 @@ export async function redirectToSocialLogin(provider: 'Google' | 'kakao') {
   await userManager.signinRedirect({
     extraQueryParams: {
       identity_provider: provider,
+      prompt: 'select_account',
     },
   })
 }

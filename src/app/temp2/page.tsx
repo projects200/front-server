@@ -13,9 +13,9 @@ export default function Temp() {
   return (
     <ProtectedRoute>
       <div>
-        <div>임시 메인 페이지</div>
+        <div>임시 메인 페이지2</div>
         <button onClick={handleSignOut}>Logout</button>
-        <Link href={SITE_MAP.TEMP2}>임시페이지2로 이동</Link>
+        <Link href={SITE_MAP.TEMP1}>임시페이지로 이동</Link>
       </div>
     </ProtectedRoute>
   )
