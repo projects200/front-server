@@ -7,7 +7,6 @@ import { checkRegister } from '@/lib/checkRegister'
 
 export default function CallbackPage() {
   const router = useRouter()
-
   useEffect(() => {
     const handleCallback = async () => {
       try {

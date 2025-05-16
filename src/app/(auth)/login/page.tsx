@@ -1,11 +1,12 @@
 'use client'
 
 import Image from 'next/image'
-
 import { redirectToSocialLogin } from '@/lib/auth'
 import styles from './login.module.css'
 
 import Typography from '@/components/ui/typography'
+import GoogleLogo from '@/assets/icon_google.svg'
+import KakaoLogo from '@/assets/icon_kakao.svg'
 
 export default function Login() {
   return (
@@ -24,13 +25,7 @@ export default function Login() {
         className={`${styles.button} ${styles.kakao}`}
         onClick={() => redirectToSocialLogin('kakao')}
       >
-        <Image
-          className={styles.icon}
-          src="icon_kakao.svg"
-          alt="카카오아이콘"
-          width={24}
-          height={24}
-        />
+        <KakaoLogo className={styles.icon} width={24} height={24} />
         <Typography className={styles.text} variant="text18">
           카카오 로그인
         </Typography>
@@ -39,13 +34,7 @@ export default function Login() {
         className={`${styles.button} ${styles.google}`}
         onClick={() => redirectToSocialLogin('Google')}
       >
-        <Image
-          className={styles.icon}
-          src="icon_google.svg"
-          alt="구글아이콘"
-          width={24}
-          height={24}
-        />
+        <GoogleLogo className={styles.icon} width={24} height={24} />
         <Typography className={styles.text} variant="text18">
           구글 로그인
         </Typography>

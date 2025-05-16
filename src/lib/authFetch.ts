@@ -11,15 +11,11 @@ export async function authFetch(
   }
 
   const accessToken = user?.access_token
-  const userId = user?.profile?.sub
-  console.log('accessToken', accessToken)
-  console.log('userId', userId)
   const authHeaders: HeadersInit = {
     ...(init?.headers ?? {}),
     Authorization: `Bearer ${accessToken}`,
     'Content-Type': 'application/json;charset=UTF-8',
     Accept: 'application/json',
-    'X-USER-ID': userId ?? '',
   }
 
   return fetch(input, {

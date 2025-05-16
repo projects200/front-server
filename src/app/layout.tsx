@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { GoogleTagManager } from '@next/third-parties/google'
+
 import './reset.css'
 import './globals.css'
 import { AuthProvider } from '@/context/authContext'
@@ -17,28 +19,10 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <head>
-        {/* GTM Script */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                  })(window,document,'script','dataLayer','${gtmId}');`,
-          }}
-        />
-      </head>
+      <head>{/* GTM Script */}</head>
+      <GoogleTagManager gtmId={gtmId!} />
       <body>
-        {/* GTM NoScript */}
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          ></iframe>
-        </noscript>
+        <noscript></noscript>
         <AuthProvider>
           <div className="responsive-container">{children}</div>
         </AuthProvider>
