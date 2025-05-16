@@ -7,6 +7,9 @@ import styles from './login.module.css'
 
 import Typography from '@/components/ui/typography'
 
+import GoogleIcon from '@/assets/icon_google.svg'
+import KakaoIcon from '@/assets/icon_kakao.svg'
+
 export default function Login() {
   return (
     <section className={styles.container}>
@@ -24,13 +27,7 @@ export default function Login() {
         className={`${styles.button} ${styles.kakao}`}
         onClick={() => redirectToSocialLogin('kakao')}
       >
-        <Image
-          className={styles.icon}
-          src="icon_kakao.svg"
-          alt="카카오아이콘"
-          width={24}
-          height={24}
-        />
+        <KakaoIcon className={styles.icon} width={24} height={24} />
         <Typography className={styles.text} variant="text18">
           카카오 로그인
         </Typography>
@@ -39,13 +36,7 @@ export default function Login() {
         className={`${styles.button} ${styles.google}`}
         onClick={() => redirectToSocialLogin('Google')}
       >
-        <Image
-          className={styles.icon}
-          src="icon_google.svg"
-          alt="구글아이콘"
-          width={24}
-          height={24}
-        />
+        <GoogleIcon className={styles.icon} width={24} height={24} />
         <Typography className={styles.text} variant="text18">
           구글 로그인
         </Typography>
