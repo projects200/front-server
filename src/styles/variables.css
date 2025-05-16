@@ -4,13 +4,12 @@
   --color-red: #E53935;
 
   --color-black: #212121;
+  --color-dark-gray: #424242;
+  --color-gray: #9E9E9E;
+  --color-white-gray: #E0E0E0;
 
-  --color-gray-100: #424242;
-  --color-gray-200: #9E9E9E;
-  --color-gray-300: #E0E0E0;
-
-  --color-white-100: #F4F4F4;
-  --color-white-200: #FAFAFA;
-  --color-white-300: #FFFFFF;
+  --color-whiteF4: #F4F4F4;
+  --color-whiteFA: #FAFAFA;
+  --color-whiteFF: #FFFFFF;
 
 }
