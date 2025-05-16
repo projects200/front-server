@@ -1,13 +1,16 @@
+@import '../styles/variables.css';
+
 .responsive-container {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
+  background-color: var(--color-whiteFF);
 }
 
 @media (min-width: 768px) {
   .responsive-container{
     max-width: 500px;
     margin:0 auto;
-    background-color: #FFF;
+
   }
 }

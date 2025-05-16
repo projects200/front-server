@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  padding: 20px ;
+}
+.title {
+  margin-top: 20px;
+  text-align: center;
+}
+.button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 55px;
+  border-radius: 15px;
+}
+.kakao {
+  margin-top: 110px;
+  background-color: #FEE500;
+}
+.google{
+  margin-top: 20px;
+  background-color: #FFFFFF;
+  border: solid 1px #747775;
+}
+.icon{
+  position: absolute;
+  left: 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.text{
+  font-weight: bold;
+}
