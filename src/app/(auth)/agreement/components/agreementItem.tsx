@@ -1,6 +1,6 @@
 'use client'
 
-import styles from './AgreementItem.module.css'
+import styles from './agreementItem.module.css'
 import CheckStatusIcon from '@/components/ui/checkStatusIcon'
 import Typography from '@/components/ui/typography'
 
