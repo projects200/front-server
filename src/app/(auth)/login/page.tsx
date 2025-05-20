@@ -3,12 +3,13 @@
 import Image from 'next/image'
 
 import { redirectToSocialLogin } from '@/lib/auth'
-import styles from './login.module.css'
 
 import Typography from '@/components/ui/typography'
 
 import GoogleIcon from '@/assets/icon_google.svg'
 import KakaoIcon from '@/assets/icon_kakao.svg'
+
+import styles from './login.module.css'
 
 export default function Login() {
   return (
@@ -17,10 +18,15 @@ export default function Login() {
         className={styles.logo}
         src="logo.svg"
         alt="로고"
-        width={200}
-        height={200}
+        width={150}
+        height={150}
       />
-      <Typography className={styles.title} variant="text32">
+      <Typography
+        className={styles.title}
+        as="div"
+        variant="text32"
+        weight="bold"
+      >
         운 다 방
       </Typography>
       <button
@@ -28,7 +34,7 @@ export default function Login() {
         onClick={() => redirectToSocialLogin('kakao')}
       >
         <KakaoIcon className={styles.icon} width={24} height={24} />
-        <Typography className={styles.text} variant="text18">
+        <Typography className={styles.text} variant="text18" weight="medium">
           카카오 로그인
         </Typography>
       </button>
@@ -37,7 +43,7 @@ export default function Login() {
         onClick={() => redirectToSocialLogin('Google')}
       >
         <GoogleIcon className={styles.icon} width={24} height={24} />
-        <Typography className={styles.text} variant="text18">
+        <Typography className={styles.text} variant="text18" weight="medium">
           구글 로그인
         </Typography>
       </button>

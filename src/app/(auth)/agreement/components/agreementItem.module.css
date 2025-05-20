@@ -1,0 +1,17 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.label {
+  color: var(--color-gray-200);
+  cursor: pointer;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}

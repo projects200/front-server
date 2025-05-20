@@ -1,0 +1,17 @@
+.container {
+  width: 100%;
+  padding: 0 20px;
+}
+.title{
+  padding-top: 100px;
+}
+.inputField{
+  margin-top: 80px;
+}
+
+@media (min-width: 768px) {
+  .title{
+    padding-top: 150px;
+  }
+
+}

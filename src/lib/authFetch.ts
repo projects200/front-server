@@ -23,3 +23,27 @@ export async function authFetch(
     headers: authHeaders,
   })
 }
+
+export async function registerFetch(
+  input: RequestInfo,
+  init?: RequestInit,
+): Promise<Response> {
+  const user = await userManager.getUser()
+
+  if (!user || !user.access_token) {
+    throw new Error('User not authenticated')
+  }
+
+  const idToken = user?.id_token
+  const authHeaders: HeadersInit = {
+    ...(init?.headers ?? {}),
+    Authorization: `Bearer ${idToken}`,
+    'Content-Type': 'application/json;charset=UTF-8',
+    Accept: 'application/json',
+  }
+
+  return fetch(input, {
+    ...init,
+    headers: authHeaders,
+  })
+}

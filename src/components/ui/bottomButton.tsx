@@ -1,29 +1,31 @@
 'use client'
 
 import { ReactNode } from 'react'
-import styles from './button.module.css'
+import styles from './bottomButton.module.css'
 import clsx from 'clsx'
 import Typography from './typography'
+import Button from './button'
 
-type ButtonVariant = 'primary' | 'secondary'
+type BottomButtonVariant = 'primary' | 'secondary'
 
-interface ButtonProps {
+interface BottomButtonProps {
   children: ReactNode
   onClick?: () => void
   disabled?: boolean
   className?: string
-  variant?: ButtonVariant
+  variant?: BottomButtonVariant
 }
 
-const Button = ({
+const BottomButton = ({
   children,
   onClick,
   disabled = false,
   className,
   variant = 'primary',
-}: ButtonProps) => {
+}: BottomButtonProps) => {
   return (
-      <button
+    <div className={styles.wrapper}>
+      <Button
         className={clsx(
           styles.button,
           styles[variant],
@@ -33,9 +35,12 @@ const Button = ({
         onClick={onClick}
         disabled={disabled}
       >
-        <Typography variant='text16' as='span' weight='bold'>{children}</Typography>
-      </button>
+        <Typography variant="text16" as="span" weight="bold">
+          {children}
+        </Typography>
+      </Button>
+    </div>
   )
 }
 
-export default Button
+export default BottomButton

@@ -1,9 +1,28 @@
+'use client'
+
+import Typography from '@/components/ui/typography'
+
+import ProfileForm from './components/profileForm'
+import styles from './signUp.module.css'
+
 export default function SighUp() {
+
   return (
-    <div>
-      <div>임시 등록 페이지</div>
-      <input type="text" />
-      
-    </div>
+    <section className={styles.container}>
+      <Typography
+        className={styles.title}
+        as="h1"
+        variant="text24"
+        weight="bold"
+      >
+        회원가입을 위해
+      </Typography>
+      <Typography as="h1" variant="text24" weight="bold">
+        프로필 정보를 입력해주세요
+      </Typography>
+      <div className={styles.inputField}>
+        <ProfileForm />
+      </div>
+    </section>
   )
 }

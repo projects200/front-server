@@ -1,5 +1,5 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
-
+import SITE_MAP from '@/constants/siteMap.constant'
 const isBrowser = typeof window !== 'undefined'
 
 const cognitoAuthConfig = {
@@ -21,14 +21,14 @@ if (isBrowser) {
   userManager.events.addSilentRenewError((error) => {
     console.error('Silent renew error:', error)
     userManager.removeUser().then(() => {
-      window.location.href = '/login' // 원하는 로그인 페이지로 이동
+      window.location.href = SITE_MAP.LOGIN
     })
   })
 
   userManager.events.addAccessTokenExpired(() => {
     console.log('Access token expired')
     userManager.removeUser().then(() => {
-      window.location.href = '/login'
+      window.location.href = SITE_MAP.LOGIN
     })
   })
 }

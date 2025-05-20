@@ -4,6 +4,7 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import './reset.css'
 import './globals.css'
 import { AuthProvider } from '@/context/authContext'
+import { ClientProviders } from '@/components/commons/clientProviders'
 
 export const metadata: Metadata = {
   title: '운다방',
@@ -23,7 +24,9 @@ export default function RootLayout({
       <GoogleTagManager gtmId={gtmId!} />
       <body>
         <AuthProvider>
-          <div className="responsive-container">{children}</div>
+          <ClientProviders>
+            <div className="responsive-container">{children}</div>
+          </ClientProviders>
         </AuthProvider>
       </body>
     </html>

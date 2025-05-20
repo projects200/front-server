@@ -1,0 +1,19 @@
+.container {
+  width: 100%;
+  padding: 0 20px;
+}
+.title{
+  padding-top: 100px;
+}
+.agreementItemList {
+  margin-top: calc(100vh - 350px);
+}
+
+@media (min-width: 768px) {
+  .title{
+    padding-top: 150px;
+  }
+  .agreementItemList {
+    margin-top: calc(100vh - 530px);
+  }
+}

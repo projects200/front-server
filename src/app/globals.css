@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  background-color: var(--color-whiteFF);
+  background-color: var(--color-white-300);
 }
 
 @media (min-width: 768px) {

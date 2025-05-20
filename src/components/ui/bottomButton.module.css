@@ -1,0 +1,15 @@
+.wrapper {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 480px;
+  z-index: 100;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    bottom: 150px;
+  }
+}
