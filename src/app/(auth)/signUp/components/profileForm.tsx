@@ -12,7 +12,7 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import { submitRegister } from '../api'
 import GenderSelector from './genderSelector'
 import DateScrollPicker from './dateScrollPicker'
-import styles from './ProfileForm.module.css'
+import styles from './profileForm.module.css'
 
 export default function ProfileForm() {
   const [nickname, setNickname] = useState('')
