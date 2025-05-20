@@ -1,5 +1,5 @@
 import Typography from '../ui/typography'
-import styles from './Toast.module.css'
+import styles from './toast.module.css'
 import { useToastContext } from '@/context/toastContext'
 
 export const Toast = () => {
