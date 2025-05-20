@@ -1,7 +1,7 @@
 'use client'
 
 import CheckStatusIcon from '@/components/ui/checkStatusIcon'
-import styles from './GenderSelector.module.css'
+import styles from './genderSelector.module.css'
 import Typography from '@/components/ui/typography'
 
 type Gender = 'M' | 'F' | 'U'
