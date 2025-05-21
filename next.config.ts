@@ -1,7 +1,26 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  output: "export",
-};
+  reactStrictMode: false,
+  output: 'export',
+  webpack: (config, { dev }) => {
+    config.module.rules.push({
+      test: /\.svg$/,
+      issuer: /\.[jt]sx?$/,
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            icon: true,
+          },
+        },
+      ],
+    })
+    if (dev) {
+      config.cache = false
+    }
+    return config
+  },
+}
 
-export default nextConfig;
+export default nextConfig

@@ -1,0 +1,56 @@
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.field {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+.label{
+  width: 70px;
+  flex-shrink: 0;
+}
+.inputArea {
+  width: 100%;
+}
+
+.underlineInput {
+  width: 100%;
+  padding-bottom: 3px;
+  border: none;
+  border-bottom: 1px solid var(--color-black);
+  font-size: 16px;
+  outline: none;
+  background: transparent;
+  line-height: 1.5;
+}
+.helperText {
+  margin-top: 6px;
+  color: var(--color-gray-200);
+  padding-left: 4px;
+}
+
+.genderGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.genderButton {
+  border: 1px solid #ccc;
+  border-radius: 9999px;
+  padding: 8px 14px;
+  background-color: transparent;
+  color: #222;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.selected {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}

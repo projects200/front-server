@@ -1,0 +1,24 @@
+.button {
+  width: 100%;
+  height: 55px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--color-green);
+  color: #fff;
+}
+
+.secondary {
+  background-color: var(--color-gray-300);
+  color: #fff;
+}
+
+/* Disabled state */
+.disabled {
+  background-color: var(--color-gray-300);
+  pointer-events: none;
+}
