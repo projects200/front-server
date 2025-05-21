@@ -18,13 +18,13 @@ const AgreementItem = ({
   onClickLabel,
 }: AgreementItemProps) => {
   return (
-    <div className={styles.item}>
-      <div onClick={onClickLabel}>
-        <Typography className={styles.label} as="span" variant="text14">
+    <div className={styles['item']}>
+      <button onClick={onClickLabel}>
+        <Typography className={styles['label']} as="span" variant="text14">
           {label} &gt;
         </Typography>
-      </div>
-      <button className={styles.iconButton} onClick={onToggle}>
+      </button>
+      <button className={styles['icon-button']} onClick={onToggle}>
         <CheckStatusIcon checked={checked} />
       </button>
     </div>

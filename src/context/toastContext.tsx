@@ -27,8 +27,9 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
           toast.id === id ? { ...toast, isVisible: false } : toast,
         ),
       )
+      setTimeout(() => removeToast(id), 300)
     }, 3000)
-    setTimeout(() => removeToast(id), 3300)
+    
   }
 
   const removeToast = (id: string) => {

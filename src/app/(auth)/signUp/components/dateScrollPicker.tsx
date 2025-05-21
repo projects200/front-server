@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Picker from 'react-mobile-picker'
 import styles from './dateScrollPicker.module.css'
 import Button from '@/components/ui/button'
@@ -10,9 +10,16 @@ type Props = {
   onChange: (val: string) => void
 }
 
+const today = new Date()
+const currentYear = today.getFullYear()
+const selections = {
+  year: Array.from({ length: 100 }, (_, i) => currentYear - i),
+  month: Array.from({ length: 12 }, (_, i) => i + 1),
+  day: Array.from({ length: 31 }, (_, i) => i + 1),
+}
+
 const getInitialDate = (value: string) => {
   if (!value) {
-    const today = new Date()
     return {
       year: today.getFullYear(),
       month: today.getMonth() + 1,
@@ -27,36 +34,31 @@ const getInitialDate = (value: string) => {
     day: parsed[2],
   }
 }
-
 const DateScrollPicker = ({ value, onChange }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(getInitialDate(value))
-  const today = new Date()
-  const currentYear = today.getFullYear()
-
-  useEffect(() => {
-    const dateString = `${selected.year}-${String(selected.month).padStart(2, '0')}-${String(selected.day).padStart(2, '0')}`
-    onChange(dateString)
-  }, [selected, onChange])
-
-  const selections = {
-    year: Array.from({ length: 100 }, (_, i) => currentYear - i),
-    month: Array.from({ length: 12 }, (_, i) => i + 1),
-    day: Array.from({ length: 31 }, (_, i) => i + 1),
-  }
 
   const formatted = `${selected.year}/${String(selected.month).padStart(2, '0')}/${String(selected.day).padStart(2, '0')}`
 
+  const handleButton = () => {
+    const dateString = `${selected.year}-${String(selected.month).padStart(2, '0')}-${String(selected.day).padStart(2, '0')}`
+    onChange(dateString)
+    setIsOpen(false)
+  }
+
   return (
     <div>
-      <button className={styles.triggerBtn} onClick={() => setIsOpen(true)}>
+      <button
+        className={styles['trigger-button']}
+        onClick={() => setIsOpen(true)}
+      >
         {formatted}
       </button>
 
       {isOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <div className={styles.pickerContainer}>
+        <div className={styles['modal-overlay']}>
+          <div className={styles['modal']}>
+            <div className={styles['picker-container']}>
               <Picker
                 value={selected}
                 onChange={setSelected}
@@ -71,7 +73,9 @@ const DateScrollPicker = ({ value, onChange }: Props) => {
                           {({ selected }) => (
                             <div
                               className={
-                                selected ? styles.selected : styles.unselected
+                                selected
+                                  ? styles['selected']
+                                  : styles['unselected']
                               }
                             >
                               {option}
@@ -84,18 +88,18 @@ const DateScrollPicker = ({ value, onChange }: Props) => {
                 )}
               </Picker>
             </div>
-            <div className={styles.footer}>
+            <div className={styles['footer']}>
               <Button
-                className={styles.button}
+                className={styles['button']}
                 variant="secondary"
-                onClick={() => setIsOpen(false)}
+                onClick={handleButton}
               >
                 닫기
               </Button>
               <Button
-                className={styles.button}
+                className={styles['button']}
                 variant="primary"
-                onClick={() => setIsOpen(false)}
+                onClick={handleButton}
               >
                 완료
               </Button>

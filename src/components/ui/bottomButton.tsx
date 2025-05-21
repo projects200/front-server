@@ -24,12 +24,11 @@ const BottomButton = ({
   variant = 'primary',
 }: BottomButtonProps) => {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles['wrapper']}>
       <Button
         className={clsx(
           styles.button,
           styles[variant],
-          { [styles.disabled]: disabled },
           className,
         )}
         onClick={onClick}

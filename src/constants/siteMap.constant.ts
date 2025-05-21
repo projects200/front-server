@@ -4,6 +4,6 @@ const SITE_MAP = {
   AGREEMENT: '/agreement',
   SIGHUP: '/signUp',
   TEMP1: '/temp',
-  TEMP2: '/temp2',
+  SETTINGS: '/settings',
 } as const
 export default SITE_MAP

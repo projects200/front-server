@@ -15,9 +15,9 @@ export default function Agreement() {
   const isValid = checkedTerms && checkedPrivacy
 
   return (
-    <section className={styles.container}>
+    <section className={styles['container']}>
       <Typography
-        className={styles.title}
+        className={styles['title']}
         as="h1"
         variant="text24"
         weight="bold"
@@ -27,7 +27,7 @@ export default function Agreement() {
       <Typography as="h1" variant="text24" weight="bold">
         아래의 약관에 동의해주세요
       </Typography>
-      <div className={styles.agreementItemList}>
+      <div className={styles['agreement-item-list']}>
         <AgreementItem
           label="(필수) 이용약관"
           checked={checkedTerms}

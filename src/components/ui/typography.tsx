@@ -34,7 +34,7 @@ const Typography = <T extends TextElement = 'span'>({
   const Component = as || 'span'
   return (
     <Component
-      className={clsx(className, styles[weight], styles[variant])}
+      className={clsx(className, styles[weight], styles[variant], styles['text'])}
       {...props}
     >
       {children}

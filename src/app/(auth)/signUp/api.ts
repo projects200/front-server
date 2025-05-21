@@ -1,12 +1,13 @@
 import { registerFetch } from '@/lib/authFetch'
+import { Gender } from '@/types/profile'
 
 export async function submitRegister(data: {
   nickname: string
   birthdate: string
-  gender: 'M' | 'F' | 'U'
+  gender: Gender
 }) {
   const response = await registerFetch(
-    'https://api.undabang.store/dev/auth/sign-up/v1',
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}${process.env.NEXT_PUBLIC_SIGN_UP}`,
     {
       method: 'POST',
       body: JSON.stringify({

@@ -1,9 +1,9 @@
-.triggerBtn {
+.trigger-button {
   border: none;
   border-radius: 8px;
   font-size: 16px;
 }
-.modalOverlay {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -23,7 +23,7 @@
   min-width: 300px;
 }
 
-.pickerContainer {
+.picker-container {
   cursor: default;
   display: flex;
   justify-content: center;
@@ -41,8 +41,8 @@
   align-items: center;
   gap: 15px;
 }
-.button{
-  height: 45px !important;
+button.button{
+  height: 45px;
 }
 
 @media (min-width: 768px) {

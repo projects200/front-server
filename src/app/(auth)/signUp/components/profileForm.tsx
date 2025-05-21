@@ -18,9 +18,11 @@ export default function ProfileForm() {
   const [nickname, setNickname] = useState('')
   const [birthdate, setBirthdate] = useState('')
   const [gender, setGender] = useState<'M' | 'F' | 'U'>('U')
-  const [isValid, setIsValid] = useState(false)
   const router = useRouter()
   const showToast = useToast()
+
+  const isValid = nickname.trim() !== '' && birthdate.trim() !== ''
+
 
   async function handleSubmit() {
     const nicknameCheck = validateNickname(nickname.trim())
@@ -45,28 +47,24 @@ export default function ProfileForm() {
     }
   }
 
-  useEffect(() => {
-    const valid = nickname.trim() !== '' && birthdate.trim() !== ''
-    setIsValid(valid)
-  }, [nickname, birthdate, gender])
 
   return (
-    <div className={styles.formWrapper}>
-      <div className={styles.field}>
-        <label className={styles.label}>
+    <div className={styles['form-wrapper']}>
+      <div className={styles['field']}>
+        <label className={styles['label']}>
           <Typography as="span" variant="text16" weight="bold">
             닉네임
           </Typography>
         </label>
 
-        <div className={styles.inputArea}>
+        <div className={styles['input-area']}>
           <input
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className={styles.underlineInput}
+            className={styles['underline-input']}
           />
-          <ul className={styles.helperText}>
+          <ul className={styles['helper-text']}>
             <li>
               <Typography as="span" variant="text12">
                 &#8226; &nbsp;영어, 한글, 숫자 포함 30자 이내
@@ -80,16 +78,16 @@ export default function ProfileForm() {
           </ul>
         </div>
       </div>
-      <div className={styles.field}>
-        <label className={styles.label}>
+      <div className={styles['field']}>
+        <label className={styles['label']}>
           <Typography as="span" variant="text16" weight="bold">
             생년월일
           </Typography>
         </label>
-        <DateScrollPicker value={birthdate} onChange={setBirthdate}/>
+        <DateScrollPicker value={birthdate} onChange={setBirthdate} />
       </div>
-      <div className={styles.field}>
-        <label className={styles.label}>
+      <div className={styles['field']}>
+        <label className={styles['label']}>
           <Typography as="span" variant="text16" weight="bold">
             성별
           </Typography>

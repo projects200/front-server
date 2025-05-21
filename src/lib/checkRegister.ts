@@ -3,7 +3,7 @@ import { authFetch } from '../lib/authFetch'
 export async function checkRegister() {
   try {
     const response = await authFetch(
-      'https://api.undabang.store/dev/v1/members/me/registration-status',
+      `${process.env.NEXT_PUBLIC_API_DOMAIN}${process.env.NEXT_PUBLIC_REGISTRATION_STATUS}`,
     )
     const json = await response.json()
     const isRegistered = json?.data?.isRegistered

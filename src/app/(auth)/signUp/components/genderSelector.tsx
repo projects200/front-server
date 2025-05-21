@@ -3,8 +3,7 @@
 import CheckStatusIcon from '@/components/ui/checkStatusIcon'
 import styles from './genderSelector.module.css'
 import Typography from '@/components/ui/typography'
-
-type Gender = 'M' | 'F' | 'U'
+import { Gender } from '@/types/profile'
 
 interface GenderSelectorProps {
   value: Gender
@@ -19,16 +18,16 @@ const GenderSelector = ({ value, onChange }: GenderSelectorProps) => {
   ]
 
   return (
-    <div className={styles.container}>
+    <div className={styles['container']}>
       {genderOptions.map((option) => (
         <button
           key={option.value}
           type="button"
-          className={styles.option}
+          className={styles['option']}
           onClick={() => onChange(option.value)}
         >
           <Typography as='span' variant='text16'>{option.label}</Typography>
-          <CheckStatusIcon checked={value === option.value} className={styles.icon} />
+          <CheckStatusIcon checked={value === option.value} className={styles['icon']} />
         </button>
       ))}
     </div>

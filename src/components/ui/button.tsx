@@ -27,7 +27,6 @@ const Button = ({
         className={clsx(
           styles.button,
           styles[variant],
-          { [styles.disabled]: disabled },
           className,
         )}
         onClick={onClick}

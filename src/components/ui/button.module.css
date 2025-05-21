@@ -17,8 +17,12 @@
   color: #fff;
 }
 
-/* Disabled state */
-.disabled {
+.button:hover{
+
+}
+
+.button:disabled {
   background-color: var(--color-gray-300);
+  cursor: not-allowed;
   pointer-events: none;
 }

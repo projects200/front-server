@@ -10,19 +10,20 @@ import GoogleIcon from '@/assets/icon_google.svg'
 import KakaoIcon from '@/assets/icon_kakao.svg'
 
 import styles from './login.module.css'
+import clsx from 'clsx'
 
 export default function Login() {
   return (
-    <section className={styles.container}>
+    <section className={styles['container']}>
       <Image
-        className={styles.logo}
+        className={styles['logo']}
         src="logo.svg"
         alt="로고"
         width={150}
         height={150}
       />
       <Typography
-        className={styles.title}
+        className={styles['title']}
         as="div"
         variant="text32"
         weight="bold"
@@ -30,20 +31,20 @@ export default function Login() {
         운 다 방
       </Typography>
       <button
-        className={`${styles.button} ${styles.kakao}`}
+        className={`${styles['button']} ${styles['kakao']}`}
         onClick={() => redirectToSocialLogin('kakao')}
       >
-        <KakaoIcon className={styles.icon} width={24} height={24} />
-        <Typography className={styles.text} variant="text18" weight="medium">
+        <KakaoIcon className={styles['icon']} width={24} height={24} />
+        <Typography className={styles['text']} variant="text18" weight="medium">
           카카오 로그인
         </Typography>
       </button>
       <button
-        className={`${styles.button} ${styles.google}`}
+        className={clsx(styles['button'], styles['google'])}
         onClick={() => redirectToSocialLogin('Google')}
       >
-        <GoogleIcon className={styles.icon} width={24} height={24} />
-        <Typography className={styles.text} variant="text18" weight="medium">
+        <GoogleIcon className={styles['icon']} width={24} height={24} />
+        <Typography className={styles['text']} variant="text18" weight="medium">
           구글 로그인
         </Typography>
       </button>

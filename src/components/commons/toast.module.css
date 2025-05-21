@@ -1,4 +1,4 @@
-.toastContainer {
+.toast-container {
   width: 100%;
   position: fixed;
   bottom: 100px;
@@ -37,11 +37,11 @@
   background-color: rgba(100, 100, 100, 0.8);
 }
 
-.fadeIn {
+.fade-in {
   animation: fadeIn 0.3s ease-in;
 }
 
-.fadeOut {
+.fade-out {
   animation: fadeOut 0.3s ease-in forwards;
 }
 
@@ -68,7 +68,7 @@
 }
 
 @media (min-width: 768px) {
-  .toastContainer {
+  .toast-container {
     width: 500px;
     bottom: 220px;
   }

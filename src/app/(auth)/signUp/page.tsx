@@ -8,9 +8,9 @@ import styles from './signUp.module.css'
 export default function SighUp() {
 
   return (
-    <section className={styles.container}>
+    <section className={styles['container']}>
       <Typography
-        className={styles.title}
+        className={styles['title']}
         as="h1"
         variant="text24"
         weight="bold"
@@ -20,7 +20,7 @@ export default function SighUp() {
       <Typography as="h1" variant="text24" weight="bold">
         프로필 정보를 입력해주세요
       </Typography>
-      <div className={styles.inputField}>
+      <div className={styles['input-field']}>
         <ProfileForm />
       </div>
     </section>

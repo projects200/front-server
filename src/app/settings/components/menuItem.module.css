@@ -1,0 +1,21 @@
+.menu-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 19px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.right-text {
+  color: var(--color-gray-200);
+}

@@ -1,19 +1,23 @@
 .container {
+  display: flex;
   width: 100%;
   padding: 0 20px;
+  min-height: 100vh;
+  flex-direction: column;
+  padding-bottom: 140px;
 }
 .title{
   padding-top: 100px;
 }
-.agreementItemList {
-  margin-top: calc(100vh - 350px);
+.agreement-item-list {
+  margin-top: auto;
 }
 
 @media (min-width: 768px) {
+  .container {
+    padding-bottom: 250px;
+  }
   .title{
     padding-top: 150px;
-  }
-  .agreementItemList {
-    margin-top: calc(100vh - 530px);
   }
 }
