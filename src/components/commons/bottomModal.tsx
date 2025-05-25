@@ -1,5 +1,5 @@
 import Typography from '../ui/typography'
-import styles from './BottomModal.module.css'
+import styles from './bottomModal.module.css'
 
 interface BottomModalProps {
   isOpen: boolean
