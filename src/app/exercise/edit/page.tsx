@@ -2,17 +2,13 @@
 
 import Header from '@/components/commons/header'
 import ProtectedRoute from '@/components/commons/protectedRoute'
+import { Exercise } from '@/types/exercise'
 
 import ExerciseForm from '../components/exerciseForm'
-import styles from './edit.module.css'
+// import styles from './edit.module.css'
 
 export default function Create() {
-  const handleSubmit = (values: {
-    title: string
-    category: string
-    location: string
-    content: string
-  }) => {
+  const handleSubmit = (values: Exercise) => {
     console.log('자식에서 받은 값:', values)
     //운동기록 수정 api 연결
   }

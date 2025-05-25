@@ -9,7 +9,7 @@ import BottomButton from '@/components/commons/bottomButton'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import DateLabel from './components/dateLabel'
-import ExerciseCard from './components/exerciseCard'
+// import ExerciseCard from './components/exerciseCard'
 
 export default function List() {
   const router = useRouter()
