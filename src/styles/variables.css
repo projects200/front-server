@@ -13,4 +13,6 @@
   --color-white-200: #FAFAFA;
   --color-white-300: #FFFFFF;
 
+  --color-overlay: rgba(0, 0, 0, 0.3);
+
 }

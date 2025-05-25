@@ -7,6 +7,10 @@
   background-color: var(--color-white-300);
 }
 
+.container{
+  padding: 0 20px;
+}
+
 @media (min-width: 768px) {
   .responsive-container{
     max-width: 500px;

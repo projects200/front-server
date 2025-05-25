@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
+
 import { GoogleTagManager } from '@next/third-parties/google'
+import { AuthProvider } from '@/context/authContext'
+import { ClientProviders } from '@/components/commons/clientProviders'
 
 import './reset.css'
 import './globals.css'
-import { AuthProvider } from '@/context/authContext'
-import { ClientProviders } from '@/components/commons/clientProviders'
 
 export const metadata: Metadata = {
   title: '운다방',

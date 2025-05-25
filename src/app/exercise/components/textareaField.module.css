@@ -1,0 +1,16 @@
+.container {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.textarea{
+  margin-top: 8px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  min-height: 200px;
+  background-color: var(--color-white-100);
+  padding: 16px;
+  resize: none;
+}

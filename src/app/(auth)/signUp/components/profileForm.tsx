@@ -1,28 +1,27 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import BottomButton from '@/components/ui/bottomButton'
+import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
+import DatePicker from '@/app/(auth)/signUp/components/datePicker'
 import { useToast } from '@/hooks/useToast'
 import { validateNickname, validateBirthdate } from '@/utils/validation'
+import { signUp } from '@/api/auth'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import { submitRegister } from '../api'
 import GenderSelector from './genderSelector'
-import DateScrollPicker from './dateScrollPicker'
 import styles from './profileForm.module.css'
 
 export default function ProfileForm() {
   const [nickname, setNickname] = useState('')
-  const [birthdate, setBirthdate] = useState('')
+  const [birthdate, setBirthdate] = useState('2000-01-01')
   const [gender, setGender] = useState<'M' | 'F' | 'U'>('U')
   const router = useRouter()
   const showToast = useToast()
 
   const isValid = nickname.trim() !== '' && birthdate.trim() !== ''
-
 
   async function handleSubmit() {
     const nicknameCheck = validateNickname(nickname.trim())
@@ -30,29 +29,28 @@ export default function ProfileForm() {
       showToast(nicknameCheck.error!, 'info')
       return
     }
+
     const birthdateCheck = validateBirthdate(birthdate.trim())
     if (!birthdateCheck.valid) {
       showToast(birthdateCheck.error!, 'info')
       return
     }
+
     try {
-      const result = await submitRegister({ nickname, birthdate, gender })
-      if (result?.succeed) {
-        router.push(SITE_MAP.TEMP1)
-      } else {
-        showToast(result?.message || '회원가입에 실패했습니다.', 'info')
-      }
-    } catch {
-      showToast('서버 오류가 발생했습니다.', 'info')
+      await signUp({ nickname, birthdate, gender })
+      router.push(SITE_MAP.TEMP1)
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : '서버 오류가 발생했습니다.'
+      showToast(message, 'info')
     }
   }
-
 
   return (
     <div className={styles['form-wrapper']}>
       <div className={styles['field']}>
         <label className={styles['label']}>
-          <Typography as="span" variant="text16" weight="bold">
+          <Typography as="span" variant="text15" weight="bold">
             닉네임
           </Typography>
         </label>
@@ -80,15 +78,15 @@ export default function ProfileForm() {
       </div>
       <div className={styles['field']}>
         <label className={styles['label']}>
-          <Typography as="span" variant="text16" weight="bold">
+          <Typography as="span" variant="text15" weight="bold">
             생년월일
           </Typography>
         </label>
-        <DateScrollPicker value={birthdate} onChange={setBirthdate} />
+        <DatePicker value={birthdate} onChange={setBirthdate} />
       </div>
       <div className={styles['field']}>
         <label className={styles['label']}>
-          <Typography as="span" variant="text16" weight="bold">
+          <Typography as="span" variant="text15" weight="bold">
             성별
           </Typography>
         </label>

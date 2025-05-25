@@ -1,8 +1,9 @@
 'use client'
 
-import styles from './agreementItem.module.css'
 import CheckStatusIcon from '@/components/ui/checkStatusIcon'
 import Typography from '@/components/ui/typography'
+
+import styles from './agreementItem.module.css'
 
 interface AgreementItemProps {
   label: string

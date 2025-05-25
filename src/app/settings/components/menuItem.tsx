@@ -1,6 +1,8 @@
 import React from 'react'
-import styles from './menuItem.module.css'
+
 import Typography from '@/components/ui/typography'
+
+import styles from './menuItem.module.css'
 
 interface MenuItemProps {
   icon: React.ReactNode
@@ -19,11 +21,15 @@ const MenuItem: React.FC<MenuItemProps> = ({
     <button className={styles['menu-item']} onClick={onClick}>
       <div className={styles['left']}>
         {icon}
-        <Typography as="span" variant="text16">
+        <Typography as="span" variant="text15">
           {label}
         </Typography>
       </div>
-      {rightText && <Typography className={styles['right-text']} as='span' variant='text12'>{rightText}</Typography>}
+      {rightText && (
+        <Typography className={styles['right-text']} as="span" variant="text12">
+          {rightText}
+        </Typography>
+      )}
     </button>
   )
 }
