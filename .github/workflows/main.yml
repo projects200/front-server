@@ -52,6 +52,7 @@ jobs:
               --paths $CHANGED_FILES
           else
             echo "No files changed, skipping CloudFront invalidation."
+          fi
             
       - name: Deploy to Dev S3 and Invalidate CloudFront cache
         if: ${{ github.ref == 'refs/heads/develop' }}
