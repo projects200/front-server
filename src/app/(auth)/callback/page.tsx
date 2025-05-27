@@ -27,7 +27,7 @@ export default function CallbackPage() {
       }
     }
     handleCallback()
-  }, [])
+  }, [router])
 
   return null
 }

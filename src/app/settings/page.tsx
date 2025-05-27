@@ -2,7 +2,7 @@
 
 import { signOutRedirect } from '@/lib/auth'
 import ProtectedRoute from '@/components/commons/protectedRoute'
-import SITE_MAP from '@/constants/siteMap.constant'
+// import SITE_MAP from '@/constants/siteMap.constant'
 import Header from '@/components/commons/header'
 import MenuItem from './components/menuItem'
 
@@ -22,11 +22,11 @@ export default function Settings() {
     <ProtectedRoute>
       <Header title="설정" />
       <div className={styles['container']}>
-        {/* <MenuItem
+        <MenuItem
           icon={<HelpIcon className={styles['icon']} />}
           label="고객센터"
           onClick={() => {}}
-        /> */}
+        />
         <MenuItem
           icon={<LogoutIcon className={styles['icon']} />}
           label="로그아웃"
