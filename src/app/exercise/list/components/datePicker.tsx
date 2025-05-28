@@ -39,11 +39,10 @@ const formatStorage = (birthday: Birthday): string => {
 }
 
 export default function DatePicker({ value, onChange }: DatePickerProps) {
-  const [birthday, setBirthday] = useState(getInitialDate(value))
   const [isOpen, setIsOpen] = useState(false)
+    const formatValue = getInitialDate(value)
 
   const handleChange = (picked: Record<string, string | number>) => {
-    setBirthday(picked as { year: number; month: number; day: number })
     onChange(
       formatStorage(picked as { year: number; month: number; day: number }),
     )
@@ -57,7 +56,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
         onClick={() => setIsOpen(true)}
       >
         <Typography className={styles['text']} as="span" variant="text15" weight="bold">
-          {formatDisplay(birthday)}
+          {formatDisplay(formatValue)}
         </Typography>
         <BottomArrowIcon className={styles['icon']}/>
       </button>
@@ -65,7 +64,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
       {isOpen && (
         <ScrollPicker
           fields={['year', 'month', 'day']}
-          value={birthday}
+          value={formatValue}
           onChange={handleChange}
           onClose={() => setIsOpen(false)}
         />

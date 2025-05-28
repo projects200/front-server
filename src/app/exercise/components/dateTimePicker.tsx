@@ -68,20 +68,18 @@ export default function DateTimePicker({
   label,
   readonly = false,
 }: DateTimePickerProps) {
-  const [startDate, setStartDate] = useState(getInitialDateTime(startedAt))
-  const [endDate, setEndDate] = useState(getInitialDateTime(endedAt))
   const [isOpenStart, setIsOpenStart] = useState(false)
   const [isOpenEnd, setIsOpenEnd] = useState(false)
+  const formatStartDate = getInitialDateTime(startedAt)
+  const formatEndDate = getInitialDateTime(endedAt)
 
   const handleChangeStart = (picked: Record<string, string | number>) => {
-    setStartDate(picked as { date: string; hour: number; minute: number })
     onStartedAtChange?.(
       formatStorage(picked as { date: string; hour: number; minute: number }),
     )
   }
 
   const handleChangeEnd = (picked: Record<string, string | number>) => {
-    setEndDate(picked as { date: string; hour: number; minute: number })
     onEndedAtChange?.(
       formatStorage(picked as { date: string; hour: number; minute: number }),
     )
@@ -107,7 +105,7 @@ export default function DateTimePicker({
           {!startedAt && <ClockIcon className={styles['icon']} />}
           {startedAt ? (
             <Typography as="span" variant="text14">
-              {formatDisplay(startDate)}
+              {formatDisplay(formatStartDate)}
             </Typography>
           ) : (
             <Typography as="span" variant="text14">
@@ -128,7 +126,7 @@ export default function DateTimePicker({
           {!endedAt && <ClockIcon className={styles['icon']} />}
           {endedAt ? (
             <Typography as="span" variant="text14">
-              {formatDisplay(endDate)}
+              {formatDisplay(formatEndDate)}
             </Typography>
           ) : (
             <Typography as="span" variant="text14">
@@ -141,7 +139,7 @@ export default function DateTimePicker({
       {isOpenStart && (
         <ScrollPicker
           fields={['date', 'hour', 'minute']}
-          value={startDate}
+          value={formatStartDate}
           onChange={handleChangeStart}
           onClose={() => setIsOpenStart(false)}
         />
@@ -149,7 +147,7 @@ export default function DateTimePicker({
       {isOpenEnd && (
         <ScrollPicker
           fields={['date', 'hour', 'minute']}
-          value={endDate}
+          value={formatEndDate}
           onChange={handleChangeEnd}
           onClose={() => setIsOpenEnd(false)}
         />
