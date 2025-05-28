@@ -5,7 +5,6 @@ import { useState } from 'react'
 import Header from '@/components/commons/header'
 import ProtectedRoute from '@/components/commons/protectedRoute'
 import KebabIcon from '@/assets/icon_kebab.svg'
-import Spacer from '@/components/ui/spacer'
 
 import InputField from '../components/inputField'
 import TextareaField from '../components/textareaField'
@@ -41,12 +40,12 @@ export default function Detail() {
       />
       <InputField value="데이터 연결" label="장소" id="title" readonly={true} />
       <TextareaField
+        className={styles['text-field']}
         value="데이터 연결"
         label="내용"
         id="title"
         readonly={true}
       />
-      <Spacer height={50} />
       <KebabModal isOpen={isBottomModalOpen} setIsOpen={setIsBottomModalOpen} />
     </ProtectedRoute>
   )

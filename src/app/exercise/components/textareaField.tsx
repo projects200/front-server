@@ -1,8 +1,11 @@
+import clsx from 'clsx'
+
 import Typography from '@/components/ui/typography'
 
 import styles from './textareaField.module.css'
 
 interface TextAreaFieldProps {
+  className?: string
   value: string
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   label: string
@@ -12,6 +15,7 @@ interface TextAreaFieldProps {
 }
 
 const TextareaField = ({
+  className,
   value,
   onChange,
   label,
@@ -20,7 +24,7 @@ const TextareaField = ({
   readonly = false,
 }: TextAreaFieldProps) => {
   return (
-    <div className={styles['container']}>
+    <div className={clsx(className, styles['container'])}>
       <label htmlFor={id}>
         <Typography as="span" variant="text15" weight="medium">
           {label}

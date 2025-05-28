@@ -1,8 +1,11 @@
+import clsx from 'clsx'
+
 import Typography from '@/components/ui/typography'
 
 import styles from './inputField.module.css'
 
 interface InputFieldProps {
+  className?: string
   value: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   label: string
@@ -13,16 +16,17 @@ interface InputFieldProps {
 }
 
 const InputField = ({
+  className,
   value,
   onChange,
   label,
   id,
   maxLength,
   placeholder,
-  readonly=false
+  readonly = false,
 }: InputFieldProps) => {
   return (
-    <div className={styles['container']}>
+    <div className={clsx(className, styles['container'])}>
       <label htmlFor={id}>
         <Typography as="span" variant="text15" weight="medium">
           {label}

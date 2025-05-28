@@ -1,3 +1,5 @@
+import clsx from 'clsx'
+
 import { useToast } from '@/hooks/useToast'
 import XButtonIcon from '@/assets/icon_x_button.svg'
 import CameraIcon from '@/assets/icon_camera.svg'
@@ -6,11 +8,16 @@ import Typography from '@/components/ui/typography'
 import styles from './imageUploader.module.css'
 
 type ImageUploaderProps = {
+  className?: string
   images: File[]
   setImages: (files: File[]) => void
 }
 
-const ImageUploader = ({ images, setImages }: ImageUploaderProps) => {
+const ImageUploader = ({
+  className,
+  images,
+  setImages,
+}: ImageUploaderProps) => {
   const showToast = useToast()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +53,7 @@ const ImageUploader = ({ images, setImages }: ImageUploaderProps) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={clsx(className, styles['container'])}>
       <label className={styles['upload-box']}>
         <input
           type="file"
