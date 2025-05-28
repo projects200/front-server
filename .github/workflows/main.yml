@@ -23,9 +23,15 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
-      - name: Create .env.production
+      - name: Create Env File for Main
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          echo "PUBLIC_GTM_ID=${{ secrets.PUBLIC_GTM_ID }}" > .env.production
+          echo "${{ secrets.MAIN_ENV }}" | base64 -d > .env
+
+      - name: Create Env File for Develop
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        run: |
+          echo "${{ secrets.DEV_ENV }}" | base64 -d > .env
 
       - name: Build and Export
         run: |
@@ -67,5 +73,3 @@ jobs:
           else
             echo "No files changed, skipping CloudFront invalidation."
           fi
-
-

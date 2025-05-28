@@ -46,10 +46,18 @@ const formatDisplay = (dateTime: DateTime) => {
 
 const formatStorage = (dateTime: DateTime) => {
   const [year, month, day] = dateTime.date.split('.')
-  const fullYear = `20${year}`
-  const paddedHour = String(dateTime.hour).padStart(2, '0')
-  const paddedMinute = String(dateTime.minute).padStart(2, '0')
-  return `${fullYear}-${month}-${day}T${paddedHour}:${paddedMinute}:00.000`
+  const fullYear = Number(`20${year}`)
+  const monthIndex = Number(month) - 1
+  const dayNumber = Number(day)
+
+  const date = new Date(
+    fullYear,
+    monthIndex,
+    dayNumber,
+    dateTime.hour,
+    dateTime.minute,
+  )
+  return date.toISOString()
 }
 
 export default function DateTimePicker({
