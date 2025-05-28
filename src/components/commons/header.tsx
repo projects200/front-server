@@ -1,5 +1,6 @@
 'use client'
 
+import { ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 
 import LeftArrow from '@/assets/icon_back_arrow.svg'
@@ -8,15 +9,15 @@ import styles from './header.module.css'
 import Typography from '../ui/typography'
 
 type Props = {
-  title: string
-  titleAlign?: 'left' | 'center'
+  children: ReactNode
+  className?: string
   rightIcon?: React.ReactNode
   onClick?: () => void
 }
 
 const Header = ({
-  title,
-  titleAlign = 'center',
+  children,
+  className = 'center-title',
   rightIcon,
   onClick,
 }: Props) => {
@@ -32,27 +33,15 @@ const Header = ({
           >
             <LeftArrow className={styles['back-icon']} />
           </button>
-          {titleAlign === 'left' && (
-            <Typography
-              className={styles.title}
-              as="h1"
-              variant="text15"
-              weight="bold"
-            >
-              {title}
-            </Typography>
-          )}
         </div>
-        {titleAlign === 'center' && (
-          <Typography
-            className={styles.center}
-            as="h1"
-            variant="text15"
-            weight="bold"
-          >
-            {title}
-          </Typography>
-        )}
+        <Typography
+          className={styles[className]}
+          as="h1"
+          variant="text15"
+          weight="bold"
+        >
+          {children}
+        </Typography>
         {rightIcon && (
           <button className={styles['right-icon']} onClick={onClick}>
             {rightIcon}

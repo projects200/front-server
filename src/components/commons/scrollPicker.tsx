@@ -84,7 +84,7 @@ export default function ScrollPicker({
         </div>
 
         <div className={styles.footer}>
-          <Button type="button" variant="secondary" onClick={handleButton}>
+          <Button type="button" variant="secondary" onClick={() => onClose()}>
             취소
           </Button>
           <Button type="button" variant="primary" onClick={handleButton}>

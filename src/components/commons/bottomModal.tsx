@@ -1,3 +1,4 @@
+import Portal from '../ui/portal'
 import Typography from '../ui/typography'
 import styles from './bottomModal.module.css'
 
@@ -11,16 +12,18 @@ const BottomModal = ({ isOpen, onClose, children }: BottomModalProps) => {
   if (!isOpen) return null
 
   return (
-    <div className={styles['overlay']}>
-      <div className={styles['modal']}>
-        <div className={styles['content']}>{children}</div>
-        <button className={styles['close']} onClick={onClose}>
-          <Typography as="span" variant="text15" weight="bold">
-            닫 기
-          </Typography>
-        </button>
+    <Portal>
+      <div className={styles['overlay']}>
+        <div className={styles['modal']}>
+          <div className={styles['content']}>{children}</div>
+          <button className={styles['close']} onClick={onClose}>
+            <Typography as="span" variant="text15" weight="bold">
+              닫 기
+            </Typography>
+          </button>
+        </div>
       </div>
-    </div>
+    </Portal>
   )
 }
 

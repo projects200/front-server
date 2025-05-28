@@ -20,11 +20,11 @@ export default function Detail() {
   return (
     <ProtectedRoute>
       <Header
-        title="기록 상세"
-        titleAlign="center"
         rightIcon={<KebabIcon className={styles['header-icon']} />}
         onClick={() => setIsBottomModalOpen(true)}
-      />
+      >
+        기록 상세
+      </Header>
       <ImageField />
       <InputField value="데이터 연결" label="제목" id="title" readonly={true} />
       <InputField

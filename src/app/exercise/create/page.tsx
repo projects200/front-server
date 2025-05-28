@@ -13,7 +13,7 @@ export default function Create() {
   }
   return (
     <ProtectedRoute>
-      <Header title="운동 기록하기" titleAlign="center" />
+      <Header>운동 기록하기</Header>
       <ExerciseForm
         defaultValues={{
           title: '',

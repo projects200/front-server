@@ -7,7 +7,7 @@ import ProtectedRoute from '@/components/commons/protectedRoute'
 import Header from '@/components/commons/header'
 import CenterModal from '@/components/commons/centerModal'
 import Typography from '@/components/ui/typography'
-// import HelpIcon from '@/assets/icon_help.svg'
+import HelpIcon from '@/assets/icon_help.svg'
 import LogoutIcon from '@/assets/icon_logout.svg'
 import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
@@ -16,7 +16,6 @@ import InfoIcon from '@/assets/icon_info.svg'
 import MenuItem from './components/menuItem'
 import styles from './settings.module.css'
 
-
 export default function Settings() {
   const [isCenterModalOpen, setIsCenterModalOpen] = useState(false)
   const handleSignOut = async () => {
@@ -24,13 +23,13 @@ export default function Settings() {
   }
   return (
     <ProtectedRoute>
-      <Header title="설정" titleAlign="left" />
+      <Header className="left-title">설정</Header>
       <div className={styles['container']}>
-        {/* <MenuItem
+        <MenuItem
           icon={<HelpIcon className={styles['icon']} />}
           label="고객센터"
           onClick={() => {}}
-        /> */}
+        />
         <MenuItem
           icon={<LogoutIcon className={styles['icon']} />}
           label="로그아웃"
