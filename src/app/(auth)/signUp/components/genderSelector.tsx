@@ -1,9 +1,10 @@
 'use client'
 
 import CheckStatusIcon from '@/components/ui/checkStatusIcon'
-import styles from './genderSelector.module.css'
 import Typography from '@/components/ui/typography'
-import { Gender } from '@/types/profile'
+import { Gender } from '@/types/auth'
+
+import styles from './genderSelector.module.css'
 
 interface GenderSelectorProps {
   value: Gender
@@ -26,8 +27,13 @@ const GenderSelector = ({ value, onChange }: GenderSelectorProps) => {
           className={styles['option']}
           onClick={() => onChange(option.value)}
         >
-          <Typography as='span' variant='text16'>{option.label}</Typography>
-          <CheckStatusIcon checked={value === option.value} className={styles['icon']} />
+          <Typography as="span" variant="text15">
+            {option.label}
+          </Typography>
+          <CheckStatusIcon
+            checked={value === option.value}
+            className={styles['icon']}
+          />
         </button>
       ))}
     </div>

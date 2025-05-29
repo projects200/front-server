@@ -9,8 +9,31 @@ export default function Temp() {
   return (
     <ProtectedRoute>
       <div>
-        <div>임시 메인 페이지</div>
-        <Link href={SITE_MAP.SETTINGS}>설정페이지</Link>
+        <div style={{ textAlign: 'center' }}>임시 메인 페이지</div>
+        <div>
+          <Link href={SITE_MAP.SETTINGS} scroll={false}>
+            설정페이지
+          </Link>
+        </div>
+        <div>
+          <Link
+            // 임시날짜 전달
+            href={`${SITE_MAP.EXERCISE_LIST}?date=2025-05-24`}
+            scroll={false}
+          >
+            운동기록 리스트
+          </Link>
+        </div>
+        <div>
+          <Link href={SITE_MAP.EXERCISE_CREATE} scroll={false}>
+            운동기록
+          </Link>
+        </div>
+        <div>
+          <Link href={SITE_MAP.EXERCISE_DETAIL} scroll={false}>
+            운동기록상세
+          </Link>
+        </div>
       </div>
     </ProtectedRoute>
   )

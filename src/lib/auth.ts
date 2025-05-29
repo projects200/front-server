@@ -1,5 +1,7 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
+
 import SITE_MAP from '@/constants/siteMap.constant'
+
 const isBrowser = typeof window !== 'undefined'
 
 const cognitoAuthConfig = {

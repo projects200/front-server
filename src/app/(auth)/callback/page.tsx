@@ -2,30 +2,37 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+
+import { useToast } from '@/hooks/useToast'
 import { userManager } from '@/lib/auth'
-import { checkRegister } from '@/lib/checkRegister'
+import { registrationStatus } from '@/api/auth'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 export default function CallbackPage() {
+  const showToast = useToast()
   const router = useRouter()
 
   useEffect(() => {
     const handleCallback = async () => {
       try {
         await userManager.signinRedirectCallback()
-        const isRegistered = await checkRegister()
-        if (isRegistered === true) {
+        const isRegistered = await registrationStatus()
+
+        if (isRegistered) {
           router.replace(SITE_MAP.TEMP1)
-        } else if (isRegistered === false) {
-          router.replace(SITE_MAP.AGREEMENT)
         } else {
-          router.replace(SITE_MAP.LOGIN)
+          router.replace(SITE_MAP.AGREEMENT)
         }
-      } catch (error) {
-        console.error('Error in signinRedirectCallback:', error)
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : '회원등록 조회를 실패하였습니다.'
+        showToast(message, 'info')
         router.replace(SITE_MAP.LOGIN)
       }
     }
+
     handleCallback()
   }, [router])
 

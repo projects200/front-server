@@ -1,7 +1,9 @@
+import clsx from 'clsx'
+
+import { useToastContext } from '@/context/toastContext'
+
 import Typography from '../ui/typography'
 import styles from './toast.module.css'
-import { useToastContext } from '@/context/toastContext'
-import clsx from 'clsx'
 
 export const Toast = () => {
   const { toasts } = useToastContext()

@@ -1,0 +1,49 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color-white-100);
+  box-shadow: 0 0 0 0.5px var(--color-black);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.camera-icon{
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+.preview-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  box-shadow: 0 0 0 0.5px var(--color-black);
+  overflow: hidden;
+}
+
+.preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  cursor: pointer;
+}
+.x-button{
+  width: 25px;
+  height: 25px;
+}

@@ -5,18 +5,21 @@
   background-color: var(--color-white-300);
   display: flex;
   align-items: center;
-  padding: 25px 20px 0 20px;
+  padding: 0 20px;
   z-index: 1000;
   width: 100%;
-  height:50px;
+  height:65px;
 }
-
+.left{
+  display: flex;
+  align-items: center;
+}
 .back-button {
   background: none;
   border: none;
 }
 
-.icon {
+.back-icon {
   width: 16px;
   height: 16px;
   vertical-align: middle;
@@ -24,9 +27,20 @@
 .title {
   margin-left: 4px;
 }
+.left-title{
+  margin-left: 5px;
+}
+.center-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.right-icon {
+  margin-left: auto;
+}
 .back-area{
   width: 100%;
-  height: 50px;
+  height: 65px;
 }
 
 @media (min-width: 768px) {
@@ -35,18 +49,18 @@
     left: 50%;
     width: 500px;
     transform: translateX(-50%);
-    padding: 50px 20px 0 20px;
-    height:75px;
+    padding: 0 20px;
+    height:85px;
   }
   .icon {
     width: 20px;
     height: 20px;
   }
   .title {
-    margin-left: 5px;
+    margin-left: 6px;
   }
   .back-area{
     width: 100%;
-    height: 75px;
+    height: 85px;
   }
 }

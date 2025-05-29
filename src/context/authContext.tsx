@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
+
 import { userManager } from '@/lib/auth'
 
 type AuthContextType = {

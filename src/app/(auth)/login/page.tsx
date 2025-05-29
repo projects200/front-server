@@ -1,21 +1,21 @@
 'use client'
 
 import Image from 'next/image'
+import clsx from 'clsx'
 
 import { redirectToSocialLogin } from '@/lib/auth'
-
 import Typography from '@/components/ui/typography'
-
 import GoogleIcon from '@/assets/icon_google.svg'
 import KakaoIcon from '@/assets/icon_kakao.svg'
 
 import styles from './login.module.css'
-import clsx from 'clsx'
+
 
 export default function Login() {
   return (
     <section className={styles['container']}>
       <Image
+        priority
         className={styles['logo']}
         src="logo.svg"
         alt="로고"

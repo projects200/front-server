@@ -2,7 +2,7 @@ name: CI/CD
 on:
   push:
     paths:
-      - "**"
+      - '**'
   workflow_dispatch:
 
 permissions:
@@ -20,18 +20,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
+          cache: 'npm'
           cache-dependency-path: package-lock.json
 
-      - name: Create .env.production
+      - name: Create Env File for Main
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          echo "PUBLIC_GTM_ID=${{ secrets.PUBLIC_GTM_ID }}" > .env.production
+          echo "${{ secrets.MAIN_ENV }}" | base64 -d > .env
+
+      - name: Create Env File for Develop
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        run: |
+          echo "${{ secrets.DEV_ENV }}" | base64 -d > .env
 
       - name: Build and Export
         run: |
           npm install
           npm run build
-          
+
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
         uses: aws-actions/configure-aws-credentials@v3
@@ -53,7 +59,7 @@ jobs:
           else
             echo "No files changed, skipping CloudFront invalidation."
           fi
-            
+
       - name: Deploy to Dev S3 and Invalidate CloudFront cache
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
@@ -67,5 +73,3 @@ jobs:
           else
             echo "No files changed, skipping CloudFront invalidation."
           fi
-
-          

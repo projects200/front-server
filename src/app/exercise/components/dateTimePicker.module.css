@@ -1,0 +1,34 @@
+.container {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.time-selector {
+  margin-top: 8px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #eee;
+  border-radius: 8px;
+  height: 40px;
+}
+.icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.dash {
+  flex-shrink: 0;
+  background-color: #96979B;
+  width: 12px;
+  height: 2px;
+  border-radius: 1px;
+}

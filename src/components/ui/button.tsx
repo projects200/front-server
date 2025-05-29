@@ -1,13 +1,14 @@
 'use client'
 
-import { ReactNode } from 'react'
-import styles from './button.module.css'
+import { ReactNode, ButtonHTMLAttributes } from 'react'
 import clsx from 'clsx'
+
 import Typography from './typography'
+import styles from './button.module.css'
 
 type ButtonVariant = 'primary' | 'secondary'
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
   onClick?: () => void
   disabled?: boolean
@@ -21,19 +22,19 @@ const Button = ({
   disabled = false,
   className,
   variant = 'primary',
+  ...props
 }: ButtonProps) => {
   return (
-      <button
-        className={clsx(
-          styles.button,
-          styles[variant],
-          className,
-        )}
-        onClick={onClick}
-        disabled={disabled}
-      >
-        <Typography variant='text16' as='span' weight='bold'>{children}</Typography>
-      </button>
+    <button
+      className={clsx(styles.button, styles[variant], className)}
+      onClick={onClick}
+      disabled={disabled}
+      {...props}
+    >
+      <Typography variant="text15" as="span" weight="bold">
+        {children}
+      </Typography>
+    </button>
   )
 }
 

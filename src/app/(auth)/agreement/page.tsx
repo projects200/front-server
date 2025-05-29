@@ -2,11 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import BottomButton from '@/components/ui/bottomButton'
+
+import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
+import SITE_MAP from '@/constants/siteMap.constant'
+
 import AgreementItem from './components/agreementItem'
 import styles from './agreement.module.css'
-import SITE_MAP from '@/constants/siteMap.constant'
+
 
 export default function Agreement() {
   const [checkedTerms, setCheckedTerms] = useState(false)
