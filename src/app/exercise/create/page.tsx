@@ -2,9 +2,8 @@
 
 import { Exercise } from '@/types/exercise'
 import Header from '@/components/commons/header'
-import ProtectedRoute from '@/components/commons/protectedRoute'
 
-import ExerciseForm from '../components/exerciseForm'
+import ExerciseForm from '../_components/exerciseForm'
 
 export default function Create() {
   const handleSubmit = (values: Exercise) => {
@@ -12,7 +11,7 @@ export default function Create() {
     //운동기록 생성 api 연결
   }
   return (
-    <ProtectedRoute>
+    <>
       <Header>운동 기록하기</Header>
       <ExerciseForm
         defaultValues={{
@@ -26,6 +25,6 @@ export default function Create() {
         }}
         onSubmit={handleSubmit}
       />
-    </ProtectedRoute>
+    </>
   )
 }

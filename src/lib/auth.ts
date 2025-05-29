@@ -1,5 +1,6 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
 
+import { useRegistrationStore } from '@/store/useRegistrationStore'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 const isBrowser = typeof window !== 'undefined'
@@ -37,7 +38,7 @@ if (isBrowser) {
 
 export async function signOutRedirect() {
   await userManager.removeUser()
-
+  useRegistrationStore.getState().resetRegistered()
   const logoutUri = `${process.env.NEXT_PUBLIC_UNDABANG_URI}/login`
   const logoutDomain = `https://ap-northeast-2${process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID}.auth.ap-northeast-2.amazoncognito.com`
   const clientId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID!

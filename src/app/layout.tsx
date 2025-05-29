@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import { GoogleTagManager } from '@next/third-parties/google'
-import { AuthProvider } from '@/context/authContext'
-import { ClientProviders } from '@/components/commons/clientProviders'
+
+import { ClientProviders } from './_components/clientProviders'
 
 import './reset.css'
 import './globals.css'
@@ -25,14 +25,12 @@ export default function RootLayout({
       <head></head>
       <GoogleTagManager gtmId={gtmId!} />
       <body>
-        <div className="responsive-container">
-          <AuthProvider>
-            <ClientProviders>
-              <NuqsAdapter>{children}</NuqsAdapter>
-            </ClientProviders>
-          </AuthProvider>
-        </div>
-        <div id="modal-root" />
+        <ClientProviders>
+          <NuqsAdapter>
+            <div className="responsive-container">{children}</div>
+            <div id="modal-root" />
+          </NuqsAdapter>
+        </ClientProviders>
       </body>
     </html>
   )

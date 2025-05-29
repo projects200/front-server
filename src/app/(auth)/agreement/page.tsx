@@ -7,7 +7,7 @@ import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import AgreementItem from './components/agreementItem'
+import AgreementItem from './_components/agreementItem'
 import styles from './agreement.module.css'
 
 

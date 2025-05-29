@@ -2,7 +2,7 @@
 
 import Typography from '@/components/ui/typography'
 
-import ProfileForm from './components/profileForm'
+import ProfileForm from './_components/profileForm'
 import styles from './signUp.module.css'
 
 export default function SighUp() {
