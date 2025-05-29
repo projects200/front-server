@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     if (!loading && !isAuthenticated) {
       router.replace('/login')
     }
-  }, [loading, isAuthenticated])
+  }, [loading, isAuthenticated, router])
 
   if (loading || !isAuthenticated) return null
 
