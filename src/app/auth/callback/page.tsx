@@ -18,9 +18,10 @@ export default function CallbackPage() {
 
   useEffect(() => {
     if (!auth.isLoading && auth.isAuthenticated) {
-      (async () => {
+      ;(async () => {
         try {
-          const isRegistered = await registrationStatus()
+          // const isRegistered = await registrationStatus()
+          const isRegistered = true //임시
           setRegistered(isRegistered)
           if (isRegistered) {
             router.replace(SITE_MAP.TEMP1)
@@ -41,10 +42,7 @@ export default function CallbackPage() {
       showToast('로그인에 실패했습니다.', 'error')
       router.replace(SITE_MAP.LOGIN)
     }
-  }, [
-    auth.isLoading,
-    auth.isAuthenticated,
-  ])
+  }, [auth.isLoading, auth.isAuthenticated])
 
   return null
 }

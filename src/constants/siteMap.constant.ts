@@ -1,8 +1,8 @@
 const SITE_MAP = {
   HOME: '/',
-  LOGIN: '/login',
-  AGREEMENT: '/agreement',
-  SIGHUP: '/signUp',
+  LOGIN: '/auth/login',
+  AGREEMENT: '/auth/agreement',
+  SIGHUP: '/auth/signUp',
   TEMP1: '/temp',
   SETTINGS: '/settings',
   EXERCISE_LIST: '/exercise/list',

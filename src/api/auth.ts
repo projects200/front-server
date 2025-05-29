@@ -19,7 +19,7 @@ export function useAuthApi() {
       `${process.env.NEXT_PUBLIC_API_DOMAIN}${process.env.NEXT_PUBLIC_REGISTRATION_STATUS}`,
     )
     const json: ApiResponse<{ isRegistered: boolean }> = await response.json()
-    console.log(response)
+
     if (!json.succeed) {
       throw new Error(json.message || '등록 상태 확인 실패')
     }
