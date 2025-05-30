@@ -4,6 +4,7 @@ import { useAuth } from 'react-oidc-context'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
+import { useAuthApi } from '@/api/auth'
 import { useRegistrationStore } from '@/store/useRegistrationStore'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -13,6 +14,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isRegistered = useRegistrationStore((state) => state.isRegistered)
   const setRegistered = useRegistrationStore((state) => state.setRegistered)
+  const { registrationStatus } = useAuthApi()
 
   useEffect(() => {
     // 로그인 관련 페이지 AuthGuard 미적용
@@ -33,8 +35,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     if (auth.isAuthenticated && isRegistered === null) {
       ;(async () => {
         try {
-          // const isRegistered = await registrationStatus()
-          const isRegistered = true //임시
+          const isRegistered = await registrationStatus()
           setRegistered(isRegistered)
         } catch {
           router.replace(SITE_MAP.LOGIN)
@@ -54,7 +55,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // 인증완료, 가입유저
-    if (auth.isAuthenticated && isRegistered === true) {
+    if (
+      auth.isAuthenticated &&
+      isRegistered === true &&
+      pathname !== SITE_MAP.TEMP1
+    ) {
       router.replace(SITE_MAP.TEMP1)
       return
     }

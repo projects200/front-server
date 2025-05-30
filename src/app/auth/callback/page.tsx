@@ -20,8 +20,7 @@ export default function CallbackPage() {
     if (!auth.isLoading && auth.isAuthenticated) {
       ;(async () => {
         try {
-          // const isRegistered = await registrationStatus()
-          const isRegistered = true //임시
+          const isRegistered = await registrationStatus()
           setRegistered(isRegistered)
           if (isRegistered) {
             router.replace(SITE_MAP.TEMP1)
