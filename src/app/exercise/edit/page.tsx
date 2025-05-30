@@ -1,10 +1,9 @@
 'use client'
 
 import Header from '@/components/commons/header'
-import ProtectedRoute from '@/components/commons/protectedRoute'
 import { Exercise } from '@/types/exercise'
 
-import ExerciseForm from '../components/exerciseForm'
+import ExerciseForm from '../_components/exerciseForm'
 // import styles from './edit.module.css'
 
 export default function Create() {
@@ -13,7 +12,7 @@ export default function Create() {
     //운동기록 수정 api 연결
   }
   return (
-    <ProtectedRoute>
+    <>
       <Header>운동 기록 수정</Header>
       <ExerciseForm
         // 전달받은 데이터 넣어주기
@@ -28,6 +27,6 @@ export default function Create() {
         }}
         onSubmit={handleSubmit}
       />
-    </ProtectedRoute>
+    </>
   )
 }

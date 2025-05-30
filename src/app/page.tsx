@@ -1,16 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-
-import SITE_MAP from '@/constants/siteMap.constant'
+import AuthGuard from '@/app/_components/authGuard'
 
 export default function Home() {
-  const router = useRouter()
-
-  useEffect(() => {
-    router.replace(SITE_MAP.TEMP1)
-  }, [router])
-
-  return null
+  return <AuthGuard>임시 / 경로 페이지입니다.</AuthGuard>
 }

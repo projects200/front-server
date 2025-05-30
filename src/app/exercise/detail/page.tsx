@@ -3,21 +3,20 @@
 import { useState } from 'react'
 
 import Header from '@/components/commons/header'
-import ProtectedRoute from '@/components/commons/protectedRoute'
 import KebabIcon from '@/assets/icon_kebab.svg'
 
-import InputField from '../components/inputField'
-import TextareaField from '../components/textareaField'
-import TimeSelect from '../components/dateTimePicker'
-import ImageField from './components/imageField'
-import KebabModal from './components/kebabModal'
+import InputField from '../_components/inputField'
+import TextareaField from '../_components/textareaField'
+import TimeSelect from '../_components/dateTimePicker'
+import ImageField from './_components/imageField'
+import KebabModal from './_components/kebabModal'
 import styles from './detail.module.css'
 
 export default function Detail() {
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
 
   return (
-    <ProtectedRoute>
+    <>
       <Header
         rightIcon={<KebabIcon className={styles['header-icon']} />}
         onClick={() => setIsBottomModalOpen(true)}
@@ -47,6 +46,6 @@ export default function Detail() {
         readonly={true}
       />
       <KebabModal isOpen={isBottomModalOpen} setIsOpen={setIsBottomModalOpen} />
-    </ProtectedRoute>
+    </>
   )
 }

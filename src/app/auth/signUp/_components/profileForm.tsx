@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation'
 
 import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
-import DatePicker from '@/app/(auth)/signUp/components/datePicker'
 import { useToast } from '@/hooks/useToast'
 import { validateNickname, validateBirthdate } from '@/utils/validation'
-import { signUp } from '@/api/auth'
+import { useAuthApi } from '@/api/auth'
 import SITE_MAP from '@/constants/siteMap.constant'
 
+import DatePicker from './datePicker'
 import GenderSelector from './genderSelector'
 import styles from './profileForm.module.css'
 
@@ -20,6 +20,7 @@ export default function ProfileForm() {
   const [gender, setGender] = useState<'M' | 'F' | 'U'>('U')
   const router = useRouter()
   const showToast = useToast()
+  const { signUp } = useAuthApi()
 
   const isValid = nickname.trim() !== '' && birthdate.trim() !== ''
 

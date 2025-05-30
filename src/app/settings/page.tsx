@@ -2,7 +2,6 @@
 import { useState } from 'react'
 
 import { signOutRedirect } from '@/lib/auth'
-import ProtectedRoute from '@/components/commons/protectedRoute'
 // import SITE_MAP from '@/constants/siteMap.constant'
 import Header from '@/components/commons/header'
 import CenterModal from '@/components/commons/centerModal'
@@ -13,7 +12,7 @@ import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
 import InfoIcon from '@/assets/icon_info.svg'
 
-import MenuItem from './components/menuItem'
+import MenuItem from './_components/menuItem'
 import styles from './settings.module.css'
 
 export default function Settings() {
@@ -22,7 +21,7 @@ export default function Settings() {
     await signOutRedirect()
   }
   return (
-    <ProtectedRoute>
+    <>
       <Header className="left-title">설정</Header>
       <div className={styles['container']}>
         <MenuItem
@@ -67,6 +66,6 @@ export default function Settings() {
           정말 로그아웃 하시겠어요
         </Typography>
       </CenterModal>
-    </ProtectedRoute>
+    </>
   )
 }
