@@ -5,7 +5,11 @@ const Layout = ({
 }: Readonly<{
   children: React.ReactNode
 }>) => {
-  return <AuthGuard>{children}</AuthGuard>
+  return (
+    <AuthGuard>
+      <div className="container">{children}</div>
+    </AuthGuard>
+  )
 }
 
 export default Layout

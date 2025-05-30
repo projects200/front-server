@@ -4,24 +4,14 @@ import { useAuth } from 'react-oidc-context'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-import { useAuthApi } from '@/api/auth'
-import { useRegistrationStore } from '@/store/useRegistrationStore'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const auth = useAuth()
   const router = useRouter()
   const pathname = usePathname()
-  const isRegistered = useRegistrationStore((state) => state.isRegistered)
-  const setRegistered = useRegistrationStore((state) => state.setRegistered)
-  const { registrationStatus } = useAuthApi()
 
   useEffect(() => {
-    // 로그인 관련 페이지 AuthGuard 미적용
-    if (pathname.startsWith('/auth')) {
-      return
-    }
-
     // 인증 로딩중
     if (auth.isLoading) return
 
@@ -31,38 +21,14 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return
     }
 
-    // 인증완료, 등록 여부파악 못함
-    if (auth.isAuthenticated && isRegistered === null) {
-      ;(async () => {
-        try {
-          const isRegistered = await registrationStatus()
-          setRegistered(isRegistered)
-        } catch {
-          router.replace(SITE_MAP.LOGIN)
-        }
-      })()
-      return
-    }
-
-    // 인증완료, 미등록 유저
-    if (
-      auth.isAuthenticated &&
-      isRegistered === false &&
-      pathname !== SITE_MAP.AGREEMENT
-    ) {
-      router.replace(SITE_MAP.AGREEMENT)
-      return
-    }
-
     // 인증완료, 가입유저가 "/"에 있는경우
-    if (auth.isAuthenticated && isRegistered === true && pathname === '/') {
+    if (auth.isAuthenticated && pathname === '/') {
       router.replace(SITE_MAP.TEMP1)
       return
     }
-  }, [auth.isLoading, auth.isAuthenticated, isRegistered])
+  }, [auth.isLoading, auth.isAuthenticated])
 
-  if (auth.isLoading || (auth.isAuthenticated && isRegistered === null))
-    return null
+  if (auth.isLoading) return null
 
   return <>{children}</>
 }

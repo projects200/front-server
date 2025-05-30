@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { useRegistrationStore } from '@/store/useRegistrationStore'
 import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
 import { useToast } from '@/hooks/useToast'
@@ -40,7 +39,6 @@ export default function ProfileForm() {
 
     try {
       await signUp({ nickname, birthdate, gender })
-      useRegistrationStore.getState().setRegistered(true)
       router.push(SITE_MAP.TEMP1)
     } catch (error: unknown) {
       const message =
