@@ -7,21 +7,21 @@ import { useEffect } from 'react'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
+  console.log('authGuard 진입')
   const auth = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
-    console.log(1)
     // 인증 로딩중
     if (auth.isLoading) return
-    console.log(2)
+
     // 인증안된유저
     if (!auth.isAuthenticated) {
       router.replace(SITE_MAP.LOGIN)
       return
     }
-    console.log(3)
+
     // 인증완료, 가입유저가 "/"에 있는경우
     if (auth.isAuthenticated && pathname === '/') {
       router.replace(SITE_MAP.TEMP1)
