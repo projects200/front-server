@@ -53,8 +53,6 @@ jobs:
         uses: tj-actions/changed-files@v44
         with:
           files: 'out/**'
-          base_sha: ${{ github.event.before }}
-          head_sha: ${{ github.sha }}
 
       - name: Deploy to Main S3 and Invalidate CloudFront cache
         if: ${{ github.ref == 'refs/heads/main' }}
