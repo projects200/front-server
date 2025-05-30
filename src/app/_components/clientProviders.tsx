@@ -5,8 +5,6 @@ import { userManager } from '@/lib/auth'
 import { ToastProvider } from '@/context/toastContext'
 import { Toast } from '@/components/commons/toast'
 
-import AuthGuard from './authGuard'
-
 export const ClientProviders = ({
   children,
 }: {
@@ -14,12 +12,10 @@ export const ClientProviders = ({
 }) => {
   return (
     <AuthProvider userManager={userManager}>
-      <AuthGuard>
-        <ToastProvider>
-          {children}
-          <Toast />
-        </ToastProvider>
-      </AuthGuard>
+      <ToastProvider>
+        {children}
+        <Toast />
+      </ToastProvider>
     </AuthProvider>
   )
 }

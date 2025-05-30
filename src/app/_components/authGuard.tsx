@@ -54,20 +54,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return
     }
 
-    // 인증완료, 가입유저
-    if (
-      auth.isAuthenticated &&
-      isRegistered === true &&
-      pathname !== SITE_MAP.TEMP1
-    ) {
+    // 인증완료, 가입유저가 "/"에 있는경우
+    if (auth.isAuthenticated && isRegistered === true && pathname === '/') {
       router.replace(SITE_MAP.TEMP1)
       return
     }
   }, [auth.isLoading, auth.isAuthenticated, isRegistered])
-
-  if (pathname.startsWith('/auth')) {
-    return <>{children}</>
-  }
 
   if (auth.isLoading || (auth.isAuthenticated && isRegistered === null))
     return null

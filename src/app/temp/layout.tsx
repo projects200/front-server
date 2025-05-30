@@ -1,7 +1,11 @@
-export default function Layout({
+import AuthGuard from '@/app/_components/authGuard'
+
+const Layout = ({
   children,
 }: Readonly<{
   children: React.ReactNode
-}>) {
-  return <div className="temp-layout">{children}</div>
+}>) => {
+  return <AuthGuard>{children}</AuthGuard>
 }
+
+export default Layout
