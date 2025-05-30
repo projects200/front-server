@@ -9,7 +9,7 @@ import { useAuthApi } from '@/api/auth'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 export default function CallbackPage() {
-  console.log('진입 체크')
+  console.log('콜백 진입 체크')
   const auth = useAuth()
   const router = useRouter()
   const showToast = useToast()
