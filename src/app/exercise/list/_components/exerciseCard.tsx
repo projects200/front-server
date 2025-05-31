@@ -2,16 +2,12 @@
 
 import Image from 'next/image'
 
-import { Exercise } from '@/types/exercise'
+import { ExerciseFormValues } from '@/types/exercise'
 
 // import styles from './exerciseCard.module.css'
 
-type ExerciseCardProps = {
-  record: Exercise
-}
-
-// 운동기록 카드 임시 디자인 변경예정
-export default function ExerciseCard({ record }: ExerciseCardProps) {
+// 운동기록 카드 임시 변경예정입니다. 타입도 api명세에 따라 변경할 예정입니다.
+export default function ExerciseCard(record: ExerciseFormValues) {
   return (
     <div>
       {record.images?.[0] && (

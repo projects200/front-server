@@ -7,7 +7,6 @@ import { useEffect } from 'react'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  console.log('authGuard 진입')
   const auth = useAuth()
   const router = useRouter()
   const pathname = usePathname()

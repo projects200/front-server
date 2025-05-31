@@ -1,13 +1,13 @@
 'use client'
 
 import Header from '@/components/commons/header'
-import { Exercise } from '@/types/exercise'
+import { ExerciseFormValues } from '@/types/exercise'
 
 import ExerciseForm from '../_components/exerciseForm'
 // import styles from './edit.module.css'
 
 export default function Create() {
-  const handleSubmit = (values: Exercise) => {
+  const handleSubmit = (values: ExerciseFormValues) => {
     console.log('자식에서 받은 값:', values)
     //운동기록 수정 api 연결
   }

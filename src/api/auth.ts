@@ -1,54 +1,35 @@
-import { useAuthFetch } from '@/hooks/useAuthFetch'
-import { useRegisterFetch } from '@/hooks/useRegisterFetch'
 import { ApiResponse } from '@/types/common'
-import { Gender, MemberInfo } from '@/types/auth'
+import { SignUp, MemberInfo } from '@/types/auth'
+import { authFetch } from '@/utils/authFetch'
 
-type SignUpProps = {
-  nickname: string
-  birthdate: string
-  gender: Gender
+// 회원가입 여부 확인
+export function readRegistered(
+  token: string,
+): Promise<ApiResponse<{ isRegistered: boolean }>> {
+
+  return authFetch<ApiResponse<{ isRegistered: boolean }>>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/members/me/registration-status`,
+    { method: 'GET' },
+    token,
+  )
 }
 
-export function useAuthApi() {
-  const authFetch = useAuthFetch()
-  const registerFetch = useRegisterFetch()
-
-  // 회원등록상태 조회
-  const registrationStatus = async (): Promise<boolean> => {
-    const response = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_DOMAIN}${process.env.NEXT_PUBLIC_REGISTRATION_STATUS}`,
-    )
-    const json: ApiResponse<{ isRegistered: boolean }> = await response.json()
-
-    if (!json.succeed) {
-      throw new Error(json.message || '등록 상태 확인 실패')
-    }
-    return json.data.isRegistered
-  }
-
-  // 회원등록
-  const signUp = async (data: SignUpProps) => {
-    const response = await registerFetch(
-      `${process.env.NEXT_PUBLIC_API_DOMAIN}${process.env.NEXT_PUBLIC_SIGN_UP}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          memberNickname: data.nickname,
-          memberBday: data.birthdate,
-          memberGender: data.gender,
-        }),
-      },
-    )
-    const json: ApiResponse<MemberInfo> = await response.json()
-
-    if (!json.succeed) {
-      throw new Error(json.message || '회원가입에 실패했습니다.')
-    }
-    return json
-  }
-
-  return {
-    registrationStatus,
-    signUp,
-  }
+// 회원가입
+export function createUser(
+  token: string,
+  data: SignUp,
+): Promise<ApiResponse<MemberInfo>> {
+  
+  return authFetch<ApiResponse<MemberInfo>>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/auth/v1/sign-up`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        memberNickname: data.nickname,
+        memberBday: data.birthdate,
+        memberGender: data.gender,
+      }),
+    },
+    token,
+  )
 }

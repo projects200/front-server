@@ -4,7 +4,7 @@ import * as z from 'zod'
 
 import { useToast } from '@/hooks/useToast'
 import { useForm } from '@tanstack/react-form'
-import { Exercise } from '@/types/exercise'
+import { ExerciseFormValues } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
 
 import DateTimePicker from './dateTimePicker'
@@ -14,8 +14,8 @@ import ImageUploader from './imageUploader'
 import styles from './exerciseForm.module.css'
 
 type ExerciseFormProps = {
-  defaultValues: Exercise
-  onSubmit: (values: Exercise) => void
+  defaultValues: ExerciseFormValues
+  onSubmit: (values: ExerciseFormValues) => void
 }
 
 const exerciseSchema = z.object({
@@ -100,7 +100,7 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
       <form.Field name="location">
         {(field) => (
           <InputField
-            value={field.state.value  ?? ''}
+            value={field.state.value ?? ''}
             onChange={(e) => field.handleChange(e.target.value)}
             label="장소"
             id="location"
@@ -112,7 +112,7 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
       <form.Field name="content">
         {(field) => (
           <TextareaField
-            value={field.state.value  ?? ''}
+            value={field.state.value ?? ''}
             onChange={(e) => field.handleChange(e.target.value)}
             label="내용"
             id="content"
