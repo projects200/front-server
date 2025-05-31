@@ -11,3 +11,5 @@ export type ExerciseRecord = {
 export type ExercisePictures = {
   images: File[]
 }
+
+export type ExerciseFormValues = ExerciseRecord & ExercisePictures

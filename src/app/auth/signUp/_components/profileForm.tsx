@@ -7,7 +7,7 @@ import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
 import { useToast } from '@/hooks/useToast'
 import { validateNickname, validateBirthdate } from '@/utils/validation'
-import { useAuthApi } from '@/api/auth'
+import { useAuthApi } from '@/hooks/useAuthApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import DatePicker from './datePicker'
@@ -20,7 +20,7 @@ export default function ProfileForm() {
   const [gender, setGender] = useState<'M' | 'F' | 'U'>('U')
   const router = useRouter()
   const showToast = useToast()
-  const { signUp } = useAuthApi()
+  const { postCreateUser } = useAuthApi()
 
   const isValid = nickname.trim() !== '' && birthdate.trim() !== ''
 
@@ -38,7 +38,7 @@ export default function ProfileForm() {
     }
 
     try {
-      await signUp({ nickname, birthdate, gender })
+      await postCreateUser({ nickname, birthdate, gender })
       router.push(SITE_MAP.TEMP1)
     } catch (error: unknown) {
       const message =
