@@ -48,40 +48,84 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Get Changed Files
-        id: changed-files
-        uses: tj-actions/changed-files@v44
-        with:
-          files: 'out/**'
+      # - name: Get Changed Files
+      #   id: changed-files
+      #   uses: tj-actions/changed-files@v44
+      #   with:
+      #     files: 'out/**'
 
-      - name: Deploy to Main S3 and Invalidate CloudFront cache
+      # - name: Deploy to Main S3 and Invalidate CloudFront cache
+      #   if: ${{ github.ref == 'refs/heads/main' }}
+      #   run: |
+      #     aws s3 sync ./out s3://${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }} --delete
+      #     CHANGED_FILES_PATHS="${{ steps.changed-files.outputs.all_changed_files }}"
+
+      #     if [ ! -z "$CHANGED_FILES_PATHS" ]; then
+      #       CLOUD_FRONT_PATHS=$(echo "$CHANGED_FILES_PATHS" | sed -e 's/^out\///' -e 's/^/\//' | tr '\n' ' ')
+      #       echo "Invalidating CloudFront cache for the following files: $CLOUD_FRONT_PATHS"
+      #       aws cloudfront create-invalidation \
+      #         --distribution-id ${{ secrets.AWS_CLOUDFRONT_MAIN_DISTRIBUTION_ID }} \
+      #         --paths $CLOUD_FRONT_PATHS
+      #     else
+      #       echo "No files changed in 'out/' directory, skipping CloudFront invalidation."
+      #     fi
+
+      # - name: Deploy to Dev S3 and Invalidate CloudFront cache
+      #   if: ${{ github.ref == 'refs/heads/develop' }}
+      #   run: |
+      #     aws s3 sync ./out s3://${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }} --delete
+      #     CHANGED_FILES_PATHS="${{ steps.changed-files.outputs.all_changed_files }}"
+
+      #     if [ ! -z "$CHANGED_FILES_PATHS" ]; then
+      #       CLOUD_FRONT_PATHS=$(echo "$CHANGED_FILES_PATHS" | sed -e 's/^out\///' -e 's/^/\//' | tr '\n' ' ')
+      #       echo "Invalidating CloudFront cache for the following files: $CLOUD_FRONT_PATHS"
+      #       aws cloudfront create-invalidation \
+      #         --distribution-id ${{ secrets.AWS_CLOUDFRONT_DEV_DISTRIBUTION_ID }} \
+      #         --paths $CLOUD_FRONT_PATHS
+      #     else
+      #       echo "No files changed in 'out/' directory, skipping CloudFront invalidation."
+      #     fi
+
+      - name: Upload to MAIN S3 & collect changed paths
         if: ${{ github.ref == 'refs/heads/main' }}
+        id: s3-sync-main
         run: |
-          aws s3 sync ./out s3://${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }} --delete
-          CHANGED_FILES_PATHS="${{ steps.changed-files.outputs.all_changed_files }}"
+          BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
 
-          if [ ! -z "$CHANGED_FILES_PATHS" ]; then
-            CLOUD_FRONT_PATHS=$(echo "$CHANGED_FILES_PATHS" | sed -e 's/^out\///' -e 's/^/\//' | tr '\n' ' ')
-            echo "Invalidating CloudFront cache for the following files: $CLOUD_FRONT_PATHS"
-            aws cloudfront create-invalidation \
-              --distribution-id ${{ secrets.AWS_CLOUDFRONT_MAIN_DISTRIBUTION_ID }} \
-              --paths $CLOUD_FRONT_PATHS
-          else
-            echo "No files changed in 'out/' directory, skipping CloudFront invalidation."
-          fi
+          PATHS=$(aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS --dryrun \
+                    | awk '/^upload:/{print $4}' \
+                    | sed "s#s3://$BUCKET##" \
+                    | sed 's/^/\//' \
+                    | tr '\n' ' ')
+          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
 
-      - name: Deploy to Dev S3 and Invalidate CloudFront cache
+          aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS
+
+      - name: Invalidate MAIN CloudFront
+        if: ${{ github.ref == 'refs/heads/main' && steps.s3-sync-main.outputs.paths != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_CLOUDFRONT_MAIN_DISTRIBUTION_ID }} \
+            --paths ${{ steps.s3-sync-main.outputs.paths }}
+
+      - name: Upload to DEV S3 & collect changed paths
         if: ${{ github.ref == 'refs/heads/develop' }}
+        id: s3-sync-dev
         run: |
-          aws s3 sync ./out s3://${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }} --delete
-          CHANGED_FILES_PATHS="${{ steps.changed-files.outputs.all_changed_files }}"
+          BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
 
-          if [ ! -z "$CHANGED_FILES_PATHS" ]; then
-            CLOUD_FRONT_PATHS=$(echo "$CHANGED_FILES_PATHS" | sed -e 's/^out\///' -e 's/^/\//' | tr '\n' ' ')
-            echo "Invalidating CloudFront cache for the following files: $CLOUD_FRONT_PATHS"
-            aws cloudfront create-invalidation \
-              --distribution-id ${{ secrets.AWS_CLOUDFRONT_DEV_DISTRIBUTION_ID }} \
-              --paths $CLOUD_FRONT_PATHS
-          else
-            echo "No files changed in 'out/' directory, skipping CloudFront invalidation."
-          fi
+          PATHS=$(aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS --dryrun \
+                    | awk '/^upload:/{print $4}' \
+                    | sed "s#s3://$BUCKET##" \
+                    | sed 's/^/\//' \
+                    | tr '\n' ' ')
+          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
+
+          aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS
+
+      - name: Invalidate DEV CloudFront
+        if: ${{ github.ref == 'refs/heads/develop' && steps.s3-sync-dev.outputs.paths != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_CLOUDFRONT_DEV_DISTRIBUTION_ID }} \
+            --paths ${{ steps.s3-sync-dev.outputs.paths }}
