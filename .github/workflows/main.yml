@@ -93,7 +93,7 @@ jobs:
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
 
           PATHS=$(aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS --dryrun \
-                    | awk '/^upload:/{print $4}' \
+                    | awk '/upload:/{print $NF}' \
                     | sed "s#s3://$BUCKET##" \
                     | sed 's/^/\//' \
                     | tr '\n' ' ')
@@ -115,7 +115,7 @@ jobs:
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
 
           PATHS=$(aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS --dryrun \
-                    | awk '/^upload:/{print $4}' \
+                    | awk '/upload:/{print $NF}' \
                     | sed "s#s3://$BUCKET##" \
                     | sed 's/^/\//' \
                     | tr '\n' ' ')
@@ -129,3 +129,6 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.AWS_CLOUDFRONT_DEV_DISTRIBUTION_ID }} \
             --paths ${{ steps.s3-sync-dev.outputs.paths }}
+
+      - name: Debug PATHS
+        run: echo "::notice ::Paths to invalidate -> '${{ steps.s3-sync-main.outputs.paths }}'"
