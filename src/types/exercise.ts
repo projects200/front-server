@@ -1,4 +1,4 @@
-export type Exercise = {
+export type ExerciseRecord = {
   title: string
   category?: string | undefined
   location?: string | undefined
@@ -6,4 +6,8 @@ export type Exercise = {
   endedAt: string
   content?: string | undefined
   images?: File[] | undefined
+}
+
+export type ExercisePictures = {
+  images: File[]
 }
