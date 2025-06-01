@@ -86,49 +86,61 @@ jobs:
       #       echo "No files changed in 'out/' directory, skipping CloudFront invalidation."
       #     fi
 
-      - name: Upload to MAIN S3 & collect changed paths
-        if: ${{ github.ref == 'refs/heads/main' }}
-        id: s3-sync-main
+      # ============== MAIN 배포 ==============
+      - name: Upload static assets (MAIN)
+        if: github.ref == 'refs/heads/main'
+        id: sync_main_static
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
 
-          PATHS=$(aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS --dryrun \
-                    | awk '/upload:/{print $NF}' \
-                    | sed "s#s3://$BUCKET##" \
-                    | sed 's/^/\//' \
-                    | tr '\n' ' ')
-          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
+          CHANGED=$(aws s3 sync ./out s3://$BUCKET \
+                      --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS --dryrun \
+                      | awk '/upload:/{print $NF}' \
+                      | sed "s#s3://$BUCKET##" | sed 's/^/\//' | tr '\n' ' ')
+          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
 
-          aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS
+          # 실제 업로드
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
 
-      - name: Invalidate MAIN CloudFront
-        if: ${{ github.ref == 'refs/heads/main' && steps.s3-sync-main.outputs.paths != '' }}
+      - name: Upload index.html (MAIN)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
+          aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
+
+      - name: Invalidate MAIN static objects
+        if: github.ref == 'refs/heads/main' && steps.sync_main_static.outputs.changed != ''
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.AWS_CLOUDFRONT_MAIN_DISTRIBUTION_ID }} \
-            --paths ${{ steps.s3-sync-main.outputs.paths }}
+            --paths ${{ steps.sync_main_static.outputs.changed }}
 
-      - name: Upload to DEV S3 & collect changed paths
-        if: ${{ github.ref == 'refs/heads/develop' }}
-        id: s3-sync-dev
+      # ============== DEVELOP 배포 ==============
+      - name: Upload static assets (DEV)
+        if: github.ref == 'refs/heads/develop'
+        id: sync_dev_static
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
 
-          PATHS=$(aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS --dryrun \
-                    | awk '/upload:/{print $NF}' \
-                    | sed "s#s3://$BUCKET##" \
-                    | sed 's/^/\//' \
-                    | tr '\n' ' ')
-          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
+          CHANGED=$(aws s3 sync ./out s3://$BUCKET \
+                      --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS --dryrun \
+                      | awk '/upload:/{print $NF}' \
+                      | sed "s#s3://$BUCKET##" | sed 's/^/\//' | tr '\n' ' ')
+          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
 
-          aws s3 sync ./out s3://$BUCKET $S3_SYNC_OPTS
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
 
-      - name: Invalidate DEV CloudFront
-        if: ${{ github.ref == 'refs/heads/develop' && steps.s3-sync-dev.outputs.paths != '' }}
+      - name: Upload index.html (DEV)
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
+          aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
+
+      - name: Invalidate DEV static objects
+        if: github.ref == 'refs/heads/develop' && steps.sync_dev_static.outputs.changed != ''
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.AWS_CLOUDFRONT_DEV_DISTRIBUTION_ID }} \
-            --paths ${{ steps.s3-sync-dev.outputs.paths }}
-
-      - name: Debug PATHS
-        run: echo "::notice ::Paths to invalidate -> '${{ steps.s3-sync-main.outputs.paths }}'"
+            --paths ${{ steps.sync_dev_static.outputs.changed }}

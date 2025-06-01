@@ -3,5 +3,5 @@
 import AuthGuard from '@/app/_components/authGuard'
 
 export default function Home() {
-  return <AuthGuard>1.0.3</AuthGuard>
+  return <AuthGuard>1.0.4</AuthGuard>
 }
