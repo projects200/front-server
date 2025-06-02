@@ -44,14 +44,14 @@ export default function ProfileForm() {
     } catch (err: unknown) {
       if (err instanceof ApiError) {
         if (err.status === 401) {
-          showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'error')
+          showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'info')
         } else {
-          showToast(err.message, 'error')
+          showToast(err.message, 'info')
         }
       } else if (err instanceof Error) {
-        showToast(err.message, 'error')
+        showToast(err.message, 'info')
       } else {
-        showToast('서버 오류가 발생했습니다.', 'error')
+        showToast('서버 오류가 발생했습니다.', 'info')
       }
     }
   }

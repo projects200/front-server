@@ -19,7 +19,7 @@ export default function CallbackPage() {
     if (auth.isLoading) return
 
     if (!auth.isAuthenticated) {
-      showToast('로그인 정보가 없습니다.', 'error')
+      showToast('로그인 정보가 없습니다.', 'info')
       router.replace(SITE_MAP.LOGIN)
       return
     }
@@ -35,14 +35,14 @@ export default function CallbackPage() {
       } catch (err: unknown) {
         if (err instanceof ApiError) {
           if (err.status === 401) {
-            showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'error')
+            showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'info')
           } else {
-            showToast(err.message, 'error')
+            showToast(err.message, 'info')
           }
         } else if (err instanceof Error) {
-          showToast(err.message, 'error')
+          showToast(err.message, 'info')
         } else {
-          showToast('서버 오류가 발생했습니다.', 'error')
+          showToast('서버 오류가 발생했습니다.', 'info')
         }
         router.replace(SITE_MAP.LOGIN)
       }
