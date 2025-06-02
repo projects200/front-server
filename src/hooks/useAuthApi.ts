@@ -3,7 +3,7 @@ import { useAuth } from 'react-oidc-context'
 
 import { readRegistered, createUser } from '@/api/auth'
 import { SignUp } from '@/types/auth'
-import { apiHandler } from '@/utils/apiHandler'
+import { ApiError } from '@/types/common'
 
 export function useAuthApi() {
   const auth = useAuth()
@@ -12,28 +12,28 @@ export function useAuthApi() {
   const accessToken = user?.access_token
 
   // 회원가입 여부 확인
-  const checkRegistered = useCallback(() => {
-    if (!accessToken) throw new Error('accessToken 만료')
-
-    return apiHandler(async () => {
-      const res = await readRegistered(accessToken)
-      if (!res.succeed) throw new Error(res.message)
-
-      return res.data
-    })
+  const checkRegistered = useCallback(async () => {
+    if (!accessToken) {
+      throw new ApiError('accessToken이 만료되었거나 존재하지 않습니다.', 401)
+    }
+    const res = await readRegistered(accessToken)
+    if (!res.succeed) {
+      throw new ApiError(res.message, 400, res)
+    }
+    return res.data
   }, [accessToken])
 
   // 회원가입
   const postCreateUser = useCallback(
-    (data: SignUp) => {
-      if (!idToken) throw new Error('idToken 만료')
-
-      return apiHandler(async () => {
-        const res = await createUser(idToken, data)
-        if (!res.succeed) throw new Error(res.message)
-          
-        return res.data
-      })
+    async (data: SignUp) => {
+      if (!idToken) {
+        throw new ApiError('idToken이 만료되었거나 존재하지 않습니다.', 401)
+      }
+      const res = await createUser(idToken, data)
+      if (!res.succeed) {
+        throw new ApiError(res.message, 400, res)
+      }
+      return res.data
     },
     [idToken],
   )

@@ -4,6 +4,7 @@ import { useAuth } from 'react-oidc-context'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { ApiError } from '@/types/common'
 import { useToast } from '@/hooks/useToast'
 import { useAuthApi } from '@/hooks/useAuthApi'
 import SITE_MAP from '@/constants/siteMap.constant'
@@ -31,10 +32,18 @@ export default function CallbackPage() {
         } else {
           router.replace(SITE_MAP.AGREEMENT)
         }
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : '회원등록 조회 실패'
-        showToast(message, 'error')
+      } catch (err: unknown) {
+        if (err instanceof ApiError) {
+          if (err.status === 401) {
+            showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'error')
+          } else {
+            showToast(err.message, 'error')
+          }
+        } else if (err instanceof Error) {
+          showToast(err.message, 'error')
+        } else {
+          showToast('서버 오류가 발생했습니다.', 'error')
+        }
         router.replace(SITE_MAP.LOGIN)
       }
     })()
