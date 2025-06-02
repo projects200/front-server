@@ -1,12 +1,12 @@
 'use client'
 
-import { Exercise } from '@/types/exercise'
+import { ExerciseFormValues } from '@/types/exercise'
 import Header from '@/components/commons/header'
 
 import ExerciseForm from '../_components/exerciseForm'
 
 export default function Create() {
-  const handleSubmit = (values: Exercise) => {
+  const handleSubmit = (values: ExerciseFormValues) => {
     console.log('자식에서 받은 값:', values)
     //운동기록 생성 api 연결
   }

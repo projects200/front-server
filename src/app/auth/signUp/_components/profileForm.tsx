@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation'
 
 import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
+import { ApiError } from '@/types/common'
 import { useToast } from '@/hooks/useToast'
 import { validateNickname, validateBirthdate } from '@/utils/validation'
-import { useAuthApi } from '@/api/auth'
+import { useAuthApi } from '@/hooks/useAuthApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import DatePicker from './datePicker'
@@ -20,7 +21,7 @@ export default function ProfileForm() {
   const [gender, setGender] = useState<'M' | 'F' | 'U'>('U')
   const router = useRouter()
   const showToast = useToast()
-  const { signUp } = useAuthApi()
+  const { postCreateUser } = useAuthApi()
 
   const isValid = nickname.trim() !== '' && birthdate.trim() !== ''
 
@@ -38,12 +39,20 @@ export default function ProfileForm() {
     }
 
     try {
-      await signUp({ nickname, birthdate, gender })
+      await postCreateUser({ nickname, birthdate, gender })
       router.push(SITE_MAP.TEMP1)
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : '서버 오류가 발생했습니다.'
-      showToast(message, 'info')
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        if (err.status === 401) {
+          showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'error')
+        } else {
+          showToast(err.message, 'error')
+        }
+      } else if (err instanceof Error) {
+        showToast(err.message, 'error')
+      } else {
+        showToast('서버 오류가 발생했습니다.', 'error')
+      }
     }
   }
 
