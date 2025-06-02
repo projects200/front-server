@@ -3,7 +3,6 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   output: 'export',
-  trailingSlash: true,
   webpack: (config, { dev }) => {
     config.module.rules.push({
       test: /\.svg$/,
