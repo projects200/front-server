@@ -4,7 +4,7 @@ import * as z from 'zod'
 
 import { useToast } from '@/hooks/useToast'
 import { useForm } from '@tanstack/react-form'
-import { ExerciseFormValues } from '@/types/exercise'
+import { ExerciseRecordReq } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
 
 import DateTimePicker from './dateTimePicker'
@@ -14,8 +14,8 @@ import ImageUploader from './imageUploader'
 import styles from './exerciseForm.module.css'
 
 type ExerciseFormProps = {
-  defaultValues: ExerciseFormValues
-  onSubmit: (values: ExerciseFormValues) => void
+  defaultValues: ExerciseRecordReq
+  onSubmit: (values: ExerciseRecordReq) => void
 }
 
 const exerciseSchema = z.object({
@@ -38,9 +38,9 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
       try {
         exerciseSchema.parse(value)
         onSubmit(value)
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          const firstError = error.errors[0]?.message
+      } catch (err: unknown) {
+        if (err instanceof z.ZodError) {
+          const firstError = err.errors[0]?.message
           showToast(firstError || '입력값을 확인해주세요.', 'info')
         }
       }
