@@ -1,0 +1,23 @@
+import useExerciseSwr from './useExerciseSwr'
+
+import { readExerciseDetail } from '@/api/exercise'
+import { adaptExerciseRecord } from '@/lib/adapters/exercise.adapter'
+import { ExerciseRecordRes } from '@/types/exercise'
+import { ApiError } from '@/types/common'
+
+// 운동 기록 상세 조회
+export function useExerciseDetail(id: number) {
+  return useExerciseSwr<ExerciseRecordRes>(
+    ['exerciseDetail', id],
+    async (token) => {
+      const res = await readExerciseDetail(token, id)
+      if (!res.succeed) throw new ApiError(res.message, 400, res)
+      return adaptExerciseRecord(res.data)
+    },
+    { revalidateOnFocus: false, shouldRetryOnError: false },
+  )
+}
+
+// 추가예정
+// 운동 기록 기간별 기록 조회
+// 운동 기록 한날짜 기록 조회

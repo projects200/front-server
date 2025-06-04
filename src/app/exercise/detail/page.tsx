@@ -8,7 +8,7 @@ import KebabIcon from '@/assets/icon_kebab.svg'
 import { useToast } from '@/hooks/useToast'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import ExerciseDetailContainer from './exerciseDetailContainer'
+import ExerciseDetail from './_components/exerciseDetail'
 import KebabModal from './_components/kebabModal'
 import styles from './detail.module.css'
 
@@ -19,13 +19,13 @@ export default function Detail() {
   const showToast = useToast()
 
   useLayoutEffect(() => {
-    if (exerciseId == null) {
+    if (exerciseId === null) {
       showToast('해당 운동 기록이 없습니다.', 'info')
       router.replace(SITE_MAP.EXERCISE_LIST)
     }
   }, [])
 
-  if (exerciseId == null) return null
+  if (exerciseId === null) return null
   return (
     <>
       <Header
@@ -34,7 +34,7 @@ export default function Detail() {
       >
         기록 상세
       </Header>
-      <ExerciseDetailContainer exerciseId={exerciseId} />
+      <ExerciseDetail exerciseId={exerciseId} />
       <KebabModal
         isOpen={isBottomModalOpen}
         setIsOpen={setIsBottomModalOpen}

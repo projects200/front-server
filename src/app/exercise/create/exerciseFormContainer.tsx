@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 
 import { useToast } from '@/hooks/useToast'
-import { useExerciseApi } from '@/hooks/useExerciseApi'
+import { useExerciseApi } from '@/hooks/exercise/useExerciseApi'
 import { ExerciseRecordReq } from '@/types/exercise'
 import { ApiError } from '@/types/common'
 import SITE_MAP from '@/constants/siteMap.constant'
@@ -67,7 +67,6 @@ export default function ExerciseFormContainer() {
         }
       }
     }
-
     router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${resExerciseId}`)
   }
 

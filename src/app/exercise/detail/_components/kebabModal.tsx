@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import { ApiError } from '@/types/common'
 import { useToast } from '@/hooks/useToast'
-import { useExerciseApi } from '@/hooks/useExerciseApi'
+import { useExerciseApi } from '@/hooks/exercise/useExerciseApi'
 import BottomModal from '@/components/commons/bottomModal'
 import CenterModal from '@/components/commons/centerModal'
 import EditIcon from '@/assets/icon_edit.svg'
