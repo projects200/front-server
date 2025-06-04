@@ -50,31 +50,38 @@ export default function ExerciseDetail({ exerciseId }: Props) {
     <>
       <ImageField />
       <InputField value={data.title} label="제목" id="title" readonly={true} />
-      <InputField
-        value={data.category || ''}
-        label="운동 종류"
-        id="category"
-        readonly={true}
-      />
       <DateTimePicker
         label="운동 시간"
         startedAt={data.startedAt}
         endedAt={data.endedAt}
         readonly={true}
       />
-      <InputField
-        value={data.location || ''}
-        label="장소"
-        id="location"
-        readonly={true}
-      />
-      <TextareaField
-        className={styles['text-field']}
-        value={data.content || ''}
-        label="내용"
-        id="content"
-        readonly={true}
-      />
+      {data.category && (
+        <InputField
+          value={data.category}
+          label="운동 종류"
+          id="category"
+          readonly={true}
+        />
+      )}
+      {data.location && (
+        <InputField
+          value={data.location}
+          label="장소"
+          id="location"
+          readonly={true}
+        />
+      )}
+
+      {data.content && (
+        <TextareaField
+          className={styles['text-field']}
+          value={data.content}
+          label="내용"
+          id="content"
+          readonly={true}
+        />
+      )}
     </>
   )
 }

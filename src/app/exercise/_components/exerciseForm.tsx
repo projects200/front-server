@@ -63,18 +63,7 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
             label="제목 *"
             id="title"
             maxLength={50}
-          />
-        )}
-      </form.Field>
-
-      <form.Field name="category">
-        {(field) => (
-          <InputField
-            value={field.state.value ?? ''}
-            onChange={(e) => field.handleChange(e.target.value)}
-            label="운동 종류"
-            id="category"
-            maxLength={30}
+            placeholder="제목을 입력해주세요."
           />
         )}
       </form.Field>
@@ -97,6 +86,19 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
         )}
       </form.Field>
 
+      <form.Field name="category">
+        {(field) => (
+          <InputField
+            value={field.state.value ?? ''}
+            onChange={(e) => field.handleChange(e.target.value)}
+            label="운동 종류"
+            id="category"
+            maxLength={30}
+            placeholder="운동 종류를 입력해주세요."
+          />
+        )}
+      </form.Field>
+
       <form.Field name="location">
         {(field) => (
           <InputField
@@ -105,6 +107,7 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
             label="장소"
             id="location"
             maxLength={50}
+            placeholder="운동장소를 입력해주세요."
           />
         )}
       </form.Field>

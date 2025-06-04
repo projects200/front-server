@@ -1,11 +1,12 @@
 'use client'
-
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { useToast } from '@/hooks/useToast'
 import { useExerciseApi } from '@/hooks/exercise/useExerciseApi'
 import { ExerciseRecordReq } from '@/types/exercise'
 import { ApiError } from '@/types/common'
+import LoadingScreen from '@/components/commons/loadingScreen'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import ExerciseForm from '../_components/exerciseForm'
@@ -15,7 +16,10 @@ export default function ExerciseFormContainer() {
   const router = useRouter()
   const { postExercise, uploadExercisePictures } = useExerciseApi()
 
+  const [isLoading, setIsLoading] = useState(false) // 추후 SWR적용시 삭제예정
+
   const handleSubmit = async (values: ExerciseRecordReq) => {
+    setIsLoading(true)
     let resExerciseId = null
     // 운동기록 생성
     try {
@@ -51,8 +55,6 @@ export default function ExerciseFormContainer() {
       try {
         await uploadExercisePictures({ images: values.images }, resExerciseId)
       } catch (err: unknown) {
-        // 업로드 실패 시 롤백 or 텍스트 기록만 생성 논의필요
-
         if (err instanceof ApiError) {
           if (err.status === 401) {
             showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'info')
@@ -71,17 +73,20 @@ export default function ExerciseFormContainer() {
   }
 
   return (
-    <ExerciseForm
-      defaultValues={{
-        title: '',
-        category: '',
-        startedAt: '',
-        endedAt: '',
-        location: '',
-        content: '',
-        images: [],
-      }}
-      onSubmit={handleSubmit}
-    />
+    <>
+      <ExerciseForm
+        defaultValues={{
+          title: '',
+          category: '',
+          startedAt: '',
+          endedAt: '',
+          location: '',
+          content: '',
+          images: [],
+        }}
+        onSubmit={handleSubmit}
+      />
+      {isLoading && <LoadingScreen />}
+    </>
   )
 }

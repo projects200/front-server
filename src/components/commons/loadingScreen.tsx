@@ -1,4 +1,4 @@
-import LoadingSVG from '@/assets/loading.svg'
+import LoadingSVG from '@/assets/loading_spinner.svg'
 
 import Portal from '../ui/portal'
 import styles from './loadingScreen.module.css'

@@ -1,5 +1,5 @@
 .container{
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 2000;
@@ -9,8 +9,9 @@
   justify-content: center;
   align-items: center;
   background-color: var(--color-gray-200);
+  opacity: 0.5;
 }
 .loading{
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
