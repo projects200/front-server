@@ -45,6 +45,20 @@ export function createExercisePictures(
   )
 }
 
+// 운동기록 하루 조회 임시코드
+export function readExerciseList(
+  token: string,
+  date: string,
+): Promise<ApiResponse<unknown>> {
+  return fetchWrapper<ApiResponse<unknown>>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises?date=${date}`,
+    {
+      method: 'GET',
+    },
+    token,
+  )
+}
+
 // 운동기록 상세 조회
 export function readExerciseDetail(
   token: string,
