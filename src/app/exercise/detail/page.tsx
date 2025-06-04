@@ -1,6 +1,6 @@
 'use client'
 import { useQueryState, parseAsInteger } from 'nuqs'
-import { useState, useLayoutEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
@@ -18,7 +18,8 @@ export default function Detail() {
   const router = useRouter()
   const showToast = useToast()
 
-  useLayoutEffect(() => {
+
+  useEffect(() => {
     if (exerciseId === null) {
       showToast('해당 운동 기록이 없습니다.', 'info')
       router.replace(SITE_MAP.EXERCISE_LIST)
@@ -26,6 +27,7 @@ export default function Detail() {
   }, [])
 
   if (exerciseId === null) return null
+  
   return (
     <>
       <Header
