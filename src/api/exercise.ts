@@ -4,7 +4,7 @@ import {
   ExerciseContentReqDto,
   ExerciseRecordResDto,
 } from '@/types/dto/exercise'
-import { authFetch } from '@/utils/authFetch'
+import { fetchWrapper } from '@/utils/fetchWrapper'
 import { adaptExerciseContent } from '@/lib/adapters/exercise.adapter'
 
 // 운동 기록 생성
@@ -13,7 +13,7 @@ export function createExercise(
   data: ExerciseContent,
 ): Promise<ApiResponse<{ exerciseId: number }>> {
   const dto: ExerciseContentReqDto = adaptExerciseContent(data)
-  return authFetch<ApiResponse<{ exerciseId: number }>>(
+  return fetchWrapper<ApiResponse<{ exerciseId: number }>>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises`,
     {
       method: 'POST',
@@ -35,7 +35,7 @@ export function createExercisePictures(
     formData.append('pictures', file)
   })
 
-  return authFetch<ApiResponse<{ exerciseId: number }>>(
+  return fetchWrapper<ApiResponse<{ exerciseId: number }>>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}/pictures`,
     {
       method: 'POST',
@@ -50,7 +50,7 @@ export function readExerciseDetail(
   token: string,
   exerciseId: number,
 ): Promise<ApiResponse<ExerciseRecordResDto>> {
-  return authFetch<ApiResponse<ExerciseRecordResDto>>(
+  return fetchWrapper<ApiResponse<ExerciseRecordResDto>>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
     {
       method: 'GET',
@@ -64,7 +64,7 @@ export function removeExerciseDetail(
   token: string,
   exerciseId: number,
 ): Promise<ApiResponse<null>> {
-  return authFetch<ApiResponse<null>>(
+  return fetchWrapper<ApiResponse<null>>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
     {
       method: 'DELETE',

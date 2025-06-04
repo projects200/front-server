@@ -1,13 +1,13 @@
-import useExerciseSwr from './useExerciseSwr'
-
 import { readExerciseDetail } from '@/api/exercise'
 import { adaptExerciseRecord } from '@/lib/adapters/exercise.adapter'
 import { ExerciseRecordRes } from '@/types/exercise'
 import { ApiError } from '@/types/common'
 
+import useAuthFetch from '../useAuthFetch'
+
 // 운동 기록 상세 조회
 export function useExerciseDetail(id: number) {
-  return useExerciseSwr<ExerciseRecordRes>(
+  return useAuthFetch<ExerciseRecordRes>(
     ['exerciseDetail', id],
     async (token) => {
       const res = await readExerciseDetail(token, id)

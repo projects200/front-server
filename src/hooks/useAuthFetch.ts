@@ -2,7 +2,7 @@ import useSWR, { SWRConfiguration, Key } from 'swr'
 import { useAuth } from 'react-oidc-context'
 import { ApiError } from '@/types/common'
 
-export default function useExerciseSwr<Data = unknown>(
+export default function useAuthFetch<Data = unknown>(
   key: Key, 
   request: (token: string) => Promise<Data>,
   options?: SWRConfiguration<Data, Error>,
@@ -17,5 +17,5 @@ export default function useExerciseSwr<Data = unknown>(
     return request(token)
   }
 
-  return useSWR<Data, Error>(token ? key : null, fetcher, options)
+  return useSWR<Data, Error>(token, fetcher, options)
 }
