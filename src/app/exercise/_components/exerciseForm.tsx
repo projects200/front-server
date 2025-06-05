@@ -4,7 +4,7 @@ import * as z from 'zod'
 
 import { useToast } from '@/hooks/useToast'
 import { useForm } from '@tanstack/react-form'
-import { ExerciseFormValues } from '@/types/exercise'
+import { ExerciseRecordReq } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
 
 import DateTimePicker from './dateTimePicker'
@@ -14,8 +14,8 @@ import ImageUploader from './imageUploader'
 import styles from './exerciseForm.module.css'
 
 type ExerciseFormProps = {
-  defaultValues: ExerciseFormValues
-  onSubmit: (values: ExerciseFormValues) => void
+  defaultValues: ExerciseRecordReq
+  onSubmit: (values: ExerciseRecordReq) => void
 }
 
 const exerciseSchema = z.object({
@@ -38,9 +38,9 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
       try {
         exerciseSchema.parse(value)
         onSubmit(value)
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          const firstError = error.errors[0]?.message
+      } catch (err: unknown) {
+        if (err instanceof z.ZodError) {
+          const firstError = err.errors[0]?.message
           showToast(firstError || '입력값을 확인해주세요.', 'info')
         }
       }
@@ -63,18 +63,7 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
             label="제목 *"
             id="title"
             maxLength={50}
-          />
-        )}
-      </form.Field>
-
-      <form.Field name="category">
-        {(field) => (
-          <InputField
-            value={field.state.value ?? ''}
-            onChange={(e) => field.handleChange(e.target.value)}
-            label="운동 종류"
-            id="category"
-            maxLength={30}
+            placeholder="제목을 입력해주세요."
           />
         )}
       </form.Field>
@@ -97,6 +86,19 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
         )}
       </form.Field>
 
+      <form.Field name="category">
+        {(field) => (
+          <InputField
+            value={field.state.value ?? ''}
+            onChange={(e) => field.handleChange(e.target.value)}
+            label="운동 종류"
+            id="category"
+            maxLength={30}
+            placeholder="운동 종류를 입력해주세요."
+          />
+        )}
+      </form.Field>
+
       <form.Field name="location">
         {(field) => (
           <InputField
@@ -105,6 +107,7 @@ const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
             label="장소"
             id="location"
             maxLength={50}
+            placeholder="운동장소를 입력해주세요."
           />
         )}
       </form.Field>

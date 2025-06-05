@@ -6,7 +6,7 @@ import SITE_MAP from '@/constants/siteMap.constant'
 
 export default function Temp() {
   return (
-    <div>
+    <>
       <div style={{ textAlign: 'center' }}>임시 메인 페이지</div>
       <div>
         <Link href={SITE_MAP.SETTINGS} scroll={false}>
@@ -16,7 +16,7 @@ export default function Temp() {
       <div>
         <Link
           // 임시날짜 전달
-          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-05-24`}
+          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-06-03`}
           scroll={false}
         >
           운동기록 리스트
@@ -28,10 +28,10 @@ export default function Temp() {
         </Link>
       </div>
       <div>
-        <Link href={SITE_MAP.EXERCISE_DETAIL} scroll={false}>
+        <Link href={`${SITE_MAP.EXERCISE_DETAIL}?id=2`} scroll={false}>
           운동기록상세
         </Link>
       </div>
-    </div>
+    </>
   )
 }

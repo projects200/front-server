@@ -1,15 +1,24 @@
-export type ExerciseRecord = {
+export interface ExerciseContent {
   title: string
-  category?: string | undefined
-  location?: string | undefined
+  category?: string
+  location?: string
   startedAt: string
   endedAt: string
-  content?: string | undefined
-  images?: File[] | undefined
+  content?: string
 }
 
-export type ExercisePictures = {
+export interface ExercisePicturesUpload {
   images: File[]
 }
 
-export type ExerciseFormValues = ExerciseRecord & ExercisePictures
+export interface ExercisePictures {
+  images: string[]
+}
+
+export interface ExerciseRecordReq
+  extends ExerciseContent,
+    Partial<ExercisePicturesUpload> {}
+
+export interface ExerciseRecordRes
+  extends ExerciseContent,
+    Partial<ExercisePictures> {}

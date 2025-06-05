@@ -1,4 +1,4 @@
-export async function authFetch<T>(
+export async function fetchWrapper<T>(
   url: string,
   options?: RequestInit,
   token?: string,

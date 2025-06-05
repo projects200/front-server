@@ -1,20 +1,33 @@
 'use client'
-
-import { useState } from 'react'
+import { useQueryState, parseAsInteger } from 'nuqs'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
+import { useToast } from '@/hooks/useToast'
+import SITE_MAP from '@/constants/siteMap.constant'
 
-import InputField from '../_components/inputField'
-import TextareaField from '../_components/textareaField'
-import TimeSelect from '../_components/dateTimePicker'
-import ImageField from './_components/imageField'
+import ExerciseDetail from './_components/exerciseDetail'
 import KebabModal from './_components/kebabModal'
 import styles from './detail.module.css'
 
 export default function Detail() {
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
+  const [exerciseId] = useQueryState('id', parseAsInteger)
+  const router = useRouter()
+  const showToast = useToast()
 
+
+  useEffect(() => {
+    if (exerciseId === null) {
+      showToast('해당 운동 기록이 없습니다.', 'info')
+      router.replace(SITE_MAP.EXERCISE_LIST)
+    }
+  }, [])
+
+  if (exerciseId === null) return null
+  
   return (
     <>
       <Header
@@ -23,29 +36,12 @@ export default function Detail() {
       >
         기록 상세
       </Header>
-      <ImageField />
-      <InputField value="데이터 연결" label="제목" id="title" readonly={true} />
-      <InputField
-        value="데이터 연결"
-        label="운동 종류"
-        id="category"
-        readonly={true}
+      <ExerciseDetail exerciseId={exerciseId} />
+      <KebabModal
+        isOpen={isBottomModalOpen}
+        setIsOpen={setIsBottomModalOpen}
+        exerciseId={exerciseId}
       />
-      <TimeSelect
-        label="운동 시간"
-        startedAt={''}
-        endedAt={''}
-        readonly={true}
-      />
-      <InputField value="데이터 연결" label="장소" id="title" readonly={true} />
-      <TextareaField
-        className={styles['text-field']}
-        value="데이터 연결"
-        label="내용"
-        id="title"
-        readonly={true}
-      />
-      <KebabModal isOpen={isBottomModalOpen} setIsOpen={setIsBottomModalOpen} />
     </>
   )
 }
