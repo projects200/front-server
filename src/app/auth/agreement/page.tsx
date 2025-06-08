@@ -10,7 +10,6 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import AgreementItem from './_components/agreementItem'
 import styles from './agreement.module.css'
 
-
 export default function Agreement() {
   const [checkedTerms, setCheckedTerms] = useState(false)
   const [checkedPrivacy, setCheckedPrivacy] = useState(false)

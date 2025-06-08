@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 
 import { ApiError } from '@/types/common'
 import { useToast } from '@/hooks/useToast'
-import { useExerciseDetail } from '@/hooks/exercise/useGetExerciseApi'
+import { useReadExercise } from '@/hooks/exercise/useGetExerciseApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import InputField from '../../_components/inputField'
@@ -19,7 +19,7 @@ type Props = {
 export default function ExerciseDetail({ exerciseId }: Props) {
   const showToast = useToast()
   const router = useRouter()
-  const { isLoading, data, error } = useExerciseDetail(exerciseId)
+  const { isLoading, data, error } = useReadExercise(exerciseId)
 
   useEffect(() => {
     if (!isLoading && error) {
@@ -48,7 +48,7 @@ export default function ExerciseDetail({ exerciseId }: Props) {
 
   return (
     <>
-      <ImageField />
+      {data.images?.length ? <ImageField images={data.images} /> : <></>}
       <InputField value={data.title} label="제목" id="title" readonly={true} />
       <DateTimePicker
         label="운동 시간"

@@ -8,9 +8,9 @@
   padding: 0 20px;
   z-index: 1000;
   width: 100%;
-  height:65px;
+  height: 65px;
 }
-.left{
+.left {
   display: flex;
   align-items: center;
 }
@@ -27,7 +27,7 @@
 .title {
   margin-left: 4px;
 }
-.left-title{
+.left-title {
   margin-left: 5px;
 }
 .center-title {
@@ -38,9 +38,9 @@
 .right-icon {
   margin-left: auto;
 }
-.back-area{
-  width: 100%;
+.back-area {
   height: 65px;
+  flex-shrink: 0;
 }
 
 @media (min-width: 768px) {
@@ -50,7 +50,7 @@
     width: 500px;
     transform: translateX(-50%);
     padding: 0 20px;
-    height:85px;
+    height: 85px;
   }
   .icon {
     width: 20px;
@@ -59,8 +59,7 @@
   .title {
     margin-left: 6px;
   }
-  .back-area{
-    width: 100%;
+  .back-area {
     height: 85px;
   }
 }

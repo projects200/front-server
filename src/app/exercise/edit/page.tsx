@@ -1,32 +1,33 @@
 'use client'
+import { useQueryState, parseAsInteger } from 'nuqs'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
-import { ExerciseRecordReq } from '@/types/exercise'
+import { useToast } from '@/hooks/useToast'
+import SITE_MAP from '@/constants/siteMap.constant'
 
-import ExerciseForm from '../_components/exerciseForm'
-// import styles from './edit.module.css'
+import ExerciseFormContainer from './exerciseFormContainer'
 
 export default function Create() {
-  const handleSubmit = (values: ExerciseRecordReq) => {
-    console.log('자식에서 받은 값:', values)
-    //운동기록 수정 api 연결
-  }
+  const [exerciseId] = useQueryState('id', parseAsInteger)
+
+  const router = useRouter()
+  const showToast = useToast()
+
+  useEffect(() => {
+    if (!exerciseId) {
+      showToast('해당 운동 기록이 없습니다.', 'info')
+      router.replace(SITE_MAP.EXERCISE_LIST)
+    }
+  }, [])
+
+  if (!exerciseId) return null
+
   return (
     <>
       <Header>운동 기록 수정</Header>
-      <ExerciseForm
-        // 전달받은 데이터 넣어주기
-        defaultValues={{
-          title: '',
-          category: '',
-          location: '',
-          startedAt: '',
-          endedAt: '',
-          content: '',
-          images: [],
-        }}
-        onSubmit={handleSubmit}
-      />
+      <ExerciseFormContainer exerciseId={exerciseId} />
     </>
   )
 }

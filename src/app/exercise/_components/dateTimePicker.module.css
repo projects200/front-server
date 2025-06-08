@@ -16,18 +16,18 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  background-color: #eee;
+  background-color: var(--color-white-100);
   border-radius: 8px;
   height: 40px;
 }
-.icon{
+.icon {
   width: 20px;
   height: 20px;
   margin-right: 10px;
 }
 .dash {
   flex-shrink: 0;
-  background-color: #96979B;
+  background-color: #96979b;
   width: 12px;
   height: 2px;
   border-radius: 1px;

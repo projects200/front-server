@@ -1,3 +1,19 @@
+export type Picture = {
+  pictureId: number
+  pictureUrl: string
+  pictureName: string
+  pictureExtension: string
+}
+
+export interface ExerciseList {
+  exerciseId: number
+  title: string
+  category?: string
+  startedAt: string
+  endedAt: string
+  images: string[]
+}
+
 export interface ExerciseContent {
   title: string
   category?: string
@@ -12,7 +28,7 @@ export interface ExercisePicturesUpload {
 }
 
 export interface ExercisePictures {
-  images: string[]
+  images: Picture[]
 }
 
 export interface ExerciseRecordReq

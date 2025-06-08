@@ -1,29 +1,35 @@
-import { readExerciseList, readExerciseDetail } from '@/api/exercise'
-import { adaptExerciseRecord } from '@/lib/adapters/exercise.adapter'
-import { ExerciseRecordRes } from '@/types/exercise'
+import { readExerciseList, readExercise } from '@/api/exercise'
+import {
+  adaptExerciseList,
+  adaptExerciseRecord,
+} from '@/lib/adapters/exercise.adapter'
+import { ExerciseList, ExerciseRecordRes } from '@/types/exercise'
 import { ApiError } from '@/types/common'
 
 import useAuthFetch from '../useAuthFetch'
 
-// 운동기록 하루 조회 임시코드
-export function useExerciseList(date: string) {
-  return useAuthFetch<unknown>(
+// 운동기록 하루 조회
+export function useReadExerciseList(date: string) {
+  return useAuthFetch<ExerciseList[]>(
     ['exerciseList', date],
     async (token) => {
       const res = await readExerciseList(token, date)
       if (!res.succeed) throw new ApiError(res.message, 400, res)
-      return res.data
+      return adaptExerciseList(res.data)
     },
-    { revalidateOnFocus: false, shouldRetryOnError: false },
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+    },
   )
 }
 
-// 운동 기록 상세 조회
-export function useExerciseDetail(id: number) {
+// 운동 기록 조회
+export function useReadExercise(id: number) {
   return useAuthFetch<ExerciseRecordRes>(
     ['exerciseDetail', id],
     async (token) => {
-      const res = await readExerciseDetail(token, id)
+      const res = await readExercise(token, id)
       if (!res.succeed) throw new ApiError(res.message, 400, res)
       return adaptExerciseRecord(res.data)
     },

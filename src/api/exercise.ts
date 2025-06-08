@@ -1,6 +1,7 @@
 import { ApiResponse } from '@/types/common'
 import { ExerciseContent, ExercisePicturesUpload } from '@/types/exercise'
 import {
+  ExerciseListResDto,
   ExerciseContentReqDto,
   ExerciseRecordResDto,
 } from '@/types/dto/exercise'
@@ -23,7 +24,7 @@ export function createExercise(
   )
 }
 
-// 운동 이미지 업로드
+// 운동 이미지 생성
 export function createExercisePictures(
   token: string,
   data: ExercisePicturesUpload,
@@ -45,12 +46,12 @@ export function createExercisePictures(
   )
 }
 
-// 운동기록 하루 조회 임시코드
+// 운동 기록 하루 조회
 export function readExerciseList(
   token: string,
   date: string,
-): Promise<ApiResponse<unknown>> {
-  return fetchWrapper<ApiResponse<unknown>>(
+): Promise<ApiResponse<ExerciseListResDto[]>> {
+  return fetchWrapper<ApiResponse<ExerciseListResDto[]>>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises?date=${date}`,
     {
       method: 'GET',
@@ -59,8 +60,8 @@ export function readExerciseList(
   )
 }
 
-// 운동기록 상세 조회
-export function readExerciseDetail(
+// 운동 기록 조회
+export function readExercise(
   token: string,
   exerciseId: number,
 ): Promise<ApiResponse<ExerciseRecordResDto>> {
@@ -73,8 +74,23 @@ export function readExerciseDetail(
   )
 }
 
-// 운동기록 상세 삭제
-export function removeExerciseDetail(
+// 운동 기록 수정
+export function updateExercise(
+  token: string,
+  data: ExerciseContent,
+  exerciseId: number,
+): Promise<ApiResponse<null>> {
+  return fetchWrapper<ApiResponse<null>>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
+    {
+      method: 'PATCH ',
+    },
+    token,
+  )
+}
+
+// 운동 기록 삭제
+export function removeExercise(
   token: string,
   exerciseId: number,
 ): Promise<ApiResponse<null>> {

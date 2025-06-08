@@ -1,24 +1,39 @@
-'use client'
-// import { useEffect } from 'react'
-// import { useQueryState } from 'nuqs'
+import { useReadExerciseList } from '@/hooks/exercise/useGetExerciseApi'
+import Typography from '@/components/ui/typography'
 
-// import { useExerciseList } from '@/hooks/exercise/useGetExerciseApi'
+import ExerciseCard from './exerciseCard'
+import styles from './exerciseList.module.css'
 
-// import DateLabel from './dateLabel'
-// import ExerciseCard from './exerciseCard'
+type Props = {
+  date: string
+}
 
-// 임시코드들 입니다
-export default function ExerciseList() {
-  // const [date, setDate] = useQueryState('date')
-  // const { isLoading, data, error } = useExerciseList(date)
-  // useEffect(() => {
-  //   console.log(data)
-  // }, [data])
+export default function ExerciseList({ date }: Props) {
+  const { isLoading, data, error } = useReadExerciseList(date)
 
+  if (isLoading) return null
+  if (error) return null
+  if (!data || data.length === 0)
+    return (
+      <div className={styles['container']}>
+        <Typography className={styles['text']} as="span" variant="text15">
+          아직 등록된 기록이 없습니다.
+        </Typography>
+      </div>
+    )
   return (
-    <div>
-      {/* <DateLabel value={date} onChange={setDate} /> */}
-      {/* 기록 개수만큼 <ExerciseCard record={record}/> */}
+    <div className={styles['card-container']}>
+      {data.map((record) => (
+        <ExerciseCard
+          key={record.exerciseId}
+          exerciseId={record.exerciseId}
+          title={record.title}
+          category={record.category}
+          startedAt={record.startedAt}
+          endedAt={record.endedAt}
+          images={record.images}
+        />
+      ))}
     </div>
   )
 }

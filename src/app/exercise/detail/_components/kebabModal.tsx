@@ -26,16 +26,19 @@ export default function KebabModal({
 }: KebabModalProps) {
   const [isOpenCenter, setIsOpenCenter] = useState(false)
 
-  const { deleteExerciseDetail } = useExerciseApi()
+  const { deleteExercise } = useExerciseApi()
   const showToast = useToast()
   const router = useRouter()
 
-  const handleRemove = async (exerciseId: number) => {
+  const handleEdit = () => {
+    router.replace(`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}`)
+  }
+
+  const handleRemove = async () => {
     try {
-      await deleteExerciseDetail(exerciseId)
+      await deleteExercise(exerciseId)
       showToast('운동기록이 삭제되었습니다.', 'info')
-      // 나중에 경로를 알맞게 바꿔줘야됨
-      router.replace(SITE_MAP.TEMP1)
+      router.replace(SITE_MAP.TEMP1) // 나중에 경로를 알맞게 바꿔줘야됨
     } catch (err: unknown) {
       if (err instanceof ApiError) {
         if (err.status === 401) {
@@ -64,14 +67,7 @@ export default function KebabModal({
         }}
       >
         <div className={styles['button-group']}>
-          <button
-            className={styles['button']}
-            onClick={() => {
-              // 데이터 함께 전달해줘야함
-              alert('데이터 전달해줘야합니다.')
-              router.push(SITE_MAP.EXERCISE_EDIT)
-            }}
-          >
+          <button className={styles['button']} onClick={handleEdit}>
             <EditIcon className={styles['modal-icon']} />
             <Typography as="span" variant="text15">
               수정하기
@@ -94,9 +90,7 @@ export default function KebabModal({
       <CenterModal
         isOpen={isOpenCenter}
         onClose={() => setIsOpenCenter(false)}
-        onConfirm={() => {
-          handleRemove(exerciseId)
-        }}
+        onConfirm={handleRemove}
       >
         <Typography as="span" variant="text15" weight="bold">
           운동 기록을 삭제하시겠습니까?

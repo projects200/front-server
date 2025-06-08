@@ -1,3 +1,12 @@
+export interface ExerciseListResDto {
+  exerciseId: number
+  exerciseTitle: string
+  exercisePersonalType: string
+  exerciseStartedAt: string
+  exerciseEndedAt: string
+  pictureUrl: string[]
+}
+
 export interface ExerciseContentReqDto {
   exerciseTitle: string
   exercisePersonalType: string
