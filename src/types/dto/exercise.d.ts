@@ -1,3 +1,10 @@
+export type PictureDto = {
+  pictureId: number
+  pictureUrl: string
+  pictureName: string
+  pictureExtension: string
+}
+
 export interface ExerciseListResDto {
   exerciseId: number
   exerciseTitle: string
@@ -23,5 +30,5 @@ export interface ExerciseRecordResDto {
   exerciseDetail: string
   exerciseStartedAt: string
   exerciseEndedAt: string
-  pictureDataList: string[] | null
+  pictureDataList: PictureDto[] | null
 }
