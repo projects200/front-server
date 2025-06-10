@@ -21,20 +21,13 @@ export default function ImageField({ images }: ExercisePictures) {
       className={styles['carousel']}
     >
       {images.map((img) => (
-        <div
-          key={img.pictureId}
-          className={styles['slide']}
-          draggable={false}
-          onDragStart={(e) => e.preventDefault()}
-        >
+        <div key={img.pictureId} className={styles['slide']}>
           <Image
             className={styles['img']}
             src={img.pictureUrl}
             alt={img.pictureName}
             fill
             priority
-            draggable={false}
-            onDragStart={(e) => e.preventDefault()}
           />
         </div>
       ))}
