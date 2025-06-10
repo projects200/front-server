@@ -1,15 +1,16 @@
+'use client'
+
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { ApiError } from '@/types/common'
 import { useToast } from '@/hooks/useToast'
-import { useReadExercise } from '@/hooks/exercise/useGetExerciseApi'
-import SITE_MAP from '@/constants/siteMap.constant'
+import { useReadExercise } from '@/hooks/useExerciseApi'
+import useApiErrorHandler from '@/hooks/useApiErrorHandler'
 
+import ImageField from './imageField'
 import InputField from '../../_components/inputField'
 import TextareaField from '../../_components/textareaField'
 import DateTimePicker from '../../_components/dateTimePicker'
-import ImageField from './imageField'
 import styles from './exerciseDetail.module.css'
 
 type Props = {
@@ -19,33 +20,26 @@ type Props = {
 export default function ExerciseDetail({ exerciseId }: Props) {
   const showToast = useToast()
   const router = useRouter()
-  const { isLoading, data, error } = useReadExercise(exerciseId)
+  const handleError = useApiErrorHandler()
+
+  const { data, error, isLoading } = useReadExercise(exerciseId)
 
   useEffect(() => {
-    if (!isLoading && error) {
-      if (error instanceof ApiError) {
-        if (error.status === 401) {
-          showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'info')
-          router.replace(SITE_MAP.LOGIN)
-          return
-        }
-        showToast(error.message, 'info')
-      } else {
-        showToast(error.message || '서버 오류가 발생했습니다.', 'info')
-      }
-      router.back()
-      return
-    } else if (!isLoading && !data) {
-      showToast('데이터를 불러올 수 없습니다.', 'info')
-      router.back()
+    if (isLoading) return
+
+    if (error) {
+      const navigated = handleError(error) // 401·기타 에러 공통 처리
+      if (!navigated) router.back()
       return
     }
-  }, [isLoading, data, error])
 
-  if (isLoading) return null
-  if (error) return null
-  if (!data) return null
+    if (!data) {
+      showToast('데이터를 불러올 수 없습니다.', 'info')
+      router.back()
+    }
+  }, [isLoading, error, data])
 
+  if (isLoading || error || !data) return null
   return (
     <>
       {data.images?.length ? <ImageField images={data.images} /> : <></>}

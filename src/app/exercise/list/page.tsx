@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Header from '@/components/commons/header'
 import BottomButton from '@/components/commons/bottomButton'
 import { useToast } from '@/hooks/useToast'
+import { isValidYYYYMMDD } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import DateLabel from './_components/dateLabel'
@@ -19,9 +20,9 @@ export default function List() {
   const showToast = useToast()
 
   useEffect(() => {
-    if (!date) {
+    if (!date || !isValidYYYYMMDD(date)) {
       showToast('해당 운동 기록이 없습니다.', 'info')
-      router.replace(SITE_MAP.EXERCISE_LIST)
+      router.replace(SITE_MAP.TEMP1)
     }
   }, [])
 

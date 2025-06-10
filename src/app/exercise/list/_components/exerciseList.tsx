@@ -1,5 +1,10 @@
-import { useReadExerciseList } from '@/hooks/exercise/useGetExerciseApi'
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useReadExerciseList } from '@/hooks/useExerciseApi'
 import Typography from '@/components/ui/typography'
+import useApiErrorHandler from '@/hooks/useApiErrorHandler'
 
 import ExerciseCard from './exerciseCard'
 import styles from './exerciseList.module.css'
@@ -9,10 +14,17 @@ type Props = {
 }
 
 export default function ExerciseList({ date }: Props) {
-  const { isLoading, data, error } = useReadExerciseList(date)
+  const handleError = useApiErrorHandler()
+  const router = useRouter()
+  const { data, error, isLoading } = useReadExerciseList(date)
 
-  if (isLoading) return null
-  if (error) return null
+  useEffect(() => {
+    if (!error) return
+    const navigated = handleError(error)
+    if (!navigated) router.back()
+  }, [error])
+
+  if (isLoading || error) return null
   if (!data || data.length === 0)
     return (
       <div className={styles['container']}>
@@ -21,6 +33,7 @@ export default function ExerciseList({ date }: Props) {
         </Typography>
       </div>
     )
+
   return (
     <div className={styles['card-container']}>
       {data.map((record) => (

@@ -1,5 +1,6 @@
 'use client'
 
+import { useQueryState } from 'nuqs'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -11,12 +12,13 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import styles from './exerciseCard.module.css'
 
 export default function ExerciseCard(props: ExerciseList) {
+  const [date] = useQueryState('date')
   const formatedTime = `${props.startedAt.slice(11, 16)} ~ ${props.endedAt.slice(11, 16)}`
 
   return (
     <Link
       className={styles['container']}
-      href={`${SITE_MAP.EXERCISE_DETAIL}?id=${props.exerciseId}`}
+      href={`${SITE_MAP.EXERCISE_DETAIL}?id=${props.exerciseId}&date=${date}`}
     >
       <div className={styles['img_container']}>
         {props.images[0] ? (

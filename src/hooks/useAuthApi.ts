@@ -17,10 +17,8 @@ export function useAuthApi() {
       throw new ApiError('accessToken이 만료되었거나 존재하지 않습니다.', 401)
     }
     const res = await readRegistered(accessToken)
-    if (!res.succeed) {
-      throw new ApiError(res.message, 400, res)
-    }
-    return res.data
+
+    return res
   }, [accessToken])
 
   // 회원가입
@@ -30,10 +28,8 @@ export function useAuthApi() {
         throw new ApiError('idToken이 만료되었거나 존재하지 않습니다.', 401)
       }
       const res = await createUser(idToken, data)
-      if (!res.succeed) {
-        throw new ApiError(res.message, 400, res)
-      }
-      return res.data
+
+      return res
     },
     [idToken],
   )

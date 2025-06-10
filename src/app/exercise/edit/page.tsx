@@ -7,7 +7,7 @@ import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import ExerciseFormContainer from './exerciseFormContainer'
+// import ExerciseFormContainer from './exerciseFormContainer'
 
 export default function Create() {
   const [exerciseId] = useQueryState('id', parseAsInteger)
@@ -27,7 +27,7 @@ export default function Create() {
   return (
     <>
       <Header>운동 기록 수정</Header>
-      <ExerciseFormContainer exerciseId={exerciseId} />
+      {/* <ExerciseFormContainer exerciseId={exerciseId} /> */}
     </>
   )
 }

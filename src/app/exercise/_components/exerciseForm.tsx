@@ -2,7 +2,6 @@
 
 import * as z from 'zod'
 
-import { useToast } from '@/hooks/useToast'
 import { useForm } from '@tanstack/react-form'
 import { ExerciseRecordReq } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
@@ -16,6 +15,7 @@ import styles from './exerciseForm.module.css'
 type ExerciseFormProps = {
   defaultValues: ExerciseRecordReq
   onSubmit: (values: ExerciseRecordReq) => void
+  onError: (message: string) => void
 }
 
 const exerciseSchema = z.object({
@@ -30,20 +30,17 @@ const exerciseSchema = z.object({
     .max(5, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
 })
 
-const ExerciseForm = ({ defaultValues, onSubmit }: ExerciseFormProps) => {
-  const showToast = useToast()
+const ExerciseForm = ({
+  defaultValues,
+  onSubmit,
+  onError,
+}: ExerciseFormProps) => {
   const form = useForm({
     defaultValues,
-    onSubmit: async ({ value }) => {
-      try {
-        exerciseSchema.parse(value)
-        onSubmit(value)
-      } catch (err: unknown) {
-        if (err instanceof z.ZodError) {
-          const firstError = err.errors[0]?.message
-          showToast(firstError || '입력값을 확인해주세요.', 'info')
-        }
-      }
+    onSubmit: ({ value }) => {
+      const parsed = exerciseSchema.safeParse(value)
+      if (parsed.success) onSubmit(parsed.data)
+      else onError(parsed.error.errors[0]?.message ?? '입력값을 확인해주세요.')
     },
   })
 
