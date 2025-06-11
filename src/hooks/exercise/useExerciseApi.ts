@@ -4,7 +4,8 @@ import { useAuth } from 'react-oidc-context'
 import {
   createExercise,
   createExercisePictures,
-  removeExerciseDetail,
+  updateExercise,
+  removeExercise,
 } from '@/api/exercise'
 import { ExerciseContent, ExercisePicturesUpload } from '@/types/exercise'
 import { ApiError } from '@/types/common'
@@ -32,8 +33,8 @@ export function useExerciseApi() {
     [accessToken],
   )
 
-  // 운동 이미지 업로드
-  const uploadExercisePictures = useCallback(
+  // 운동 이미지 생성
+  const postExercisePictures = useCallback(
     async (data: ExercisePicturesUpload, exerciseId: number) => {
       assertToken()
       const res = await createExercisePictures(accessToken!, data, exerciseId)
@@ -45,11 +46,24 @@ export function useExerciseApi() {
     [accessToken],
   )
 
-  // 운동기록 상세 삭제
-  const deleteExerciseDetail = useCallback(
+  // 운동 기록 수정
+  const patchExercise = useCallback(
+    async (data: ExerciseContent, exerciseId: number) => {
+      assertToken()
+      const res = await updateExercise(accessToken!, data, exerciseId)
+      if (!res.succeed) {
+        throw new ApiError(res.message, 400, res)
+      }
+      return res.data
+    },
+    [accessToken],
+  )
+
+  // 운동 기록 삭제
+  const deleteExercise = useCallback(
     async (exerciseId: number): Promise<null> => {
       assertToken()
-      const res = await removeExerciseDetail(accessToken!, exerciseId)
+      const res = await removeExercise(accessToken!, exerciseId)
       if (!res.succeed) {
         throw new ApiError(res.message, 400, res)
       }
@@ -60,7 +74,8 @@ export function useExerciseApi() {
 
   return {
     postExercise,
-    uploadExercisePictures,
-    deleteExerciseDetail,
+    postExercisePictures,
+    patchExercise,
+    deleteExercise,
   }
 }

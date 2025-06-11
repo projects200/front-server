@@ -17,5 +17,5 @@ export default function useAuthFetch<Data = unknown>(
     return request(token)
   }
 
-  return useSWR<Data, Error>(token, fetcher, options)
+  return useSWR<Data, Error>(key, fetcher, options)
 }

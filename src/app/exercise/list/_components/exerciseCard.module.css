@@ -1,0 +1,48 @@
+.container {
+  margin-top: 15px;
+  width: 100%;
+  height: 105px;
+  background-color: var(--color-white-200);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+.img_container {
+  flex-shrink: 0;
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.exercise_img {
+  object-fit: cover;
+  object-position: center;
+}
+.default_img {
+  height: 100%;
+  width: 100%;
+}
+.text_container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 13px;
+  margin-left: 30px;
+  width: 100%;
+}
+.title {
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.time {
+  color: var(--color-gray-200);
+}

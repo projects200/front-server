@@ -27,11 +27,6 @@ export default function Temp() {
           운동기록
         </Link>
       </div>
-      <div>
-        <Link href={`${SITE_MAP.EXERCISE_DETAIL}?id=2`} scroll={false}>
-          운동기록상세
-        </Link>
-      </div>
     </>
   )
 }

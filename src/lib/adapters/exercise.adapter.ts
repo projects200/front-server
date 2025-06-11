@@ -1,8 +1,26 @@
 import {
+  ExerciseListResDto,
   ExerciseContentReqDto,
   ExerciseRecordResDto,
 } from '@/types/dto/exercise'
-import { ExerciseContent, ExerciseRecordRes } from '@/types/exercise'
+import {
+  ExerciseList,
+  ExerciseContent,
+  ExerciseRecordRes,
+} from '@/types/exercise'
+
+export function adaptExerciseList(
+  dtoArray: ExerciseListResDto[],
+): ExerciseList[] {
+  return dtoArray.map((dto) => ({
+    exerciseId: dto.exerciseId,
+    title: dto.exerciseTitle,
+    category: dto.exercisePersonalType || '',
+    startedAt: dto.exerciseStartedAt,
+    endedAt: dto.exerciseEndedAt,
+    images: dto.pictureUrl ?? [],
+  }))
+}
 
 export function adaptExerciseContent(
   dto: ExerciseContent,

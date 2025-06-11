@@ -70,6 +70,6 @@
 @media (min-width: 768px) {
   .toast-container {
     width: 500px;
-    bottom: 220px;
+    bottom: 120px;
   }
 }

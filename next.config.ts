@@ -3,6 +3,10 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   output: 'export',
+  images: {
+    unoptimized: true,
+    domains: [process.env.NEXT_PUBLIC_S3_BUCKET_DOMAIN!],
+  },
   webpack: (config, { dev }) => {
     config.module.rules.push({
       test: /\.svg$/,

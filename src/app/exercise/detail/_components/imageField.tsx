@@ -1,10 +1,36 @@
+'use client'
+
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
+import Image from 'next/image'
+
+import { ExercisePictures } from '@/types/exercise'
+
 import styles from './imageField.module.css'
 
-// 임시 이미지 영역
-export default function ImageField() {
+export default function ImageField({ images }: ExercisePictures) {
+  if (!images?.length) return null
+
   return (
-    <div className={styles['container']}>
-      <div className={styles['temp']}></div>
-    </div>
+    <Carousel
+      showThumbs={false}
+      showStatus={false}
+      swipeable
+      emulateTouch
+      infiniteLoop={false}
+      className={styles['carousel']}
+    >
+      {images.map((img) => (
+        <div key={img.pictureId} className={styles['slide']}>
+          <Image
+            className={styles['img']}
+            src={img.pictureUrl}
+            alt={img.pictureName}
+            fill
+            priority
+          />
+        </div>
+      ))}
+    </Carousel>
   )
 }

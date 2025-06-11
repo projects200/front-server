@@ -14,7 +14,7 @@ import ExerciseForm from '../_components/exerciseForm'
 export default function ExerciseFormContainer() {
   const showToast = useToast()
   const router = useRouter()
-  const { postExercise, uploadExercisePictures } = useExerciseApi()
+  const { postExercise, postExercisePictures } = useExerciseApi()
 
   const [isLoading, setIsLoading] = useState(false) // 추후 SWR적용시 삭제예정
 
@@ -53,7 +53,7 @@ export default function ExerciseFormContainer() {
     // 이미지 업로드
     if (resExerciseId && values.images && values.images.length > 0) {
       try {
-        await uploadExercisePictures({ images: values.images }, resExerciseId)
+        await postExercisePictures({ images: values.images }, resExerciseId)
       } catch (err: unknown) {
         if (err instanceof ApiError) {
           if (err.status === 401) {

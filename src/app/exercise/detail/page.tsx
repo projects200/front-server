@@ -18,16 +18,15 @@ export default function Detail() {
   const router = useRouter()
   const showToast = useToast()
 
-
   useEffect(() => {
-    if (exerciseId === null) {
+    if (!exerciseId) {
       showToast('해당 운동 기록이 없습니다.', 'info')
       router.replace(SITE_MAP.EXERCISE_LIST)
     }
   }, [])
 
-  if (exerciseId === null) return null
-  
+  if (!exerciseId) return null
+
   return (
     <>
       <Header
