@@ -40,7 +40,7 @@ export default function ProfileForm() {
 
     try {
       await postCreateUser({ nickname, birthdate, gender })
-      router.push(SITE_MAP.TEMP1)
+      router.push(SITE_MAP.EXERCISE)
     } catch (err: unknown) {
       if (err instanceof ApiError) {
         if (err.status === 401) {

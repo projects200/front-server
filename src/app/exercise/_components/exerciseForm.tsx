@@ -2,8 +2,13 @@
 
 import * as z from 'zod'
 
+import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
-import { ExerciseRecordReq } from '@/types/exercise'
+import {
+  ExerciseContent,
+  ExercisePicture,
+  ExerciseRecordReq,
+} from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
 
 import DateTimePicker from './dateTimePicker'
@@ -12,35 +17,56 @@ import TextareaField from './textareaField'
 import ImageUploader from './imageUploader'
 import styles from './exerciseForm.module.css'
 
-type ExerciseFormProps = {
-  defaultValues: ExerciseRecordReq
+type Props = {
+  defaultValues: ExerciseContent
+  defaultPictures?: ExercisePicture[]
   onSubmit: (values: ExerciseRecordReq) => void
   onError: (message: string) => void
 }
 
-const exerciseSchema = z.object({
-  title: z.string().min(1, '필수 항목을 입력해주세요.'),
-  category: z.string().optional(),
-  startedAt: z.string().min(1, '필수 항목을 입력해주세요.'),
-  endedAt: z.string().min(1, '필수 항목을 입력해주세요.'),
-  location: z.string().optional(),
-  content: z.string().optional(),
-  images: z
-    .array(z.instanceof(File))
-    .max(5, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
-})
+const exerciseSchema = (remain: number) =>
+  z.object({
+    title: z.string().min(1, '필수 항목을 입력해주세요.'),
+    category: z.string().optional(),
+    startedAt: z.string().min(1, '필수 항목을 입력해주세요.'),
+    endedAt: z.string().min(1, '필수 항목을 입력해주세요.'),
+    location: z.string().optional(),
+    content: z.string().optional(),
+    newImages: z
+      .array(z.instanceof(File))
+      .max(remain, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
+  })
 
 const ExerciseForm = ({
   defaultValues,
+  defaultPictures = [],
   onSubmit,
   onError,
-}: ExerciseFormProps) => {
+}: Props) => {
+  const [existingPictures, setExistingPictures] =
+    useState<ExercisePicture[]>(defaultPictures)
+  const [deletedIds, setDeletedIds] = useState<number[]>([])
+
   const form = useForm({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      newImages: [] as File[],
+    },
     onSubmit: ({ value }) => {
-      const parsed = exerciseSchema.safeParse(value)
-      if (parsed.success) onSubmit(parsed.data)
-      else onError(parsed.error.errors[0]?.message ?? '입력값을 확인해주세요.')
+      const remain = 5 - existingPictures.length
+      const parsed = exerciseSchema(remain).safeParse(value)
+
+      if (!parsed.success) {
+        onError(parsed.error.errors[0]?.message ?? '입력값을 확인해주세요.')
+        return
+      }
+
+      const payload: ExerciseRecordReq = {
+        ...parsed.data,
+        deletedIds,
+      }
+
+      onSubmit(payload)
     },
   })
 
@@ -119,11 +145,18 @@ const ExerciseForm = ({
           />
         )}
       </form.Field>
-      <form.Field name="images">
+      <form.Field name="newImages">
         {(field) => (
           <ImageUploader
-            images={field.state.value ?? []}
-            setImages={(files) => field.handleChange(files)}
+            existing={existingPictures}
+            files={field.state.value ?? []}
+            setFiles={(files) => field.handleChange(files)}
+            onDeleteExisting={(id) => {
+              setExistingPictures((prev) =>
+                prev.filter((picture) => picture.pictureId !== id),
+              )
+              setDeletedIds((prev) => [...prev, id])
+            }}
           />
         )}
       </form.Field>

@@ -1,4 +1,5 @@
 'use client'
+
 import { useQueryState, parseAsInteger } from 'nuqs'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -7,11 +8,10 @@ import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-// import ExerciseFormContainer from './exerciseFormContainer'
+import ExerciseEdit from './_components/exerciseEdit'
 
-export default function Create() {
+export default function Edit() {
   const [exerciseId] = useQueryState('id', parseAsInteger)
-
   const router = useRouter()
   const showToast = useToast()
 
@@ -27,7 +27,7 @@ export default function Create() {
   return (
     <>
       <Header>운동 기록 수정</Header>
-      {/* <ExerciseFormContainer exerciseId={exerciseId} /> */}
+      <ExerciseEdit exerciseId={exerciseId} />
     </>
   )
 }

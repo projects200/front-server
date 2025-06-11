@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import SITE_MAP from '@/constants/siteMap.constant'
 
-export default function Temp() {
+export default function Exercise() {
   return (
     <>
       <div style={{ textAlign: 'center' }}>임시 메인 페이지</div>

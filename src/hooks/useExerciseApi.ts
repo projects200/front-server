@@ -7,6 +7,7 @@ import {
   readExercise,
   updateExercise,
   removeExercise,
+  removeExercisePictures,
 } from '@/api/exercise'
 import {
   adaptExerciseList,
@@ -37,8 +38,8 @@ export const usePostExercisePictures = () =>
   useApiMutation<
     { exerciseId: number },
     ExercisePicturesUpload & { exerciseId: number }
-  >(['exercise/pictures'], (token, { images, exerciseId }) =>
-    createExercisePictures(token, { images }, exerciseId),
+  >(['exercise/create/pictures'], (token, { newImages, exerciseId }) =>
+    createExercisePictures(token, { newImages }, exerciseId),
   )
 
 // 운동기록 하루 조회
@@ -73,6 +74,17 @@ export const useDeleteExercise = (exerciseId: number) =>
   useApiMutation<null, null>(
     ['exercise/delete', exerciseId],
     (token) => removeExercise(token, exerciseId),
+    // {
+    //   onSuccess: () => mutate(['exercise/list', date]),
+    // },
+  )
+
+// 운동 이미지 삭제
+export const useDeleteExercisePictures = (exerciseId: number) =>
+  useApiMutation<null, number[]>(
+    ['exercise/delete/pictures', exerciseId],
+    (token, pictureIds) =>
+      removeExercisePictures(token, pictureIds, exerciseId),
     // {
     //   onSuccess: () => mutate(['exercise/list', date]),
     // },

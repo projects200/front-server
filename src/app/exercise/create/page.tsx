@@ -4,13 +4,10 @@ import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
-import {
-  usePostExercise,
-  usePostExercisePictures,
-} from '@/hooks/useExerciseApi'
-import { ExerciseRecordReq } from '@/types/exercise'
+import { usePostExercise, usePostExercisePictures } from '@/hooks/useExerciseApi'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import useApiErrorHandler from '@/hooks/useApiErrorHandler'
+import { ExerciseRecordReq } from '@/types/exercise'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import ExerciseForm from '../_components/exerciseForm'
@@ -20,15 +17,9 @@ export default function Create() {
   const router = useRouter()
   const handleError = useApiErrorHandler()
 
-  const {
-    trigger: createExercise,
-    isMutating: creating,
-  } = usePostExercise()
+  const { trigger: createExercise, isMutating: creating } = usePostExercise()
 
-  const {
-    trigger: uploadPictures,
-    isMutating: uploading,
-  } = usePostExercisePictures()
+  const { trigger: uploadPictures, isMutating: uploading } = usePostExercisePictures()
 
   const handleSubmit = async (value: ExerciseRecordReq) => {
     let exerciseId: number | undefined
@@ -48,17 +39,15 @@ export default function Create() {
       return
     }
 
-    if (value.images?.length && exerciseId) {
+    if (value.newImages?.length && exerciseId) {
       try {
-        await uploadPictures({ exerciseId: exerciseId, images: value.images })
+        await uploadPictures({ exerciseId: exerciseId, newImages: value.newImages })
       } catch {
         showToast('이미지 업로드에 실패했습니다.', 'info')
       }
     }
-
-    router.replace(
-      `${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.split('T')[0]}`,
-    )
+    showToast('운동 기록이 생성되어씁니다.', 'info')
+    router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.split('T')[0]}`)
   }
 
   return (
@@ -72,10 +61,9 @@ export default function Create() {
           endedAt: '',
           location: '',
           content: '',
-          images: [],
         }}
         onSubmit={handleSubmit}
-        onError={(msg) => showToast(msg, 'info')}
+        onError={(message) => showToast(message, 'info')}
       />
       {(creating || uploading) && <LoadingScreen />}
     </>

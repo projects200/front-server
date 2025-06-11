@@ -31,7 +31,7 @@ export function createExercisePictures(
 ): Promise<{ exerciseId: number }> {
   const formData = new FormData()
 
-  data.images.forEach((file) => {
+  data.newImages.forEach((file) => {
     formData.append('pictures', file)
   })
 
@@ -80,10 +80,12 @@ export function updateExercise(
   exerciseId: number,
   // 응답형태 변경점 없을시 어떤형식인지 확인필요
 ): Promise<null> {
+  const dto: ExerciseContentReqDto = adaptExerciseContent(data)
   return fetchWrapper<null>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
     {
       method: 'PATCH ',
+      body: JSON.stringify(dto),
     },
     token,
   )
@@ -96,6 +98,21 @@ export function removeExercise(
 ): Promise<null> {
   return fetchWrapper<null>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
+    {
+      method: 'DELETE',
+    },
+    token,
+  )
+}
+
+// 운동 이미지 삭제
+export function removeExercisePictures(
+  token: string,
+  images: number[],
+  exerciseId: number,
+): Promise<null> {
+  return fetchWrapper<null>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}/pictures?pictureIds=${images.join(',')}`,
     {
       method: 'DELETE',
     },

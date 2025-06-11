@@ -22,7 +22,7 @@ export default function List() {
   useEffect(() => {
     if (!date || !isValidYYYYMMDD(date)) {
       showToast('해당 운동 기록이 없습니다.', 'info')
-      router.replace(SITE_MAP.TEMP1)
+      router.replace(SITE_MAP.EXERCISE)
     }
   }, [])
 

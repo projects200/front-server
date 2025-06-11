@@ -4,20 +4,25 @@ import { useToast } from '@/hooks/useToast'
 import XButtonIcon from '@/assets/icon_x_button.svg'
 import CameraIcon from '@/assets/icon_camera.svg'
 import Typography from '@/components/ui/typography'
+import { ExercisePicture } from '@/types/exercise'
 
 import styles from './imageUploader.module.css'
 
-type ImageUploaderProps = {
+type Props = {
   className?: string
-  images: File[]
-  setImages: (files: File[]) => void
+  existing: ExercisePicture[]
+  files: File[]
+  setFiles: (files: File[]) => void
+  onDeleteExisting: (id: number) => void
 }
 
 const ImageUploader = ({
   className,
-  images,
-  setImages,
-}: ImageUploaderProps) => {
+  existing,
+  files,
+  setFiles,
+  onDeleteExisting,
+}: Props) => {
   const showToast = useToast()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,17 +44,17 @@ const ImageUploader = ({
         )
       }
 
-      if (images.length + filteredFiles.length > 5) {
+      if (existing.length + files.length + filteredFiles.length > 5) {
         showToast('이미지는 최대 5개까지 업로드할 수 있습니다.', 'info')
         return
       }
 
-      setImages([...images, ...filteredFiles])
+      setFiles([...files, ...filteredFiles])
     }
   }
 
   const handleRemove = (index: number) => {
-    setImages(images.filter((_, i) => i !== index))
+    setFiles(files.filter((_, i) => i !== index))
   }
 
   return (
@@ -67,10 +72,32 @@ const ImageUploader = ({
           사진 추가하기
         </Typography>
       </label>
-      {images.map((image, index) => (
-        <div key={index} className={styles['preview-box']}>
+      {/* 서버에서 받아온 사진 미리보기 */}
+      {existing.map((picture) => (
+        <div
+          key={`existing-${picture.pictureId}`}
+          className={styles['preview-box']}
+        >
           <img
-            src={URL.createObjectURL(image)}
+            src={picture.pictureUrl}
+            alt={picture.pictureName}
+            className={styles['preview']}
+          />
+          <button
+            type="button"
+            className={styles['button']}
+            onClick={() => onDeleteExisting(picture.pictureId)}
+          >
+            <XButtonIcon className={styles['x-button']} />
+          </button>
+        </div>
+      ))}
+
+      {/* 새로 선택한 사진 미리보기 */}
+      {files.map((file, index) => (
+        <div key={`new-${index}`} className={styles['preview-box']}>
+          <img
+            src={URL.createObjectURL(file)}
             alt="preview"
             className={styles['preview']}
           />
