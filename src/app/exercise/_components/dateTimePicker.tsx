@@ -49,15 +49,10 @@ const formatStorage = (dateTime: DateTime) => {
   const fullYear = Number(`20${year}`)
   const monthIndex = Number(month) - 1
   const dayNumber = Number(day)
-
-  const date = new Date(
-    fullYear,
-    monthIndex,
-    dayNumber,
-    dateTime.hour,
-    dateTime.minute,
-  )
-  return date.toISOString()
+  const date = new Date(fullYear, monthIndex, dayNumber, dateTime.hour, dateTime.minute)
+  const offsetMs = date.getTimezoneOffset() * 60000
+  const localIso = new Date(date.getTime() - offsetMs).toISOString().slice(0, 19)
+  return localIso
 }
 
 export default function DateTimePicker({
@@ -74,15 +69,11 @@ export default function DateTimePicker({
   const formatEndDate = getInitialDateTime(endedAt)
 
   const handleChangeStart = (picked: Record<string, string | number>) => {
-    onStartedAtChange?.(
-      formatStorage(picked as { date: string; hour: number; minute: number }),
-    )
+    onStartedAtChange?.(formatStorage(picked as { date: string; hour: number; minute: number }))
   }
 
   const handleChangeEnd = (picked: Record<string, string | number>) => {
-    onEndedAtChange?.(
-      formatStorage(picked as { date: string; hour: number; minute: number }),
-    )
+    onEndedAtChange?.(formatStorage(picked as { date: string; hour: number; minute: number }))
   }
 
   return (

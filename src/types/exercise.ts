@@ -1,4 +1,4 @@
-export interface ExerciseContent {
+export type ExerciseContent = {
   title: string
   category?: string
   location?: string
@@ -14,7 +14,7 @@ export type ExercisePicture = {
   pictureExtension: string
 }
 
-export interface ExerciseList {
+export type ExerciseList = {
   exerciseId: number
   title: string
   category?: string
@@ -23,22 +23,20 @@ export interface ExerciseList {
   images: string[]
 }
 
-export interface ExercisePicturesUpload {
+export type ExercisePicturesUpload = {
   newImages: File[]
 }
 
-export interface ExercisePicturesDelete {
+export type ExercisePicturesDelete = {
   deletedIds: number[]
 }
 
-export interface ExercisePictures {
+export type ExercisePictures = {
   images: ExercisePicture[]
 }
 
-export interface ExerciseRecordReq
-  extends ExerciseContent,
-    Partial<ExercisePicturesUpload & ExercisePicturesDelete> {}
+export type ExerciseRecordReq = ExerciseContent &
+  Partial<ExercisePicturesUpload & ExercisePicturesDelete>
 
-export interface ExerciseRecordRes
-  extends ExerciseContent,
-    Partial<ExercisePictures> {}
+export type ExerciseRecordRes = ExerciseContent &
+  Partial<ExercisePictures>

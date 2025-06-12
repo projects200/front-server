@@ -21,7 +21,6 @@ export default function ExerciseDetail({ exerciseId }: Props) {
   const showToast = useToast()
   const router = useRouter()
   const handleError = useApiErrorHandler()
-
   const { data, error, isLoading } = useReadExercise(exerciseId)
 
   useEffect(() => {
