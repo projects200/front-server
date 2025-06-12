@@ -37,10 +37,27 @@ const ExerciseForm = ({
 }: ExerciseFormProps) => {
   const form = useForm({
     defaultValues,
+    validators: { onSubmit: exerciseSchema },
+    canSubmitWhenInvalid: true,
+    // onSubmit: ({ value }) => {
+    //   const parsed = exerciseSchema.safeParse(value)
+    //   if (parsed.success) onSubmit(parsed.data)
+    //   else onError(parsed.error.errors[0]?.message ?? '입력값을 확인해주세요.')
+    // },
     onSubmit: ({ value }) => {
-      const parsed = exerciseSchema.safeParse(value)
-      if (parsed.success) onSubmit(parsed.data)
-      else onError(parsed.error.errors[0]?.message ?? '입력값을 확인해주세요.')
+      const parsed = exerciseSchema.parse(value)
+      onSubmit(parsed)
+    },
+    onSubmitInvalid: ({ formApi }) => {
+      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
+        string,
+        z.ZodIssue[]
+      >
+      console.log(Object.values(fieldErrorMap))
+      // const firstError =
+      //   Object.values(formApi.state.errorMap)[0]?.[0] ??
+      //   '입력값을 확인해주세요.'
+      // if (firstError) onError(firstError)
     },
   })
 
