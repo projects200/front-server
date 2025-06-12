@@ -3,7 +3,7 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding-bottom: 20%;
+  padding-bottom: var(--bottom-button-height);
 }
 .text {
   color: var(--color-gray-200);
