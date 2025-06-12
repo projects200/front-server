@@ -1,18 +1,19 @@
-:root{
-  --color-green: #1ABC9C;
-  --color-brown: #F4A261;
-  --color-red: #E53935;
+:root {
+  --color-green: #1abc9c;
+  --color-brown: #f4a261;
+  --color-red: #e53935;
 
   --color-black: #212121;
 
   --color-gray-100: #424242;
-  --color-gray-200: #9E9E9E;
-  --color-gray-300: #E0E0E0;
+  --color-gray-200: #9e9e9e;
+  --color-gray-300: #e0e0e0;
 
-  --color-white-100: #F4F4F4;
-  --color-white-200: #FAFAFA;
-  --color-white-300: #FFFFFF;
+  --color-white-100: #f4f4f4;
+  --color-white-200: #fafafa;
+  --color-white-300: #ffffff;
 
   --color-overlay: rgba(0, 0, 0, 0.3);
 
+  --bottom-button-height: 95px;
 }
