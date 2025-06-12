@@ -33,6 +33,11 @@ const InputField = ({
         </Typography>
       </label>
       <input
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+          }
+        }}
         className={styles['input']}
         value={value}
         onChange={onChange}
