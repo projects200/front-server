@@ -46,7 +46,7 @@ export default function Create() {
         showToast('이미지 업로드에 실패했습니다.', 'info')
       }
     }
-    showToast('운동 기록이 생성되어씁니다.', 'info')
+
     router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.split('T')[0]}`)
   }
 

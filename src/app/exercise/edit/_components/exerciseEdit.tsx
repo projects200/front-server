@@ -3,7 +3,6 @@
 import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 
-import Header from '@/components/commons/header'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { useToast } from '@/hooks/useToast'
 import {
@@ -56,27 +55,28 @@ export default function ExerciseEditPage({ exerciseId }: Props) {
       handleError(err)
       return
     }
-
+    let deleteFailed = false
     if (value.deletedIds?.length) {
       try {
         await deletePictures(value.deletedIds)
       } catch (err) {
+        deleteFailed = true
         handleError(err)
-        return
       }
     }
 
-    if (value.newImages?.length) {
+    if (!deleteFailed && value.newImages?.length) {
       try {
         await uploadPictures({ exerciseId: exerciseId, newImages: value.newImages })
       } catch (err) {
         handleError(err)
-        return
       }
     }
 
-    showToast('운동 기록이 수정되었습니다.', 'info')
-    router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.split('T')[0]}`)
+    router.back()
+    setTimeout(() => {
+      router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.split('T')[0]}`)
+    }, 0)
   }
 
   useEffect(() => {

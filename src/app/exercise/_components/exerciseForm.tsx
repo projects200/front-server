@@ -4,11 +4,7 @@ import * as z from 'zod'
 
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
-import {
-  ExerciseContent,
-  ExercisePicture,
-  ExerciseRecordReq,
-} from '@/types/exercise'
+import { ExerciseContent, ExercisePicture, ExerciseRecordReq } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
 
 import DateTimePicker from './dateTimePicker'
@@ -32,19 +28,11 @@ const exerciseSchema = (remain: number) =>
     endedAt: z.string().min(1, '필수 항목을 입력해주세요.'),
     location: z.string().optional(),
     content: z.string().optional(),
-    newImages: z
-      .array(z.instanceof(File))
-      .max(remain, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
+    newImages: z.array(z.instanceof(File)).max(remain, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
   })
 
-const ExerciseForm = ({
-  defaultValues,
-  defaultPictures = [],
-  onSubmit,
-  onError,
-}: Props) => {
-  const [existingPictures, setExistingPictures] =
-    useState<ExercisePicture[]>(defaultPictures)
+const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }: Props) => {
+  const [existingPictures, setExistingPictures] = useState<ExercisePicture[]>(defaultPictures)
   const [deletedIds, setDeletedIds] = useState<number[]>([])
 
   const form = useForm({
@@ -99,9 +87,7 @@ const ExerciseForm = ({
                 label="운동 시간 *"
                 startedAt={startedAtField.state.value}
                 endedAt={endedAtField.state.value}
-                onStartedAtChange={(value) =>
-                  startedAtField.handleChange(value)
-                }
+                onStartedAtChange={(value) => startedAtField.handleChange(value)}
                 onEndedAtChange={(value) => endedAtField.handleChange(value)}
               />
             )}
@@ -152,9 +138,7 @@ const ExerciseForm = ({
             files={field.state.value ?? []}
             setFiles={(files) => field.handleChange(files)}
             onDeleteExisting={(id) => {
-              setExistingPictures((prev) =>
-                prev.filter((picture) => picture.pictureId !== id),
-              )
+              setExistingPictures((prev) => prev.filter((picture) => picture.pictureId !== id))
               setDeletedIds((prev) => [...prev, id])
             }}
           />

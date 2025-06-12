@@ -84,7 +84,7 @@ export function updateExercise(
   return fetchWrapper<null>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
     {
-      method: 'PATCH ',
+      method: 'PATCH',
       body: JSON.stringify(dto),
     },
     token,
