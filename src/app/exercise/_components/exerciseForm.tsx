@@ -49,8 +49,7 @@ const ExerciseForm = ({
       onError(message)
     },
     onSubmit: ({ value }) => {
-      const parsed = exerciseSchema.parse(value)
-      onSubmit(parsed)
+      onSubmit(value)
     },
   })
 
