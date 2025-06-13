@@ -34,13 +34,9 @@ export default function Create() {
       })
       exerciseId = res.exerciseId
     } catch (error) {
-<<<<<<< HEAD
-      handleError(error)
-=======
       handleError(error, {
         messages: { 400: '입력값이 올바르지 않습니다.' },
       })
->>>>>>> df66f3e (2025-06-13)
       return
     }
 

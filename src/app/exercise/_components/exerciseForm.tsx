@@ -2,7 +2,7 @@
 
 import * as z from 'zod'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { ExerciseContent, ExercisePicture, ExerciseRecordReq } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
@@ -21,70 +21,57 @@ type Props = {
 }
 
 const exerciseSchema = (remain: number) =>
-  z.object({
-    title: z.string().min(1, '필수 항목을 입력해주세요.'),
-    category: z.string().optional(),
-    startedAt: z.string().min(1, '필수 항목을 입력해주세요.'),
-    endedAt: z.string().min(1, '필수 항목을 입력해주세요.'),
-    location: z.string().optional(),
-    content: z.string().optional(),
-    newImages: z.array(z.instanceof(File)).max(remain, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
-  })
+  z
+    .object({
+      title: z
+        .string()
+        .trim()
+        .min(1, '운동 제목을 입력해주세요.')
+        .max(255, '운동 제목은 최대 255자까지 입력 가능합니다.')
+        .refine((val) => val.trim().length > 0, '공백만으로는 입력할 수 없습니다.'),
+      category: z.string().trim().max(255, '운동 종류는 최대 255자까지 입력 가능합니다.').optional(),
+
+      startedAt: z.string().refine((val) => new Date(val) < new Date(), '시작 일시는 현재 이전이어야 합니다.'),
+      endedAt: z.string().refine((val) => new Date(val) < new Date(), '종료 일시는 현재 이전이어야 합니다.'),
+      location: z.string().trim().max(255, '운동 장소는 최대 255자까지 입력 가능합니다.').optional(),
+      content: z
+        .string()
+        .refine(
+          (val) => new TextEncoder().encode(val).length <= 65535,
+          '운동 상세 내용은 최대 65,535바이트까지 입력 가능합니다.',
+        )
+        .optional(),
+      newImages: z.array(z.instanceof(File)).max(remain, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
+    })
+    .refine((data) => new Date(data.startedAt) <= new Date(data.endedAt), {
+      message: '종료 일시는 시작 일시 이후여야 합니다.',
+      path: ['exerciseEndedAt'],
+    })
 
 const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }: Props) => {
   const [existingPictures, setExistingPictures] = useState<ExercisePicture[]>(defaultPictures)
   const [deletedIds, setDeletedIds] = useState<number[]>([])
-
+  const remain = useMemo(() => 5 - existingPictures.length, [existingPictures.length])
+  
   const form = useForm({
     defaultValues: {
       ...defaultValues,
       newImages: [] as File[],
     },
-    // validators: { onSubmit: exerciseSchema },
-    // canSubmitWhenInvalid: true,
-    // onSubmitInvalid: ({ formApi }) => {
-    //   const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
-    //     string,
-    //     z.ZodIssue[]
-    //   >
-    //   const firstIssueArr = Object.values(fieldErrorMap)[0]
-    //   const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
-    //   onError(message)
-    // },
+    validators: { onSubmit: exerciseSchema(remain) },
+    canSubmitWhenInvalid: true,
+
+    onSubmitInvalid: ({ formApi }) => {
+      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<string, z.ZodIssue[]>
+      const firstIssueArr = Object.values(fieldErrorMap)[0]
+      const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
+      onError(message)
+    },
     onSubmit: ({ value }) => {
-      const remain = 5 - existingPictures.length
-      const parsed = exerciseSchema(remain).safeParse(value)
-
-      if (!parsed.success) {
-        onError(parsed.error.errors[0]?.message ?? '입력값을 확인해주세요.')
-        return
-      }
-
-      const payload: ExerciseRecordReq = {
-        ...parsed.data,
-        deletedIds,
-      }
-
+      const payload: ExerciseRecordReq = { ...value, deletedIds }
       onSubmit(payload)
     },
   })
-  //   const form = useForm({
-  //   defaultValues,
-  //   validators: { onSubmit: exerciseSchema },
-  //   canSubmitWhenInvalid: true,
-  //   onSubmitInvalid: ({ formApi }) => {
-  //     const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
-  //       string,
-  //       z.ZodIssue[]
-  //     >
-  //     const firstIssueArr = Object.values(fieldErrorMap)[0]
-  //     const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
-  //     onError(message)
-  //   },
-  //   onSubmit: ({ value }) => {
-  //     onSubmit(value)
-  //   },
-  // })
 
   return (
     <form
@@ -101,7 +88,7 @@ const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }
             onChange={(e) => field.handleChange(e.target.value)}
             label="제목 *"
             id="title"
-            maxLength={50}
+            maxLength={255}
             placeholder="제목을 입력해주세요."
           />
         )}
@@ -130,7 +117,7 @@ const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }
             onChange={(e) => field.handleChange(e.target.value)}
             label="운동 종류"
             id="category"
-            maxLength={30}
+            maxLength={255}
             placeholder="운동 종류를 입력해주세요."
           />
         )}
@@ -143,7 +130,7 @@ const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }
             onChange={(e) => field.handleChange(e.target.value)}
             label="장소"
             id="location"
-            maxLength={50}
+            maxLength={255}
             placeholder="운동장소를 입력해주세요."
           />
         )}
