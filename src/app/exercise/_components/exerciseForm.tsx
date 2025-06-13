@@ -68,6 +68,23 @@ const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }
       onSubmit(payload)
     },
   })
+  //   const form = useForm({
+  //   defaultValues,
+  //   validators: { onSubmit: exerciseSchema },
+  //   canSubmitWhenInvalid: true,
+  //   onSubmitInvalid: ({ formApi }) => {
+  //     const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
+  //       string,
+  //       z.ZodIssue[]
+  //     >
+  //     const firstIssueArr = Object.values(fieldErrorMap)[0]
+  //     const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
+  //     onError(message)
+  //   },
+  //   onSubmit: ({ value }) => {
+  //     onSubmit(value)
+  //   },
+  // })
 
   return (
     <form
