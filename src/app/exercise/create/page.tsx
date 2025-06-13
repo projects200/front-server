@@ -18,7 +18,6 @@ export default function Create() {
   const handleError = useApiErrorHandler()
 
   const { trigger: createExercise, isMutating: creating } = usePostExercise()
-
   const { trigger: uploadPictures, isMutating: uploading } = usePostExercisePictures()
 
   const handleSubmit = async (value: ExerciseRecordReq) => {
@@ -34,8 +33,8 @@ export default function Create() {
         endedAt: value.endedAt,
       })
       exerciseId = res.exerciseId
-    } catch (err) {
-      handleError(err)
+    } catch (error) {
+      handleError(error)
       return
     }
 
@@ -47,7 +46,7 @@ export default function Create() {
       }
     }
 
-    router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.split('T')[0]}`)
+    router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}`)
   }
 
   return (
