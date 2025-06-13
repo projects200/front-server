@@ -6,7 +6,7 @@ import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
 import { usePostExercise, usePostExercisePictures } from '@/hooks/useExerciseApi'
 import LoadingScreen from '@/components/commons/loadingScreen'
-import useApiErrorHandler from '@/hooks/useApiErrorHandler'
+import { useApiErrorHandler } from '@/hooks/useApiErrorHandler'
 import { ExerciseRecordReq } from '@/types/exercise'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -34,15 +34,23 @@ export default function Create() {
       })
       exerciseId = res.exerciseId
     } catch (error) {
+<<<<<<< HEAD
       handleError(error)
+=======
+      handleError(error, {
+        messages: { 400: '입력값이 올바르지 않습니다.' },
+      })
+>>>>>>> df66f3e (2025-06-13)
       return
     }
 
     if (value.newImages?.length && exerciseId) {
       try {
         await uploadPictures({ exerciseId: exerciseId, newImages: value.newImages })
-      } catch {
-        showToast('이미지 업로드에 실패했습니다.', 'info')
+      } catch (error) {
+        handleError(error, {
+          messages: { 400: '이미지 업로드에 실패했습니다.' },
+        })
       }
     }
 

@@ -6,39 +6,38 @@ import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
 import BottomButton from '@/components/commons/bottomButton'
-import { useToast } from '@/hooks/useToast'
 import { isValidYYYYMMDD } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
 import { useReadExerciseList } from '@/hooks/useExerciseApi'
 import Typography from '@/components/ui/typography'
-import useApiErrorHandler from '@/hooks/useApiErrorHandler'
+import { useApiErrorHandler } from '@/hooks/useApiErrorHandler'
 
 import DateLabel from './_components/dateLabel'
 import ExerciseCard from './_components/exerciseCard'
 import styles from './list.module.css'
 
 export default function List() {
-  const [date, setDate] = useQueryState('date')
   const router = useRouter()
-  const showToast = useToast()
-  const handleApiError = useApiErrorHandler()
+  const handleError = useApiErrorHandler()
+  const [date, setDate] = useQueryState('date')
   const { data = [], error, isLoading } = useReadExerciseList(date ?? '')
   const invalidDate = !date || !isValidYYYYMMDD(date)
 
   useEffect(() => {
     if (invalidDate) {
-      showToast('해당 운동 기록이 없습니다.', 'info')
       router.replace(SITE_MAP.EXERCISE)
     }
   }, [invalidDate])
 
   useEffect(() => {
-    if (!error) return
-    const navigated = handleApiError(error)
-    if (!navigated) router.back()
+    if (error) {
+      handleError(error, {
+        actions: { 400: 'back' },
+      })
+    }
   }, [error])
 
-  if (!date || isLoading || error) return null
+  if (invalidDate || isLoading || error) return null
 
   return (
     <div className={styles['container']}>
@@ -68,9 +67,7 @@ export default function List() {
         </div>
       )}
 
-      <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
-        오늘 운동 기록하고 점수 얻기
-      </BottomButton>
+      <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>오늘 운동 기록하고 점수 얻기</BottomButton>
     </div>
   )
 }
