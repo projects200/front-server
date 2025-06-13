@@ -1,19 +1,17 @@
+import { ApiResponse, ApiError } from '@/types/common'
+
 export async function fetchWrapper<T>(
   url: string,
   options?: RequestInit,
   token?: string,
 ): Promise<T> {
-  let headers: Record<string, string> = {
+  const headers: Record<string, string> = {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...((options?.headers as Record<string, string>) || {}),
-  }
-
-  const isFormData = options?.body instanceof FormData
-  if (!isFormData && !headers['Content-Type']) {
-    headers = {
-      'Content-Type': 'application/json',
-      ...headers,
-    }
+    Accept: 'application/json',
+    ...(options?.body instanceof FormData
+      ? {}
+      : { 'Content-Type': 'application/json' }),
+    ...(options?.headers as Record<string, string>),
   }
 
   const res = await fetch(url, {
@@ -22,13 +20,14 @@ export async function fetchWrapper<T>(
   })
 
   if (!res.ok) {
-    let errorMsg = 'API 요청 실패'
-    try {
-      const errorBody = await res.json()
-      errorMsg = errorBody.message || errorMsg
-    } catch {}
-    throw new Error(errorMsg)
+    throw new ApiError('네트워크 상태를 확인해주세요.', res.status)
   }
 
-  return res.json()
+  const json: ApiResponse<T> = await res.json()
+
+  if (!json.succeed) {
+    throw new ApiError(json.message ?? '요청에 실패하였습니다.', 400, json)
+  }
+
+  return json.data
 }

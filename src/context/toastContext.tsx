@@ -19,7 +19,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([])
 
   const showToast = (message: string, type: Toast['type'] = 'info') => {
-    const id = Date.now().toString()
+    const id = crypto.randomUUID()
     setToasts((prev) => [...prev, { id, message, type, isVisible: true }])
     setTimeout(() => {
       setToasts((prev) =>

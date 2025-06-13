@@ -16,15 +16,10 @@ export default function Temp() {
       <div>
         <Link
           // 임시날짜 전달
-          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-06-03`}
+          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-06-10`}
           scroll={false}
         >
           운동기록 리스트
-        </Link>
-      </div>
-      <div>
-        <Link href={SITE_MAP.EXERCISE_CREATE} scroll={false}>
-          운동기록
         </Link>
       </div>
     </>

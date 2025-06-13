@@ -1,10 +1,11 @@
 .wrapper {
   position: fixed;
-  bottom: 30px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 40px);
   z-index: 100;
+  height: var(--bottom-button-height);
 }
 
 @media (min-width: 768px) {

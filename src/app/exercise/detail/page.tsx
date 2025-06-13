@@ -21,7 +21,7 @@ export default function Detail() {
   useEffect(() => {
     if (!exerciseId) {
       showToast('해당 운동 기록이 없습니다.', 'info')
-      router.replace(SITE_MAP.EXERCISE_LIST)
+      router.replace(SITE_MAP.TEMP1)
     }
   }, [])
 
