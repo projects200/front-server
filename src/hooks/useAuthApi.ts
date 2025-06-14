@@ -9,17 +9,16 @@ export function useAuthApi() {
   const auth = useAuth()
   const user = auth.user
   const idToken = user?.id_token
-  const accessToken = user?.access_token
 
   // 회원가입 여부 확인
   const checkRegistered = useCallback(async () => {
-    if (!accessToken) {
-      throw new ApiError('accessToken이 만료되었거나 존재하지 않습니다.', 401)
+    if (!idToken) {
+      throw new ApiError('idToken이 만료되었거나 존재하지 않습니다.', 401)
     }
-    const res = await readRegistered(accessToken)
+    const res = await readRegistered(idToken)
 
     return res
-  }, [accessToken])
+  }, [idToken])
 
   // 회원가입
   const postCreateUser = useCallback(

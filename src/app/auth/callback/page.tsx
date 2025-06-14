@@ -28,7 +28,7 @@ export default function CallbackPage() {
       try {
         const data = await checkRegistered()
         if (data.isRegistered) {
-          router.replace(SITE_MAP.TEMP1)
+          router.replace(SITE_MAP.EXERCISE)
         } else {
           router.replace(SITE_MAP.AGREEMENT)
         }

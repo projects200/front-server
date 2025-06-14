@@ -1,4 +1,4 @@
-export interface ApiResponse<T> {
+export type ApiResponse<T> = {
   succeed: boolean
   code: string
   message: string
@@ -15,4 +15,9 @@ export class ApiError extends Error {
     this.status = status
     this.payload = payload
   }
+}
+
+export type ErrorPolicy = {
+  messages?: Record<number, string>
+  actions?: Record<number, 'back' | { type: 'redirect'; to: string }>
 }

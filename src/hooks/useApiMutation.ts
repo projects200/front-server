@@ -1,13 +1,16 @@
 import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation'
 import { Key } from 'swr'
 import { useAuth } from 'react-oidc-context'
-import { ApiError } from '@/types/common'
+import { ApiError, ErrorPolicy } from '@/types/common'
+import { useApiErrorHandler } from './useApiErrorHandler'
 
 export default function useApiMutation<Data = unknown, Body = unknown>(
   key: Key,
   request: (token: string, body: Body) => Promise<Data>,
   options?: SWRMutationConfiguration<Data, ApiError, Key, Body>,
+  policy?: ErrorPolicy,
 ) {
+  const handleError = useApiErrorHandler()
   const { user } = useAuth()
   const token = user?.access_token
 
@@ -16,5 +19,8 @@ export default function useApiMutation<Data = unknown, Body = unknown>(
     return request(token, arg)
   }
 
-  return useSWRMutation<Data, ApiError, Key, Body>(key, fetcher, options)
+  return useSWRMutation<Data, ApiError, Key, Body>(key, fetcher, {
+    ...options,
+    onError: (error) => handleError(error, policy),
+  })
 }
