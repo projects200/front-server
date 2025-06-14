@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { useReadExercise } from '@/hooks/useExerciseApi'
-import { useApiErrorHandler } from '@/hooks/useApiErrorHandler'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import ImageField from './_components/imageField'
@@ -18,10 +17,9 @@ import styles from './detail.module.css'
 
 export default function Detail() {
   const router = useRouter()
-  const handleError = useApiErrorHandler()
   const [exerciseId] = useQueryState('id', parseAsInteger)
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
-  const { data, error, isLoading } = useReadExercise(exerciseId ?? 0)
+  const { data, isLoading } = useReadExercise(exerciseId ?? 0)
 
   useEffect(() => {
     if (!exerciseId) {
@@ -29,16 +27,7 @@ export default function Detail() {
     }
   }, [exerciseId])
 
-  useEffect(() => {
-    if (error) {
-      handleError(error, {
-        messages: { 403: '운동 기록에 접근 권한이 없습니다.', 404: '운동기록이 존재하지 않습니다.' },
-        actions: { 403: 'back', 404: 'back' },
-      })
-    }
-  }, [error])
-
-  if (!exerciseId || isLoading || error || !data) return null
+  if (!exerciseId || isLoading || !data) return null
 
   return (
     <>
