@@ -24,7 +24,7 @@ export type ExerciseList = {
 }
 
 export type ExercisePicturesUpload = {
-  newImages: File[]
+  images: File[]
 }
 
 export type ExercisePicturesDelete = {

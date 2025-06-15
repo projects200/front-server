@@ -27,8 +27,7 @@ export default function List() {
     }
   }, [invalidDate])
 
-
-  if (invalidDate || isLoading ) return null
+  if (invalidDate || isLoading) return null
 
   return (
     <div className={styles['container']}>

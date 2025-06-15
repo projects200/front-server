@@ -2,7 +2,6 @@
 
 import * as z from 'zod'
 
-import { useState, useMemo } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { ExerciseContent, ExercisePicture, ExerciseRecordReq } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
@@ -20,7 +19,7 @@ type Props = {
   onError: (message: string) => void
 }
 
-const exerciseSchema = (remain: number) =>
+const exerciseSchema = () =>
   z
     .object({
       title: z
@@ -41,7 +40,19 @@ const exerciseSchema = (remain: number) =>
           '운동 상세 내용은 최대 65,535바이트까지 입력 가능합니다.',
         )
         .optional(),
-      newImages: z.array(z.instanceof(File)).max(remain, '이미지는 최대 5장까지 업로드할 수 있습니다.'),
+      images: z
+        .array(
+          z.union([
+            z
+              .instanceof(File)
+              .refine(
+                (file) => file.size <= 10 * 1024 * 1024 && ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
+                'jpg, jpeg, png 파일만 가능하며, 용량은 10MB 이하만 업로드할 수 있습니다.',
+              ),
+            z.string().url('유효하지 않은 이미지 URL입니다.'),
+          ]),
+        )
+        .max(5, '이미지는 최대 5개까지 업로드할 수 있습니다.'),
     })
     .refine((data) => new Date(data.startedAt) <= new Date(data.endedAt), {
       message: '종료 일시는 시작 일시 이후여야 합니다.',
@@ -49,16 +60,14 @@ const exerciseSchema = (remain: number) =>
     })
 
 const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }: Props) => {
-  const [existingPictures, setExistingPictures] = useState<ExercisePicture[]>(defaultPictures)
-  const [deletedIds, setDeletedIds] = useState<number[]>([])
-  const remain = useMemo(() => 5 - existingPictures.length, [existingPictures.length])
-  
+  const existingPictures = defaultPictures.map((picture) => picture.pictureUrl)
+
   const form = useForm({
     defaultValues: {
       ...defaultValues,
-      newImages: [] as File[],
+      images: existingPictures as (File | string)[],
     },
-    validators: { onSubmit: exerciseSchema(remain) },
+    validators: { onSubmit: exerciseSchema() },
     canSubmitWhenInvalid: true,
 
     onSubmitInvalid: ({ formApi }) => {
@@ -68,7 +77,18 @@ const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }
       onError(message)
     },
     onSubmit: ({ value }) => {
-      const payload: ExerciseRecordReq = { ...value, deletedIds }
+      const deletedIds = defaultPictures
+        .filter((picture) => !value.images.includes(picture.pictureUrl))
+        .map((picture) => picture.pictureId)
+
+      const newFiles = value.images.filter((v): v is File => v instanceof File)
+
+      const payload: ExerciseRecordReq = {
+        ...value,
+        deletedIds,
+        images: newFiles,
+      }
+
       onSubmit(payload)
     },
   })
@@ -146,18 +166,8 @@ const ExerciseForm = ({ defaultValues, defaultPictures = [], onSubmit, onError }
           />
         )}
       </form.Field>
-      <form.Field name="newImages">
-        {(field) => (
-          <ImageUploader
-            existing={existingPictures}
-            files={field.state.value ?? []}
-            setFiles={(files) => field.handleChange(files)}
-            onDeleteExisting={(id) => {
-              setExistingPictures((prev) => prev.filter((picture) => picture.pictureId !== id))
-              setDeletedIds((prev) => [...prev, id])
-            }}
-          />
-        )}
+      <form.Field name="images">
+        {(field) => <ImageUploader files={field.state.value ?? []} setFiles={(files) => field.handleChange(files)} />}
       </form.Field>
       <BottomButton className={styles['button']} type="submit">
         완료

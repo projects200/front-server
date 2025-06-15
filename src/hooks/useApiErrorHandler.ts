@@ -17,7 +17,7 @@ export function useApiErrorHandler() {
 
   return (error: unknown, policy?: ErrorPolicy) => {
     const status = error instanceof ApiError ? error.status : error instanceof Error ? 500 : 0
-    console.log(status)
+
     // 메세지
     const message = policy?.messages?.[status] ?? defaultMessages[status] ?? '알 수 없는 오류가 발생했습니다.'
     showToast(message, 'info')

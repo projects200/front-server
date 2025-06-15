@@ -29,20 +29,6 @@ export default function Edit() {
 
   const loading = isLoading || isPatching || isDeletingPics || isUploadingPics
 
-  const defaultValues =
-    data === undefined
-      ? null
-      : ({
-          title: data.title,
-          category: data.category,
-          location: data.location,
-          startedAt: data.startedAt,
-          endedAt: data.endedAt,
-          content: data.content,
-        } as const)
-
-  const defaultPictures = data?.images ?? []
-
   const handleSubmit = async (value: ExerciseRecordReq) => {
     try {
       await patchExercise({
@@ -65,9 +51,9 @@ export default function Edit() {
       }
     }
 
-    if (!deleteFailed && value.newImages?.length) {
+    if (!deleteFailed && value.images?.length) {
       try {
-        await uploadPictures({ exerciseId: exerciseId ?? 0, newImages: value.newImages })
+        await uploadPictures({ exerciseId: exerciseId ?? 0, images: value.images })
       } catch {}
     }
 
@@ -84,14 +70,21 @@ export default function Edit() {
     }
   }, [])
 
-  if (!exerciseId || !defaultValues) return null
+  if (!exerciseId || !data) return null
 
   return (
     <>
       <Header>운동 기록 수정</Header>
       <ExerciseForm
-        defaultValues={defaultValues}
-        defaultPictures={defaultPictures}
+        defaultValues={{
+          title: data?.title,
+          category: data?.category,
+          startedAt: data?.startedAt,
+          endedAt: data?.endedAt,
+          location: data?.location,
+          content: data?.content,
+        }}
+        defaultPictures={data?.images}
         onSubmit={handleSubmit}
         onError={(message) => showToast(message, 'info')}
       />

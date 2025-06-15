@@ -16,7 +16,7 @@ export default function Exercise() {
       <div>
         <Link
           // 임시날짜 전달
-          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-06-13`}
+          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-06-16`}
           scroll={false}
         >
           운동기록 리스트

@@ -28,7 +28,7 @@ export const usePostExercise = () =>
 export const usePostExercisePictures = () =>
   useApiMutation<{ exerciseId: number }, ExercisePicturesUpload & { exerciseId: number }>(
     ['exercise/create/pictures'],
-    (token, { newImages, exerciseId }) => createExercisePictures(token, { newImages }, exerciseId),
+    (token, { images, exerciseId }) => createExercisePictures(token, { images }, exerciseId),
     {},
     {
       messages: {

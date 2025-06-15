@@ -35,9 +35,9 @@ export default function Create() {
       return
     }
 
-    if (value.newImages?.length && exerciseId) {
+    if (value.images?.length && exerciseId) {
       try {
-        await uploadPictures({ exerciseId: exerciseId, newImages: value.newImages })
+        await uploadPictures({ exerciseId: exerciseId, images: value.images })
       } catch {}
     }
 
