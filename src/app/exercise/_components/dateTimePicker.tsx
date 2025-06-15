@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import ClockIcon from '@/assets/icon_clock.svg'
 import Typography from '@/components/ui/typography'
-
 import ScrollPicker from '@/components/commons/scrollPicker'
+import { useToast } from '@/hooks/useToast'
 
 import styles from './dateTimePicker.module.css'
 
@@ -49,15 +49,10 @@ const formatStorage = (dateTime: DateTime) => {
   const fullYear = Number(`20${year}`)
   const monthIndex = Number(month) - 1
   const dayNumber = Number(day)
-
-  const date = new Date(
-    fullYear,
-    monthIndex,
-    dayNumber,
-    dateTime.hour,
-    dateTime.minute,
-  )
-  return date.toISOString()
+  const date = new Date(fullYear, monthIndex, dayNumber, dateTime.hour, dateTime.minute)
+  const offsetMs = date.getTimezoneOffset() * 60000
+  const localIso = new Date(date.getTime() - offsetMs).toISOString().slice(0, 19)
+  return localIso
 }
 
 export default function DateTimePicker({
@@ -68,21 +63,34 @@ export default function DateTimePicker({
   label,
   readonly = false,
 }: DateTimePickerProps) {
+  const showToast = useToast()
   const [isOpenStart, setIsOpenStart] = useState(false)
   const [isOpenEnd, setIsOpenEnd] = useState(false)
   const formatStartDate = getInitialDateTime(startedAt)
   const formatEndDate = getInitialDateTime(endedAt)
 
   const handleChangeStart = (picked: Record<string, string | number>) => {
-    onStartedAtChange?.(
-      formatStorage(picked as { date: string; hour: number; minute: number }),
-    )
+    const startDateTime = formatStorage(picked as DateTime)
+    onStartedAtChange?.(startDateTime)
+
+    if (endedAt && new Date(startDateTime) > new Date(endedAt)) {
+      onEndedAtChange?.('')
+    }
   }
 
   const handleChangeEnd = (picked: Record<string, string | number>) => {
-    onEndedAtChange?.(
-      formatStorage(picked as { date: string; hour: number; minute: number }),
-    )
+    const endDateTime = formatStorage(picked as DateTime)
+
+    if (startedAt) {
+      const start = new Date(startedAt)
+      const end = new Date(endDateTime)
+      if (end < start) {
+        showToast('종료 시간은 시작 시간보다 빠를 수 없습니다.', 'info')
+        return
+      }
+    }
+
+    onEndedAtChange?.(endDateTime)
   }
 
   return (

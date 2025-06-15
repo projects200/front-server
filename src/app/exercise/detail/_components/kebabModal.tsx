@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import { useToast } from '@/hooks/useToast'
 import { useDeleteExercise } from '@/hooks/useExerciseApi'
-import useApiErrorHandler from '@/hooks/useApiErrorHandler'
+import { useApiErrorHandler } from '@/hooks/useApiErrorHandler'
 import BottomModal from '@/components/commons/bottomModal'
 import CenterModal from '@/components/commons/centerModal'
 import EditIcon from '@/assets/icon_edit.svg'
@@ -38,8 +38,8 @@ export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
       await deleteExercise(null)
       showToast('운동 기록이 삭제되었습니다.', 'info')
       router.back()
-    } catch (err) {
-      handleError(err)
+    } catch (error) {
+      handleError(error)
     }
   }
 
@@ -52,10 +52,7 @@ export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
         }}
       >
         <div className={styles['button-group']}>
-          <Link
-            className={styles['button']}
-            href={`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}&date=${date}`}
-          >
+          <Link className={styles['button']} href={`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}&date=${date}`}>
             <EditIcon className={styles['modal-icon']} />
             <Typography as="span" variant="text15">
               수정하기
@@ -75,11 +72,7 @@ export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
           </button>
         </div>
       </BottomModal>
-      <CenterModal
-        isOpen={isOpenCenter}
-        onClose={() => setIsOpenCenter(false)}
-        onConfirm={handleRemove}
-      >
+      <CenterModal isOpen={isOpenCenter} onClose={() => setIsOpenCenter(false)} onConfirm={handleRemove}>
         <Typography as="span" variant="text15" weight="bold">
           운동 기록을 삭제하시겠습니까?
         </Typography>

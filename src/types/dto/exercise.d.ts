@@ -5,7 +5,7 @@ export type PictureDto = {
   pictureExtension: string
 }
 
-export interface ExerciseListResDto {
+export type ExerciseListResDto = {
   exerciseId: number
   exerciseTitle: string
   exercisePersonalType: string
@@ -14,7 +14,7 @@ export interface ExerciseListResDto {
   pictureUrl: string[]
 }
 
-export interface ExerciseContentReqDto {
+export type ExerciseContentReqDto = {
   exerciseTitle: string
   exercisePersonalType: string
   exerciseLocation: string
@@ -23,7 +23,7 @@ export interface ExerciseContentReqDto {
   exerciseEndedAt: string
 }
 
-export interface ExerciseRecordResDto {
+export type ExerciseRecordResDto = {
   exerciseTitle: string
   exercisePersonalType: string
   exerciseLocation: string

@@ -23,7 +23,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // 인증완료, 가입유저가 "/"에 있는경우
     if (auth.isAuthenticated && pathname === '/') {
-      router.replace(SITE_MAP.TEMP1)
+      router.replace(SITE_MAP.EXERCISE)
       return
     }
   }, [auth.isLoading, auth.isAuthenticated])
