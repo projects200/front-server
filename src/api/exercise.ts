@@ -1,6 +1,7 @@
 import { ExerciseContent, ExercisePicturesUpload } from '@/types/exercise'
 import {
   ExerciseListResDto,
+  ExerciseRangeResDto,
   ExerciseContentReqDto,
   ExerciseRecordResDto,
 } from '@/types/dto/exercise'
@@ -8,10 +9,7 @@ import { fetchWrapper } from '@/utils/fetchWrapper'
 import { adaptExerciseContent } from '@/lib/adapters/exercise.adapter'
 
 // 운동 기록 생성
-export function createExercise(
-  token: string,
-  data: ExerciseContent,
-): Promise<{ exerciseId: number }> {
+export function createExercise(token: string, data: ExerciseContent): Promise<{ exerciseId: number }> {
   const dto: ExerciseContentReqDto = adaptExerciseContent(data)
   return fetchWrapper<{ exerciseId: number }>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises`,
@@ -45,11 +43,19 @@ export function createExercisePictures(
   )
 }
 
+// 운동 기록 기간 조회
+export function readExerciseRange(token: string, startDate: string, endDate: string): Promise<ExerciseRangeResDto[]> {
+  return fetchWrapper<ExerciseRangeResDto[]>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/count?start=${startDate}&end=${endDate}`,
+    {
+      method: 'GET',
+    },
+    token,
+  )
+}
+
 // 운동 기록 하루 조회
-export function readExerciseList(
-  token: string,
-  date: string,
-): Promise<ExerciseListResDto[]> {
+export function readExerciseList(token: string, date: string): Promise<ExerciseListResDto[]> {
   return fetchWrapper<ExerciseListResDto[]>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises?date=${date}`,
     {
@@ -60,10 +66,7 @@ export function readExerciseList(
 }
 
 // 운동 기록 내용 조회
-export function readExercise(
-  token: string,
-  exerciseId: number,
-): Promise<ExerciseRecordResDto> {
+export function readExercise(token: string, exerciseId: number): Promise<ExerciseRecordResDto> {
   return fetchWrapper<ExerciseRecordResDto>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
     {
@@ -92,10 +95,7 @@ export function updateExercise(
 }
 
 // 운동 기록 삭제
-export function removeExercise(
-  token: string,
-  exerciseId: number,
-): Promise<null> {
+export function removeExercise(token: string, exerciseId: number): Promise<null> {
   return fetchWrapper<null>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
     {
@@ -106,11 +106,7 @@ export function removeExercise(
 }
 
 // 운동 이미지 삭제
-export function removeExercisePictures(
-  token: string,
-  images: number[],
-  exerciseId: number,
-): Promise<null> {
+export function removeExercisePictures(token: string, images: number[], exerciseId: number): Promise<null> {
   return fetchWrapper<null>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}/pictures?pictureIds=${images.join(',')}`,
     {

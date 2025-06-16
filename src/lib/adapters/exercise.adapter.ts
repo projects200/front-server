@@ -1,13 +1,24 @@
 import {
+  ExerciseRangeResDto,
   ExerciseListResDto,
-  ExerciseContentReqDto,
   ExerciseRecordResDto,
+  ExerciseContentReqDto,
 } from '@/types/dto/exercise'
 import {
+  ExerciseRange,
   ExerciseList,
   ExerciseContent,
   ExerciseRecordRes,
 } from '@/types/exercise'
+
+export function adaptExerciseRange(
+  dtoArray: ExerciseRangeResDto[],
+): ExerciseRange[] {
+  return dtoArray.map((dto) => ({
+    date: dto.date,
+    record: dto.exerciseCount,
+  }))
+}
 
 export function adaptExerciseList(
   dtoArray: ExerciseListResDto[],

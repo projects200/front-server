@@ -14,6 +14,11 @@ export type ExercisePicture = {
   pictureExtension: string
 }
 
+export type ExerciseRange = {
+  date: string
+  record: number
+}
+
 export type ExerciseList = {
   exerciseId: number
   title: string
@@ -35,8 +40,6 @@ export type ExercisePictures = {
   images: ExercisePicture[]
 }
 
-export type ExerciseRecordReq = ExerciseContent &
-  Partial<ExercisePicturesUpload & ExercisePicturesDelete>
+export type ExerciseRecordReq = ExerciseContent & Partial<ExercisePicturesUpload & ExercisePicturesDelete>
 
-export type ExerciseRecordRes = ExerciseContent &
-  Partial<ExercisePictures>
+export type ExerciseRecordRes = ExerciseContent & Partial<ExercisePictures>

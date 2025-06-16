@@ -3,6 +3,7 @@
 import {
   createExercise,
   createExercisePictures,
+  readExerciseRange,
   readExerciseList,
   readExercise,
   updateExercise,
@@ -10,10 +11,12 @@ import {
   removeExercisePictures,
 } from '@/api/exercise'
 import {
+  adaptExerciseRange,
   adaptExerciseList,
   adaptExerciseRecord,
 } from '@/lib/adapters/exercise.adapter'
 import {
+  ExerciseRange,
   ExerciseList,
   ExerciseRecordRes,
   ExerciseContent,
@@ -42,12 +45,27 @@ export const usePostExercisePictures = () =>
     createExercisePictures(token, { newImages }, exerciseId),
   )
 
+// 운동기록 기간 조회
+export const useReadExerciseRnage = (startDate: string, endDate: string) =>
+  useApiGet<ExerciseRange[]>(
+    ['exercise/range', startDate],
+    (token) =>
+      readExerciseRange(token, startDate, endDate).then(adaptExerciseRange),
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+    },
+  )
+
 // 운동기록 하루 조회
 export const useReadExerciseList = (date: string) =>
   useApiGet<ExerciseList[]>(
     ['exercise/list', date],
     (token) => readExerciseList(token, date).then(adaptExerciseList),
-    { revalidateOnFocus: false, shouldRetryOnError: false },
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+    },
   )
 
 // 운동 기록 내용 조회
