@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import SITE_MAP from '@/constants/siteMap.constant'
 
-export default function Temp() {
+export default function Exercise() {
   return (
     <>
       <div style={{ textAlign: 'center' }}>임시 메인 페이지</div>
@@ -16,7 +16,7 @@ export default function Temp() {
       <div>
         <Link
           // 임시날짜 전달
-          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-06-10`}
+          href={`${SITE_MAP.EXERCISE_LIST}?date=2025-06-16`}
           scroll={false}
         >
           운동기록 리스트

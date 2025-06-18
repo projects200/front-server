@@ -5,42 +5,51 @@ import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
-import { useToast } from '@/hooks/useToast'
+import { useReadExercise } from '@/hooks/useExerciseApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import ExerciseDetail from './_components/exerciseDetail'
+import ImageField from './_components/imageField'
+import InputField from '../_components/inputField'
+import TextareaField from '../_components/textareaField'
+import DateTimePicker from '../_components/dateTimePicker'
 import KebabModal from './_components/kebabModal'
 import styles from './detail.module.css'
 
 export default function Detail() {
-  const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
-  const [exerciseId] = useQueryState('id', parseAsInteger)
   const router = useRouter()
-  const showToast = useToast()
+  const [exerciseId] = useQueryState('id', parseAsInteger)
+  const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
+  const { data, isLoading } = useReadExercise(exerciseId ?? 0)
 
   useEffect(() => {
     if (!exerciseId) {
-      showToast('해당 운동 기록이 없습니다.', 'info')
-      router.replace(SITE_MAP.TEMP1)
+      router.replace(SITE_MAP.EXERCISE)
     }
-  }, [])
+  }, [exerciseId])
 
-  if (!exerciseId) return null
+  if (!exerciseId || isLoading || !data) return null
 
   return (
     <>
-      <Header
-        rightIcon={<KebabIcon className={styles['header-icon']} />}
-        onClick={() => setIsBottomModalOpen(true)}
-      >
+      <Header rightIcon={<KebabIcon className={styles['header-icon']} />} onClick={() => setIsBottomModalOpen(true)}>
         기록 상세
       </Header>
-      <ExerciseDetail exerciseId={exerciseId} />
-      <KebabModal
-        isOpen={isBottomModalOpen}
-        setIsOpen={setIsBottomModalOpen}
-        exerciseId={exerciseId}
-      />
+      {data.images?.length ? <ImageField images={data.images} /> : <></>}
+      <InputField value={data.title} label="제목" id="title" readonly={true} />
+      <DateTimePicker label="운동 시간" startedAt={data.startedAt} endedAt={data.endedAt} readonly={true} />
+      {data.category && <InputField value={data.category} label="운동 종류" id="category" readonly={true} />}
+      {data.location && <InputField value={data.location} label="장소" id="location" readonly={true} />}
+
+      {data.content && (
+        <TextareaField
+          className={styles['text-field']}
+          value={data.content}
+          label="내용"
+          id="content"
+          readonly={true}
+        />
+      )}
+      <KebabModal isOpen={isBottomModalOpen} setIsOpen={setIsBottomModalOpen} exerciseId={exerciseId} />
     </>
   )
 }
