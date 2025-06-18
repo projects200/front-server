@@ -2,11 +2,7 @@ import { useRouter } from 'next/navigation'
 import { useToast } from './useToast'
 import { ApiError } from '@/types/common'
 import SITE_MAP from '@/constants/siteMap.constant'
-
-export type ErrorPolicy = {
-  messages?: Record<number, string>
-  actions?: Record<number, 'back' | { type: 'redirect'; to: string }>
-}
+import { ErrorPolicy } from '@/types/common'
 
 const defaultMessages: Record<number, string> = {
   401: '인증이 만료되었습니다. 다시 로그인해주세요.',
@@ -20,9 +16,8 @@ export function useApiErrorHandler() {
   const router = useRouter()
 
   return (error: unknown, policy?: ErrorPolicy) => {
-
     const status = error instanceof ApiError ? error.status : error instanceof Error ? 500 : 0
-    console.log(status)
+
     // 메세지
     const message = policy?.messages?.[status] ?? defaultMessages[status] ?? '알 수 없는 오류가 발생했습니다.'
     showToast(message, 'info')

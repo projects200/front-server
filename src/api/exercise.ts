@@ -29,7 +29,7 @@ export function createExercisePictures(
 ): Promise<{ exerciseId: number }> {
   const formData = new FormData()
 
-  data.newImages.forEach((file) => {
+  data.images.forEach((file) => {
     formData.append('pictures', file)
   })
 

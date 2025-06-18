@@ -16,3 +16,8 @@ export class ApiError extends Error {
     this.payload = payload
   }
 }
+
+export type ErrorPolicy = {
+  messages?: Record<number, string>
+  actions?: Record<number, 'back' | { type: 'redirect'; to: string }>
+}

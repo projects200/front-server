@@ -10,7 +10,6 @@ import { isValidYYYYMMDD } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
 import { useReadExerciseList } from '@/hooks/useExerciseApi'
 import Typography from '@/components/ui/typography'
-import { useApiErrorHandler } from '@/hooks/useApiErrorHandler'
 
 import DateLabel from './_components/dateLabel'
 import ExerciseCard from './_components/exerciseCard'
@@ -18,9 +17,8 @@ import styles from './list.module.css'
 
 export default function List() {
   const router = useRouter()
-  const handleError = useApiErrorHandler()
   const [date, setDate] = useQueryState('date')
-  const { data = [], error, isLoading } = useReadExerciseList(date ?? '')
+  const { data = [], isLoading } = useReadExerciseList(date ?? '')
   const invalidDate = !date || !isValidYYYYMMDD(date)
 
   useEffect(() => {
@@ -29,15 +27,7 @@ export default function List() {
     }
   }, [invalidDate])
 
-  useEffect(() => {
-    if (error) {
-      handleError(error, {
-        actions: { 400: 'back' },
-      })
-    }
-  }, [error])
-
-  if (invalidDate || isLoading || error) return null
+  if (invalidDate || isLoading) return null
 
   return (
     <div className={styles['container']}>
