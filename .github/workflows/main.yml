@@ -12,6 +12,7 @@ env:
   LONG_CACHE: '--cache-control public,max-age=31536000,immutable'
   SHORT_CACHE: '--cache-control public,max-age=0,no-cache,must-revalidate'
   S3_SYNC_OPTS: '--delete'
+  CSP_NONCE: ''
 
 jobs:
   client-CI-CD:
@@ -29,15 +30,19 @@ jobs:
           node-version: 22
           cache: 'npm'
           cache-dependency-path: package-lock.json
+      - name: Generate CSP nonce
+        id: nonce
+        run: |
+          NONCE=$(openssl rand -base64 16 | tr '+/' '-_' | tr -d '=')
+          echo "CSP_NONCE=$NONCE" >> $GITHUB_ENV
+          echo "::add-mask::$NONCE"
 
       - name: Create .env
         run: |
           echo "ref = $GITHUB_REF"
           if [ "$GITHUB_REF" = "refs/heads/main" ]; then
-            echo "Writing production vars"
             echo "${{ secrets.MAIN_ENV }}" > .env
           else
-            echo "Writing development vars"
             echo "${{ secrets.DEV_ENV }}" > .env
           fi
 
