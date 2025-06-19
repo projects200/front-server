@@ -45,6 +45,7 @@ jobs:
           else
             echo "${{ secrets.DEV_ENV }}" > .env
           fi
+          echo "NEXT_PUBLIC_CSP_NONCE=${{ env.CSP_NONCE }}" >> .env
 
       - name: Build and Export
         run: |
