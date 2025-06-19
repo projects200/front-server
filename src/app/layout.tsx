@@ -29,7 +29,7 @@ export default function RootLayout({
         src={`https://www.googletagmanager.com/gtm.js?id=${gtmId}`}
         nonce={nonce}
       /> */}
-      <body>
+      <body nonce={nonce}>
         <ClientProviders>
           <NuqsAdapter>
             <div className="responsive-container">{children}</div>
