@@ -49,6 +49,8 @@ jobs:
           fi
 
       - name: Build and Export
+        env:
+          CSP_NONCE: ${{ env.CSP_NONCE }}
         run: |
           npm install
           npm run build
