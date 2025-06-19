@@ -1,91 +1,87 @@
-// // import { mutate } from 'swr'
+// name: CI/CD
+// on:
+//   push:
+//     paths:
+//       - '**'
+//   workflow_dispatch:
 
-// import {
-//   createExercise,
-//   createExercisePictures,
-//   readExerciseList,
-//   readExercise,
-//   updateExercise,
-//   removeExercise,
-//   removeExercisePictures,
-// } from '@/api/exercise'
-// import {
-//   adaptExerciseList,
-//   adaptExerciseRecord,
-// } from '@/lib/adapters/exercise.adapter'
-// import {
-//   ExerciseList,
-//   ExerciseRecordRes,
-//   ExerciseContent,
-//   ExercisePicturesUpload,
-// } from '@/types/exercise'
+// permissions:
+//   contents: read
 
-// import useApiGet from './useApiGet'
-// import useApiMutation from './useApiMutation'
+// env:
+//   LONG_CACHE: '--cache-control public,max-age=31536000,immutable'
+//   SHORT_CACHE: '--cache-control public,max-age=0,no-cache,must-revalidate'
+//   S3_SYNC_OPTS: '--delete'
+//   CSP_NONCE: ''
 
-// // 운동 기록 생성
-// export const usePostExercise = () =>
-//   useApiMutation<{ exerciseId: number }, ExerciseContent>(
-//     ['exercise/create'],
-//     createExercise,
-//     // {
-//     //   onSuccess: () => mutate((key: string) => key.startsWith('exercise/list')),
-//     // },
-//   )
+// jobs:
+//   client-CI-CD:
+//     runs-on: ubuntu-latest
 
-// // 운동 이미지 생성
-// export const usePostExercisePictures = () =>
-//   useApiMutation<
-//     { exerciseId: number },
-//     ExercisePicturesUpload & { exerciseId: number }
-//   >(['exercise/create/pictures'], (token, { newImages, exerciseId }) =>
-//     createExercisePictures(token, { newImages }, exerciseId),
-//   )
+//     steps:
+//       - name: Checkout Branch
+//         uses: actions/checkout@v4
+//         with:
+//           fetch-depth: 0
 
-// // 운동기록 하루 조회
-// export const useReadExerciseList = (date: string) =>
-//   useApiGet<ExerciseList[]>(
-//     ['exercise/list', date],
-//     (token) => readExerciseList(token, date).then(adaptExerciseList),
-//     { revalidateOnFocus: false, shouldRetryOnError: false },
-//   )
+//       - name: Node.js
+//         uses: actions/setup-node@v4
+//         with:
+//           node-version: 22
+//           cache: 'npm'
+//           cache-dependency-path: package-lock.json
+//       - name: Generate CSP nonce
+//         id: nonce
+//         run: |
+//           NONCE=$(openssl rand -base64 16 | tr '+/' '-_' | tr -d '=')
+//           echo "CSP_NONCE=$NONCE" >> $GITHUB_ENV
+//           echo "::add-mask::$NONCE"
 
-// // 운동 기록 내용 조회
-// export const useReadExercise = (exerciseId: number) =>
-//   useApiGet<ExerciseRecordRes>(
-//     ['exercise/detail', exerciseId],
-//     (token) => readExercise(token, exerciseId).then(adaptExerciseRecord),
-//     { revalidateOnFocus: false, shouldRetryOnError: false },
-//   )
+//       - name: Create .env
+//         run: |
+//           echo "ref = $GITHUB_REF"
+//           if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+//             echo "${{ secrets.MAIN_ENV }}" > .env
+//           else
+//             echo "${{ secrets.DEV_ENV }}" > .env
+//           fi
+//           echo "NEXT_PUBLIC_CSP_NONCE=${{ env.CSP_NONCE }}" >> .env
 
-// // 운동 기록 수정
-// export const usePatchExercise = (exerciseId: number) =>
-//   // 응답형태 변경점 없을시 어떤형식인지 확인필요
-//   useApiMutation<null, ExerciseContent>(
-//     ['exercise/update', exerciseId],
-//     (token, body) => updateExercise(token, body, exerciseId),
-//     {
-//       // onSuccess: () => mutate(['exercise/detail', exerciseId]),
-//     },
-//   )
+//       - name: Build and Export
+//         run: |
+//           npm install
+//           npm run build
 
-// // 운동 기록 삭제
-// export const useDeleteExercise = (exerciseId: number) =>
-//   useApiMutation<null, null>(
-//     ['exercise/delete', exerciseId],
-//     (token) => removeExercise(token, exerciseId),
-//     // {
-//     //   onSuccess: () => mutate(['exercise/list', date]),
-//     // },
-//   )
+//       - name: Configure AWS credentials
+//         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+//         uses: aws-actions/configure-aws-credentials@v3
+//         with:
+//           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+//           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+//           aws-region: ${{ secrets.AWS_REGION }}
 
-// // 운동 이미지 삭제
-// export const useDeleteExercisePictures = (exerciseId: number) =>
-//   useApiMutation<null, number[]>(
-//     ['exercise/delete/pictures', exerciseId],
-//     (token, pictureIds) =>
-//       removeExercisePictures(token, pictureIds, exerciseId),
-//     // {
-//     //   onSuccess: () => mutate(['exercise/list', date]),
-//     // },
-//   )
+//       - name: Upload static assets (MAIN)
+//         if: ${{ github.ref == 'refs/heads/main' }}
+//         run: |
+//           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
+//           aws s3 sync ./out s3://$BUCKET \
+//               --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
+
+//       - name: Upload index.html (MAIN)
+//         if: ${{ github.ref == 'refs/heads/main' }}
+//         run: |
+//           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
+//           aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
+
+//       - name: Upload static assets (DEV)
+//         if: ${{ github.ref == 'refs/heads/develop' }}
+//         run: |
+//           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
+//           aws s3 sync ./out s3://$BUCKET \
+//               --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
+
+//       - name: Upload index.html (DEV)
+//         if: ${{ github.ref == 'refs/heads/develop' }}
+//         run: |
+//           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
+//           aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE

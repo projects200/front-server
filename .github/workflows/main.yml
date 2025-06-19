@@ -12,7 +12,6 @@ env:
   LONG_CACHE: '--cache-control public,max-age=31536000,immutable'
   SHORT_CACHE: '--cache-control public,max-age=0,no-cache,must-revalidate'
   S3_SYNC_OPTS: '--delete'
-  CSP_NONCE: ''
 
 jobs:
   client-CI-CD:
@@ -30,12 +29,6 @@ jobs:
           node-version: 22
           cache: 'npm'
           cache-dependency-path: package-lock.json
-      - name: Generate CSP nonce
-        id: nonce
-        run: |
-          NONCE=$(openssl rand -base64 16 | tr '+/' '-_' | tr -d '=')
-          echo "CSP_NONCE=$NONCE" >> $GITHUB_ENV
-          echo "::add-mask::$NONCE"
 
       - name: Create .env
         run: |
@@ -45,12 +38,40 @@ jobs:
           else
             echo "${{ secrets.DEV_ENV }}" > .env
           fi
-          echo "NEXT_PUBLIC_CSP_NONCE=${{ env.CSP_NONCE }}" >> .env
 
       - name: Build and Export
         run: |
           npm install
-          npm run build
+          npm run Build
+
+      - name: Set deploy env vars
+        id: setenv
+        run: |
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            echo "TARGET=main"                     >> "$GITHUB_OUTPUT"
+            echo "POLICY_ID=${{ secrets.CF_RH_POLICY_MAIN_ID }}" >> "$GITHUB_ENV"
+          elif [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
+            echo "TARGET=dev"                      >> "$GITHUB_OUTPUT"
+            echo "POLICY_ID=${{ secrets.CF_RH_POLICY_DEV_ID }}"  >> "$GITHUB_ENV"
+          else
+            echo "TARGET=none"                     >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate CSP header  
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+        id: gen_csp
+        shell: bash
+        run: |
+          HASHES=""
+          while IFS= read -r script; do
+            if [ -n "$script" ]; then
+              HASH=$(printf '%s' "$script" | openssl dgst -sha256 -binary | openssl base64 -A)
+              HASHES="$HASHES 'sha256-$HASH'"
+            fi
+          done < <(grep -rhoP '(?s)(?<=<script[^>]*>).*?(?=</script>)' ./out || true)
+
+          CSP="default-src 'self'; script-src 'self'$HASHES 'strict-dynamic'; object-src 'none'; base-uri 'self';"
+          echo "csp_header=$CSP"  >> "$GITHUB_OUTPUT"
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
@@ -59,6 +80,25 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Update CloudFront CSP header
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+        env:
+          POLICY_ID: ${{ env.POLICY_ID }}
+          CSP:       ${{ steps.gen_csp.outputs.csp_header }}
+        run: |
+          aws cloudfront get-response-headers-policy-config \
+            --id "$POLICY_ID" > old.json
+          ETag=$(jq -r '.ETag' old.json)
+
+          jq --arg c "$CSP" \
+             '.ResponseHeadersPolicyConfig.SecurityHeadersConfig.ContentSecurityPolicy.Content=$c' \
+             old.json > new.json
+
+          aws cloudfront update-response-headers-policy \
+            --id "$POLICY_ID" \
+            --if-match "$ETag" \
+            --response-headers-policy-config file://new.json
 
       - name: Upload static assets (MAIN)
         if: ${{ github.ref == 'refs/heads/main' }}
