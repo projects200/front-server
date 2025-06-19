@@ -18,13 +18,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const nonce = process.env.NEXT_PUBLIC_CSP_NONCE
+  console.log(nonce)
   // const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 
   return (
     <html lang="ko" nonce={nonce}>
-      <head nonce={nonce}>
-
-      </head>
+      <head nonce={nonce}></head>
       {/* <Script
         id="gtm-loader"
         strategy="afterInteractive"
