@@ -76,31 +76,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload static assets (MAIN)
+      - name: Upload assets to S3 (MAIN)
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" $LONG_CACHE $S3_SYNC_OPTS
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "*" --include "*.html" $SHORT_CACHE $S3_SYNC_OPTS
 
-      - name: Upload index.html (MAIN)
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: |
-          BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
-          aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
-
-      - name: Upload static assets (DEV)
+      - name: Upload assets to S3 (DEV)
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
-
-      - name: Upload index.html (DEV)
-        if: ${{ github.ref == 'refs/heads/develop' }}
-        run: |
-          BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
-          aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
+              --exclude "*.html" $LONG_CACHE $S3_SYNC_OPTS
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "*" --include "*.html" $SHORT_CACHE $S3_SYNC_OPTS
 
       - name: Update CloudFront CSP header
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
@@ -108,6 +100,8 @@ jobs:
           POLICY_ID: ${{ env.POLICY_ID }}
           NONCE: ${{ env.CSP_NONCE }}
         run: |
+          sleep 5 
+          
           aws cloudfront get-response-headers-policy-config --id "$POLICY_ID" > old.json
           ETag=$(jq -r '.ETag' old.json)
 
