@@ -19,17 +19,19 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const nonce = process.env.NEXT_PUBLIC_CSP_NONCE
-  const gtmId = process.env.NEXT_PUBLIC_GTM_ID
+  // const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 
   return (
     <html lang="ko" nonce={nonce}>
-      <head></head>
-      <Script
+      <head nonce={nonce}>
+
+      </head>
+      {/* <Script
         id="gtm-loader"
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtm.js?id=${gtmId}`}
         nonce={nonce}
-      />
+      /> */}
       <body>
         <ClientProviders>
           <NuqsAdapter>
