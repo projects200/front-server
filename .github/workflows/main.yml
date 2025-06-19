@@ -39,6 +39,13 @@ jobs:
             echo "${{ secrets.DEV_ENV }}" > .env
           fi
 
+      - name: Generate build-time nonce
+        id: nonce
+        run: |
+          NONCE=$(openssl rand -base64 16 | tr -d '=+/')
+          echo "NEXT_PUBLIC_CSP_NONCE=$NONCE" >> $GITHUB_ENV
+          echo "NONCE=$NONCE" >> $GITHUB_OUTPUT
+
       - name: Build and Export
         run: |
           npm install
@@ -57,22 +64,6 @@ jobs:
             echo "TARGET=none"                     >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Generate CSP header  
-        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
-        id: gen_csp
-        shell: bash
-        run: |
-          HASHES=""
-          while IFS= read -r script; do
-            if [ -n "$script" ]; then
-              HASH=$(printf '%s' "$script" | openssl dgst -sha256 -binary | openssl base64 -A)
-              HASHES="$HASHES 'sha256-$HASH'"
-            fi
-          done < <(grep -rhoP '(?s)(?<=<script[^>]*>).*?(?=</script>)' ./out || true)
-
-          CSP="default-src 'self'; script-src 'self'$HASHES 'strict-dynamic'; object-src 'none'; base-uri 'self';"
-          echo "csp_header=$CSP"  >> "$GITHUB_OUTPUT"
-
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
         uses: aws-actions/configure-aws-credentials@v3
@@ -85,21 +76,23 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
         env:
           POLICY_ID: ${{ env.POLICY_ID }}
-          CSP:       ${{ steps.gen_csp.outputs.csp_header }}
+          NONCE: ${{ steps.nonce.outputs.NONCE }}
         run: |
-          aws cloudfront get-response-headers-policy-config \
-            --id "$POLICY_ID" > old.json
+          aws cloudfront get-response-headers-policy-config --id "$POLICY_ID" > old.json
           ETag=$(jq -r '.ETag' old.json)
 
-          jq --arg c "$CSP" \
-            '.ResponseHeadersPolicyConfig.SecurityHeadersConfig.ContentSecurityPolicy.Content=$c
-            | .ResponseHeadersPolicyConfig' \
-            old.json > new.json
+          jq --arg n "'nonce-${NONCE}'" '
+            .ResponseHeadersPolicyConfig
+            .SecurityHeadersConfig
+            .ContentSecurityPolicy
+            .ContentSecurityPolicy |= gsub("nonce-__NONCE__"; $n)
+            | .ResponseHeadersPolicyConfig
+          ' old.json > new.json
 
           aws cloudfront update-response-headers-policy \
-            --id "$POLICY_ID" \
-            --if-match "$ETag" \
-            --response-headers-policy-config file://new.json
+              --id "$POLICY_ID" \
+              --if-match "$ETag" \
+              --response-headers-policy-config file://new.json
 
       - name: Upload static assets (MAIN)
         if: ${{ github.ref == 'refs/heads/main' }}

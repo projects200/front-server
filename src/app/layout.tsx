@@ -1,6 +1,7 @@
+import Script from 'next/script'
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { GoogleTagManager } from '@next/third-parties/google'
+// import { GoogleTagManager } from '@next/third-parties/google'
 
 import { ClientProviders } from './_components/clientProviders'
 
@@ -17,12 +18,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const nonce = process.env.NEXT_PUBLIC_CSP_NONCE
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 
   return (
-    <html lang="ko">
+    <html lang="ko" nonce={nonce}>
       <head></head>
-      <GoogleTagManager gtmId={gtmId!} />
+      <Script
+        id="gtm-loader"
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtm.js?id=${gtmId}`}
+        nonce={nonce}
+      />
       <body>
         <ClientProviders>
           <NuqsAdapter>
