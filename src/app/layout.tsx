@@ -1,12 +1,9 @@
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-// import { GoogleTagManager } from '@next/third-parties/google'
 
 import { ClientProviders } from './_components/clientProviders'
-
 import './reset.css'
 import './globals.css'
-import Script from 'next/script'
 
 export const metadata: Metadata = {
   title: '운다방',
