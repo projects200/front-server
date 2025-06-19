@@ -81,11 +81,11 @@ jobs:
           aws cloudfront get-response-headers-policy-config --id "$POLICY_ID" > old.json
           ETag=$(jq -r '.ETag' old.json)
 
-          jq --arg n "'nonce-${NONCE}'" '
+          jq --arg nonce "'nonce-${NONCE}'" '
             .ResponseHeadersPolicyConfig
             .SecurityHeadersConfig
             .ContentSecurityPolicy
-            .ContentSecurityPolicy) |= gsub("\\{\\{NONCE}}"; $n)
+            .ContentSecurityPolicy |= gsub("\\{\\{NONCE}}"; $nonce)
             | .ResponseHeadersPolicyConfig
           ' old.json > new.json
 
