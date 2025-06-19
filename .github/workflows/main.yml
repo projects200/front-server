@@ -92,8 +92,9 @@ jobs:
           ETag=$(jq -r '.ETag' old.json)
 
           jq --arg c "$CSP" \
-             '.ResponseHeadersPolicyConfig.SecurityHeadersConfig.ContentSecurityPolicy.Content=$c' \
-             old.json > new.json
+            '.ResponseHeadersPolicyConfig.SecurityHeadersConfig.ContentSecurityPolicy.Content=$c
+            | .ResponseHeadersPolicyConfig' \
+            old.json > new.json
 
           aws cloudfront update-response-headers-policy \
             --id "$POLICY_ID" \
