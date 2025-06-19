@@ -76,28 +76,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Update CloudFront CSP header
-        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
-        env:
-          POLICY_ID: ${{ env.POLICY_ID }}
-          NONCE: ${{ env.CSP_NONCE }}
-        run: |
-          aws cloudfront get-response-headers-policy-config --id "$POLICY_ID" > old.json
-          ETag=$(jq -r '.ETag' old.json)
-
-          jq --arg nonce "nonce-${NONCE}" '
-            .ResponseHeadersPolicyConfig
-            .SecurityHeadersConfig
-            .ContentSecurityPolicy
-            .ContentSecurityPolicy |= sub("nonce-[A-Za-z0-9_-]+"; $nonce)
-            | .ResponseHeadersPolicyConfig
-          ' old.json > new.json
-
-          aws cloudfront update-response-headers-policy \
-              --id "$POLICY_ID" \
-              --if-match "$ETag" \
-              --response-headers-policy-config file://new.json
-
       - name: Upload static assets (MAIN)
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
@@ -123,3 +101,25 @@ jobs:
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
           aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
+
+      - name: Update CloudFront CSP header
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+        env:
+          POLICY_ID: ${{ env.POLICY_ID }}
+          NONCE: ${{ env.CSP_NONCE }}
+        run: |
+          aws cloudfront get-response-headers-policy-config --id "$POLICY_ID" > old.json
+          ETag=$(jq -r '.ETag' old.json)
+
+          jq --arg nonce "nonce-${NONCE}" '
+            .ResponseHeadersPolicyConfig
+            .SecurityHeadersConfig
+            .ContentSecurityPolicy
+            .ContentSecurityPolicy |= sub("nonce-[A-Za-z0-9_-]+"; $nonce)
+            | .ResponseHeadersPolicyConfig
+          ' old.json > new.json
+
+          aws cloudfront update-response-headers-policy \
+              --id "$POLICY_ID" \
+              --if-match "$ETag" \
+              --response-headers-policy-config file://new.json
