@@ -85,7 +85,7 @@ jobs:
             .ResponseHeadersPolicyConfig
             .SecurityHeadersConfig
             .ContentSecurityPolicy
-            .ContentSecurityPolicy |= gsub("nonce-__NONCE__"; $n)
+            .ContentSecurityPolicy |= gsub("'nonce-[^ ]+'"; $n) 
             | .ResponseHeadersPolicyConfig
           ' old.json > new.json
 
