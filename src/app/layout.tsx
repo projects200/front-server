@@ -17,12 +17,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 
   return (
-    <html lang="ko" >
-      <GoogleTagManager gtmId={gtmId!}  />
+    <html lang="ko">
+      <head></head>
+      <GoogleTagManager gtmId={gtmId!} />
       <body>
         <ClientProviders>
           <NuqsAdapter>

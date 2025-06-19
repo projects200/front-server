@@ -42,7 +42,7 @@ jobs:
       - name: Build and Export
         run: |
           npm install
-          npm run Build
+          npm run build
 
       - name: Set deploy env vars
         id: setenv
