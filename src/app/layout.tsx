@@ -18,9 +18,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const nonce = process.env.NEXT_PUBLIC_CSP_NONCE
-  const gtmId = process.env.NEXT_PUBLIC_GTM_ID
-  console.log(nonce)
-  console.log(gtmId)
+  // const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 
   return (
     <html lang="ko" nonce={nonce}>
