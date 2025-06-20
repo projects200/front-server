@@ -14,6 +14,9 @@ const eslintConfig = [
   {
     rules: {
       'react-hooks/exhaustive-deps': 'off',
+      '@next/next/no-img-element': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+      '@next/next/next-script-for-ga': 'off'
     },
   },
 ]

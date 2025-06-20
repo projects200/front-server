@@ -45,3 +45,4 @@ cert.conf
 localhost.crt
 localhost.key
 server.js
+temp.ts

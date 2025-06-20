@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { GoogleTagManager } from '@next/third-parties/google'
 
 import { ClientProviders } from './_components/clientProviders'
-
 import './reset.css'
 import './globals.css'
 
@@ -12,8 +10,6 @@ export const metadata: Metadata = {
   description: '운동매칭 & 운동기록',
 }
 
-const nonce = process.env.NEXT_PUBLIC_CSP_NONCE
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,25 +17,35 @@ export default function RootLayout({
 }>) {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 
-  const csp = `
-    default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline';
-    connect-src 'self' https://*.undabang.store https://*.googletagmanager.com https://*.google-analytics.com https://*.clarity.ms https://*.amazonaws.com https://auth.undabang.store;
-    img-src 'self' data: blob: https://*.undabang.store https://*.googletagmanager.com https://*.google-analytics.com https://*.clarity.ms https://*.amazonaws.com;
-    object-src 'none';
-    base-uri 'self';
-  `
-    .replace(/\s{2,}/g, ' ')
-    .trim()
-
   return (
-    <html lang="ko" nonce={nonce}>
+    <html lang="ko">
       <head>
-        <meta httpEquiv="Content-Security-Policy" content={csp} />
+        {gtmId && (
+          <script
+            id="gtm-base"
+            dangerouslySetInnerHTML={{
+              __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${gtmId}');
+              `,
+            }}
+          />
+        )}
       </head>
-      <GoogleTagManager gtmId={gtmId!} nonce={nonce} />
-
       <body>
+        {gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            ></iframe>
+          </noscript>
+        )}
         <ClientProviders>
           <NuqsAdapter>
             <div className="responsive-container">{children}</div>

@@ -30,26 +30,43 @@ jobs:
           node-version: 22
           cache: 'npm'
           cache-dependency-path: package-lock.json
-      - name: Generate CSP nonce
+
+      - name: Generate build-time nonce
         id: nonce
         run: |
-          NONCE=$(openssl rand -base64 16 | tr '+/' '-_' | tr -d '=')
+          NONCE=$(openssl rand -base64 16 | tr -d '=+/')
           echo "CSP_NONCE=$NONCE" >> $GITHUB_ENV
-          echo "::add-mask::$NONCE"
 
       - name: Create .env
         run: |
           echo "ref = $GITHUB_REF"
           if [ "$GITHUB_REF" = "refs/heads/main" ]; then
             echo "${{ secrets.MAIN_ENV }}" > .env
+            echo "NEXT_PUBLIC_CSP_NONCE=${{ env.CSP_NONCE }}" >> .env
           else
             echo "${{ secrets.DEV_ENV }}" > .env
+            echo "NEXT_PUBLIC_CSP_NONCE=${{ env.CSP_NONCE }}" >> .env
           fi
 
       - name: Build and Export
+        env:
+          CSP_NONCE: ${{ env.CSP_NONCE }}
         run: |
           npm install
           npm run build
+
+      - name: Set deploy env vars
+        id: setenv
+        run: |
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            echo "TARGET=main"                     >> "$GITHUB_OUTPUT"
+            echo "POLICY_ID=${{ secrets.CF_RH_POLICY_MAIN_ID }}" >> "$GITHUB_ENV"
+          elif [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
+            echo "TARGET=dev"                      >> "$GITHUB_OUTPUT"
+            echo "POLICY_ID=${{ secrets.CF_RH_POLICY_DEV_ID }}"  >> "$GITHUB_ENV"
+          else
+            echo "TARGET=none"                     >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
@@ -59,28 +76,44 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload static assets (MAIN)
+      - name: Upload assets to S3 (MAIN)
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" $LONG_CACHE $S3_SYNC_OPTS
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "*" --include "*.html" $SHORT_CACHE $S3_SYNC_OPTS
 
-      - name: Upload index.html (MAIN)
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: |
-          BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
-          aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
-
-      - name: Upload static assets (DEV)
+      - name: Upload assets to S3 (DEV)
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "index.html" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" $LONG_CACHE $S3_SYNC_OPTS
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "*" --include "*.html" $SHORT_CACHE $S3_SYNC_OPTS
 
-      - name: Upload index.html (DEV)
-        if: ${{ github.ref == 'refs/heads/develop' }}
+      - name: Update CloudFront CSP header
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+        env:
+          POLICY_ID: ${{ env.POLICY_ID }}
+          NONCE: ${{ env.CSP_NONCE }}
         run: |
-          BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
-          aws s3 cp ./out/index.html s3://$BUCKET/index.html $SHORT_CACHE
+          sleep 5 
+          
+          aws cloudfront get-response-headers-policy-config --id "$POLICY_ID" > old.json
+          ETag=$(jq -r '.ETag' old.json)
+
+          jq --arg nonce "nonce-${NONCE}" '
+            .ResponseHeadersPolicyConfig
+            .SecurityHeadersConfig
+            .ContentSecurityPolicy
+            .ContentSecurityPolicy |= sub("nonce-[A-Za-z0-9_-]+"; $nonce)
+            | .ResponseHeadersPolicyConfig
+          ' old.json > new.json
+
+          aws cloudfront update-response-headers-policy \
+              --id "$POLICY_ID" \
+              --if-match "$ETag" \
+              --response-headers-policy-config file://new.json
