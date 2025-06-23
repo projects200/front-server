@@ -81,10 +81,9 @@ export function updateExercise(
   token: string,
   data: ExerciseContent,
   exerciseId: number,
-  // 응답형태 변경점 없을시 어떤형식인지 확인필요
-): Promise<null> {
+): Promise<{ exerciseId: number }> {
   const dto: ExerciseContentReqDto = adaptExerciseContent(data)
-  return fetchWrapper<null>(
+  return fetchWrapper<{ exerciseId: number }>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises/${exerciseId}`,
     {
       method: 'PATCH',

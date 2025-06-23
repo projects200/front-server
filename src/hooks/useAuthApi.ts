@@ -1,37 +1,26 @@
-import { useCallback } from 'react'
-import { useAuth } from 'react-oidc-context'
+import { createUser, readRegistered } from '@/api/auth'
+import { SignUp, MemberInfo } from '@/types/auth'
+import SITE_MAP from '@/constants/siteMap.constant'
 
-import { readRegistered, createUser } from '@/api/auth'
-import { SignUp } from '@/types/auth'
-import { ApiError } from '@/types/common'
+import useApiGet from './useApiGet'
+import useApiMutation from './useApiMutation'
 
-export function useAuthApi() {
-  const auth = useAuth()
-  const user = auth.user
-  const idToken = user?.id_token
-
-  // 회원가입 여부 확인
-  const checkRegistered = useCallback(async () => {
-    if (!idToken) {
-      throw new ApiError('idToken이 만료되었거나 존재하지 않습니다.', 401)
-    }
-    const res = await readRegistered(idToken)
-
-    return res
-  }, [idToken])
-
-  // 회원가입
-  const postCreateUser = useCallback(
-    async (data: SignUp) => {
-      if (!idToken) {
-        throw new ApiError('idToken이 만료되었거나 존재하지 않습니다.', 401)
-      }
-      const res = await createUser(idToken, data)
-
-      return res
-    },
-    [idToken],
+// 유저 생성
+export const usePostUser = () =>
+  useApiMutation<MemberInfo, SignUp>(
+    ['auth/create'],
+    createUser,
+    {},
+    { messages: { 400: '입력값이 올바르지 않습니다.' } },
+    false,
   )
 
-  return { checkRegistered, postCreateUser }
-}
+// 유저 회원가입 여부 확인
+export const useReadRegistered = () =>
+  useApiGet<{ isRegistered: boolean }>(
+    ['auth/isRegistered'],
+    readRegistered,
+    {},
+    { actions: { 400: { type: 'redirect', to: SITE_MAP.LOGIN } } },
+    false,
+  )

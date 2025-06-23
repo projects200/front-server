@@ -30,7 +30,7 @@ export default function Create() {
         startedAt: value.startedAt,
         endedAt: value.endedAt,
       })
-      exerciseId = res.exerciseId
+      exerciseId = res.data.exerciseId
     } catch {
       return
     }

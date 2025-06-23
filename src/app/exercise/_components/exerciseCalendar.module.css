@@ -1,24 +1,3 @@
-.month-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
-@keyframes fade-in-stamp {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-.fade-in {
-  animation: fade-in-stamp 1s ease forwards;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -61,53 +40,14 @@
   text-align: center;
 }
 
-.calendar {
-  display: grid;
-  align-items: center;
-  grid-template-rows: repeat(auto-fill, 38px);
-  gap: 12px;
+/* .swipe-wrapper {
+  overflow: hidden;
   width: 100%;
 }
 
-.week {
-  display: grid;
-  align-items: center;
-  grid-template-columns: repeat(7, 1fr);
-}
-
-.cell {
-  position: relative;
+.swipe-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 38px;
-  cursor: pointer;
-}
-
-.empty {
-  color: #c2c2c2;
-  cursor: default;
-}
-
-.disabled {
-  color: #c2c2c2;
-  cursor: default;
-}
-
-.today {
-  margin: auto;
-  width: 38px;
-  height: 38px;
-  background: #dce4d9;
-  border-radius: 50%;
-}
-
-.stamp-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 34px;
-  height: 34px;
-}
+  width: 300%;
+  transform: translateX(calc(-100% / 3));
+  will-change: transform;
+} */
