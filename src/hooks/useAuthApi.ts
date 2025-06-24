@@ -1,3 +1,4 @@
+import { Key } from 'swr'
 import { createUser, readRegistered } from '@/api/auth'
 import { SignUp, MemberInfo } from '@/types/auth'
 import SITE_MAP from '@/constants/siteMap.constant'
@@ -16,11 +17,19 @@ export const usePostUser = () =>
   )
 
 // 유저 회원가입 여부 확인
-export const useReadRegistered = () =>
+export const useReadRegistered = (key: Key) =>
   useApiGet<{ isRegistered: boolean }>(
-    ['auth/isRegistered'],
+    key,
     readRegistered,
-    {},
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateOnMount: true,
+      shouldRetryOnError: false,
+      revalidateIfStale: false,
+      dedupingInterval: 1000 * 60 * 60,
+    },
+
     { actions: { 400: { type: 'redirect', to: SITE_MAP.LOGIN } } },
     false,
   )
