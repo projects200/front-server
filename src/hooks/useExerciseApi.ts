@@ -74,9 +74,13 @@ export const usePostExercisePictures = () =>
   )
 
 // 운동기록 기간 조회
-export const useReadExerciseRange = (startDate: string, endDate: string) =>
+export const useReadExerciseRange = (
+  startDate: string,
+  endDate: string,
+  disabled = false,
+) =>
   useApiGet<ExerciseRange[]>(
-    ['exercise/range', startDate.substring(0, 7)],
+    disabled ? null : ['exercise/range', startDate.substring(0, 7)],
     (token) =>
       readExerciseRange(token, startDate, endDate).then(adaptExerciseRange),
     {

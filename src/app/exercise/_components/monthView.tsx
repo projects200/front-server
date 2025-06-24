@@ -8,7 +8,7 @@ import clsx from 'clsx'
 import StampIcon from '@/assets/stamp.svg'
 import SITE_MAP from '@/constants/siteMap.constant'
 import Typography from '@/components/ui/typography'
-import styles from './exerciseCalendarBody.module.css'
+import styles from './monthView.module.css'
 
 type Props = {
   weeks: Date[][]
@@ -17,7 +17,7 @@ type Props = {
   counts: Record<string, number>
 }
 
-const ExerciseCalendarBody = memo(function ExerciseCalendarBody({
+const MonthView = memo(function MonthView({
   weeks,
   month,
   today,
@@ -25,6 +25,8 @@ const ExerciseCalendarBody = memo(function ExerciseCalendarBody({
 }: Props) {
   const router = useRouter()
   const [notCacheData, setNotCacheData] = useState(false)
+
+  // counts값이 변경될때마다 캐시된 데이터인지 여부를 판단하여 스탬프 아이콘에 fadeIn 효과를 줄지 즉시 표시해줄지 판단합니다.
   useEffect(() => {
     const isEmpty = Object.keys(counts).length === 0
     if (!notCacheData && isEmpty) setNotCacheData(true)
@@ -73,4 +75,4 @@ const ExerciseCalendarBody = memo(function ExerciseCalendarBody({
   )
 })
 
-export default ExerciseCalendarBody
+export default MonthView

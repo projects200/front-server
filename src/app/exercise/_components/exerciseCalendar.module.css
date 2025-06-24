@@ -40,14 +40,18 @@
   text-align: center;
 }
 
-/* .swipe-wrapper {
+.calendar-carousel-container {
   overflow: hidden;
+  position: relative;
   width: 100%;
 }
 
-.swipe-container {
+.calendar-carousel-view {
   display: flex;
-  width: 300%;
-  transform: translateX(calc(-100% / 3));
-  will-change: transform;
-} */
+  width: 300%; 
+}
+
+.month-view-wrapper {
+  width: calc(100% / 3);
+  flex-shrink: 0;
+}
