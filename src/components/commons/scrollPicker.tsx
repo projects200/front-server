@@ -29,7 +29,7 @@ const generateOptions = () => {
     month: Array.from({ length: 12 }, (_, i) => i + 1),
     day: Array.from({ length: 31 }, (_, i) => i + 1),
     hour: Array.from({ length: 24 }, (_, i) => i),
-    minute: Array.from({ length: 13 }, (_, i) => i * 5),
+    minute: Array.from({ length: 12 }, (_, i) => i * 5),
     date: (() => {
       const result: string[] = []
       for (let i = 0; i < 365; i++) {
