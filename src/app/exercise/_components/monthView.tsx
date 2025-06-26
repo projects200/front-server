@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useState, useEffect, useMemo } from 'react'
+import { memo, useMemo, useEffect, useState } from 'react'
 
 import {
   format,
@@ -34,6 +34,11 @@ const MonthView = memo(function MonthView({
   onDateClick,
 }: Props) {
   const [notCacheData, setNotCacheData] = useState(false)
+  // counts값이 변경될때마다 캐시된 데이터인지 여부를 판단하여 스탬프 아이콘에 fadeIn 효과를 줄지 즉시 표시해줄지 판단합니다.
+  useEffect(() => {
+    const isEmpty = Object.keys(counts).length === 0
+    if (!notCacheData && isEmpty) setNotCacheData(true)
+  }, [counts])
 
   const weeks = useMemo(() => {
     const gridStart = startOfWeek(startOfMonth(month), { weekStartsOn: 0 })
@@ -52,11 +57,15 @@ const MonthView = memo(function MonthView({
     return newWeeks
   }, [month])
 
-  // counts값이 변경될때마다 캐시된 데이터인지 여부를 판단하여 스탬프 아이콘에 fadeIn 효과를 줄지 즉시 표시해줄지 판단합니다.
-  useEffect(() => {
-    const isEmpty = Object.keys(counts).length === 0
-    if (!notCacheData && isEmpty) setNotCacheData(true)
-  }, [counts])
+  // console.log(counts)
+  // const isChacedData = useRef(false)
+  // const isStampAnimated = useMemo(() => {
+  //   if (!isChacedData.current && Object.keys(counts).length > 0) {
+  //     isChacedData.current = true
+  //     return true
+  //   }
+  //   return false
+  // }, [counts])
 
   return (
     <div className={styles['calendar']}>

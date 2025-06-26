@@ -10,16 +10,14 @@ import { useToast } from '@/hooks/useToast'
 import { useReadRegistered } from '@/hooks/useAuthApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-export default function CallbackClient () {
+export default function CallbackClient() {
   const auth = useAuth()
   const router = useRouter()
   const showToast = useToast()
   const [errorDescription] = useQueryState('error_description')
   const hasBeenHandled = useRef(false)
 
-  const { data: registeredData } = useReadRegistered(
-    auth.isAuthenticated ? ['auth/isRegistered'] : null,
-  )
+  const { data: registeredData } = useReadRegistered(auth.isAuthenticated)
 
   useEffect(() => {
     if (hasBeenHandled.current) return

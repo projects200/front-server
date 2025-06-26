@@ -37,14 +37,14 @@ const MonthViewWithData = ({
 }) => {
   const router = useRouter()
 
-  // 미래의 달은 API를 호출하지 않도록 제어합니다.
+  // 드래그 애니메이션을 위해 이전달,현재달,다음달을 렌더링하되 API호출은 현재달만 호출합니다.
   const isFutureMonth = monthToShow.getTime() > startOfMonth(today).getTime()
-  const isDisabled = isFutureMonth || !isActive
+  const shouldFetch = !isFutureMonth && isActive
   const startDate = format(startOfMonth(monthToShow), 'yyyy-MM-dd')
   const endDate = isSameMonth(monthToShow, today)
     ? format(today, 'yyyy-MM-dd')
     : format(endOfMonth(monthToShow), 'yyyy-MM-dd')
-  const { data } = useReadExerciseRange(startDate, endDate, isDisabled)
+  const { data } = useReadExerciseRange(startDate, endDate, shouldFetch)
 
   // API 응답 데이터를 날짜별 기록 횟수 맵으로 변환합니다.
   // TODO: 향후 이 컴포넌트에 상태가 추가되면,
@@ -183,7 +183,7 @@ export default function ExerciseCalendar() {
           <MonthViewWithData
             today={today}
             monthToShow={prevMonth}
-            isActive={isSameMonth(currentMonth, prevMonth)}
+            isActive={false}
           />
           <MonthViewWithData
             today={today}
@@ -193,7 +193,7 @@ export default function ExerciseCalendar() {
           <MonthViewWithData
             today={today}
             monthToShow={nextMonth}
-            isActive={isSameMonth(currentMonth, nextMonth)}
+            isActive={false}
           />
         </animated.div>
       </div>

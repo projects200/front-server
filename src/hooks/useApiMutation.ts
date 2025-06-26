@@ -9,18 +9,29 @@ type MutationResult<Data, Body> = {
   variables: Body
 }
 
-export default function useApiMutation<Data = unknown, Body = unknown>(
-  key: Key,
-  request: (token: string, body: Body) => Promise<Data>,
-  options?: SWRMutationConfiguration<
+export interface UseApiMutationOptions<Data, Body>
+  extends SWRMutationConfiguration<
     MutationResult<Data, Body>,
     ApiError,
     Key,
     Body
-  >,
-  policy?: ErrorPolicy,
-  isAccessToken = true,
+  > {
+  policy?: ErrorPolicy
+  isAccessToken?: boolean
+  shouldFetch?: boolean
+}
+
+export default function useApiMutation<Data = unknown, Body = unknown>(
+  key: Key,
+  request: (token: string, body: Body) => Promise<Data>,
+  options?: UseApiMutationOptions<Data, Body>,
 ) {
+  const {
+    policy,
+    isAccessToken = true,
+    shouldFetch = true,
+    ...swrOptions
+  } = options || {}
   const handleError = useApiErrorHandler()
   const { user } = useAuth()
   const token = isAccessToken ? user?.access_token : user?.id_token
@@ -34,11 +45,13 @@ export default function useApiMutation<Data = unknown, Body = unknown>(
     return { data: result, variables: arg }
   }
 
+  const fetchKey = shouldFetch ? key : null
+
   return useSWRMutation<MutationResult<Data, Body>, ApiError, Key, Body>(
-    key,
+    fetchKey,
     fetcher,
     {
-      ...options,
+      ...swrOptions,
       onError: (error) => handleError(error, policy),
     },
   )

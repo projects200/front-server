@@ -44,8 +44,8 @@ export const usePostExercise = () =>
           { revalidate: true },
         )
       },
+      policy: { messages: { 400: '입력값이 올바르지 않습니다.' } },
     },
-    { messages: { 400: '입력값이 올바르지 않습니다.' } },
   )
 
 // 운동 이미지 생성
@@ -63,12 +63,12 @@ export const usePostExercisePictures = () =>
           revalidate: true,
         })
       },
-    },
-    {
-      messages: {
-        400: '이미지 업로드에 실패했습니다.',
-        403: '이미지 업로드에 실패했습니다.',
-        500: '이미지 업로드에 실패했습니다.',
+      policy: {
+        messages: {
+          400: '이미지 업로드에 실패했습니다.',
+          403: '이미지 업로드에 실패했습니다.',
+          500: '이미지 업로드에 실패했습니다.',
+        },
       },
     },
   )
@@ -77,16 +77,17 @@ export const usePostExercisePictures = () =>
 export const useReadExerciseRange = (
   startDate: string,
   endDate: string,
-  disabled = false,
+  shouldFetch: boolean,
 ) =>
   useApiGet<ExerciseRange[]>(
-    disabled ? null : ['exercise/range', startDate.substring(0, 7)],
+    ['exercise/range', startDate.substring(0, 7)],
     (token) =>
       readExerciseRange(token, startDate, endDate).then(adaptExerciseRange),
     {
       revalidateOnFocus: false,
       shouldRetryOnError: false,
       revalidateIfStale: false,
+      shouldFetch,
     },
   )
 
@@ -99,12 +100,10 @@ export const useReadExerciseList = (date: string) =>
       revalidateOnFocus: false,
       shouldRetryOnError: false,
       revalidateIfStale: false,
-    },
-    {
-      messages: {
-        400: '올바르지 않은 날짜입니다.',
+      policy: {
+        messages: { 400: '올바르지 않은 날짜입니다.' },
+        actions: { 400: 'back' },
       },
-      actions: { 400: 'back' },
     },
   )
 
@@ -116,13 +115,13 @@ export const useReadExercise = (exerciseId: number) =>
     {
       revalidateOnFocus: false,
       shouldRetryOnError: false,
-    },
-    {
-      messages: {
-        403: '접근할 수 없는 운동기록 입니다.',
-        404: '운동기록이 존재하지 않습니다.',
+      policy: {
+        messages: {
+          403: '접근할 수 없는 운동기록 입니다.',
+          404: '운동기록이 존재하지 않습니다.',
+        },
+        actions: { 403: 'back', 404: 'back' },
       },
-      actions: { 403: 'back', 404: 'back' },
     },
   )
 
@@ -137,14 +136,14 @@ export const usePatchExercise = (exerciseId: number) =>
           revalidate: true,
         })
       },
-    },
-    {
-      messages: {
-        400: '입력값이 올바르지 않습니다.',
-        403: '접근할 수 없는 운동기록 입니다.',
-        404: '운동기록이 존재하지 않습니다.',
+      policy: {
+        messages: {
+          400: '입력값이 올바르지 않습니다.',
+          403: '접근할 수 없는 운동기록 입니다.',
+          404: '운동기록이 존재하지 않습니다.',
+        },
+        actions: { 403: 'back', 404: 'back' },
       },
-      actions: { 403: 'back', 404: 'back' },
     },
   )
 
@@ -159,14 +158,14 @@ export const useDeleteExercise = (exerciseId: number) =>
           revalidate: true,
         })
       },
-    },
-    {
-      messages: {
-        400: '운동ID값이 올바르지 않습니다.',
-        403: '접근할 수 없는 운동기록 입니다.',
-        404: '운동기록이 존재하지 않습니다.',
+      policy: {
+        messages: {
+          400: '운동ID값이 올바르지 않습니다.',
+          403: '접근할 수 없는 운동기록 입니다.',
+          404: '운동기록이 존재하지 않습니다.',
+        },
+        actions: { 403: 'back', 404: 'back' },
       },
-      actions: { 403: 'back', 404: 'back' },
     },
   )
 
@@ -182,12 +181,12 @@ export const useDeleteExercisePictures = (exerciseId: number) =>
           revalidate: true,
         })
       },
-    },
-    {
-      messages: {
-        400: '운동ID값이 올바르지 않습니다.',
-        403: '접근할 수 없는 운동기록 입니다.',
-        404: '운동기록이 존재하지 않습니다.',
+      policy: {
+        messages: {
+          400: '운동ID값이 올바르지 않습니다.',
+          403: '접근할 수 없는 운동기록 입니다.',
+          404: '운동기록이 존재하지 않습니다.',
+        },
       },
     },
   )
