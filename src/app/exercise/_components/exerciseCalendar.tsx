@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   startOfMonth,
   endOfMonth,
@@ -12,11 +13,11 @@ import {
 import { ko } from 'date-fns/locale'
 import { useSpring, animated } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
-
 import { useReadExerciseRange } from '@/hooks/useExerciseApi'
 import LeftArrow from '@/assets/icon_left_arrow.svg'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import Typography from '@/components/ui/typography'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import MonthView from './monthView'
 import styles from './exerciseCalendar.module.css'
@@ -34,6 +35,8 @@ const MonthViewWithData = ({
   monthToShow: Date
   isActive: boolean
 }) => {
+  const router = useRouter()
+
   // 미래의 달은 API를 호출하지 않도록 제어합니다.
   const isFutureMonth = monthToShow.getTime() > startOfMonth(today).getTime()
   const isDisabled = isFutureMonth || !isActive
@@ -53,6 +56,11 @@ const MonthViewWithData = ({
     })
   }
 
+  const handleDateClick = (date: Date) => {
+    const dateStr = format(date, 'yyyy-MM-dd')
+    router.push(`${SITE_MAP.EXERCISE_LIST}?date=${dateStr}`)
+  }
+
   return (
     <div className={styles['month-view-wrapper']}>
       <MonthView
@@ -60,6 +68,7 @@ const MonthViewWithData = ({
         month={monthToShow}
         today={today}
         counts={counts}
+        onDateClick={handleDateClick}
       />
     </div>
   )

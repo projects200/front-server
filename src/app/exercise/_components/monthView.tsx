@@ -1,7 +1,7 @@
 'use client'
 
 import { memo, useState, useEffect, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+
 import {
   format,
   isSameMonth,
@@ -16,7 +16,7 @@ import {
 import clsx from 'clsx'
 
 import StampIcon from '@/assets/stamp.svg'
-import SITE_MAP from '@/constants/siteMap.constant'
+
 import Typography from '@/components/ui/typography'
 import styles from './monthView.module.css'
 
@@ -24,10 +24,15 @@ type Props = {
   month: Date
   today: Date
   counts: Record<string, number>
+  onDateClick: (date: Date) => void
 }
 
-const MonthView = memo(function MonthView({ month, today, counts }: Props) {
-  const router = useRouter()
+const MonthView = memo(function MonthView({
+  month,
+  today,
+  counts,
+  onDateClick,
+}: Props) {
   const [notCacheData, setNotCacheData] = useState(false)
 
   const weeks = useMemo(() => {
@@ -80,7 +85,7 @@ const MonthView = memo(function MonthView({ month, today, counts }: Props) {
                 )}
                 onClick={() => {
                   if (!isCurrent || isFuture) return
-                  router.push(`${SITE_MAP.EXERCISE_LIST}?date=${dateStr}`)
+                  onDateClick(day)
                 }}
               >
                 <Typography as="span" variant="text14">
