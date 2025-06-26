@@ -129,7 +129,7 @@ export const useReadExercise = (exerciseId: number) =>
 // 운동 기록 수정
 export const usePatchExercise = (exerciseId: number) =>
   useApiMutation<{ exerciseId: number }, ExerciseContent>(
-    ['exercise/update', exerciseId],
+    ['exercise/update'],
     (token, body) => updateExercise(token, body, exerciseId),
     {
       onSuccess: () => {
