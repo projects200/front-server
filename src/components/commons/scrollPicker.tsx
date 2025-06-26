@@ -18,9 +18,14 @@ type ScrollPickerProps = {
 
 const generateOptions = () => {
   const today = new Date()
-
+  const currentYear = today.getFullYear()
+  const startYear = 1945
+  
   return {
-    year: Array.from({ length: 100 }, (_, i) => today.getFullYear() - 99 + i),
+    year: Array.from(
+      { length: currentYear - startYear + 1 },
+      (_, i) => startYear + i,
+    ),
     month: Array.from({ length: 12 }, (_, i) => i + 1),
     day: Array.from({ length: 31 }, (_, i) => i + 1),
     hour: Array.from({ length: 24 }, (_, i) => i),

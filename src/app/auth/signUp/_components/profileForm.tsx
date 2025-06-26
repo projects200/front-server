@@ -7,7 +7,11 @@ import LoadingScreen from '@/components/commons/loadingScreen'
 import BottomButton from '@/components/commons/bottomButton'
 import Typography from '@/components/ui/typography'
 import { useToast } from '@/hooks/useToast'
-import { validateNickname, validateBirthdate } from '@/utils/validation'
+import {
+  validateNickname,
+  validateBirthdate,
+  validateGender,
+} from '@/utils/validation'
 import { usePostUser } from '@/hooks/useAuthApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -17,18 +21,24 @@ import styles from './profileForm.module.css'
 
 export default function ProfileForm() {
   const [nickname, setNickname] = useState('')
-  const [birthdate, setBirthdate] = useState('2000-01-01')
-  const [gender, setGender] = useState<'M' | 'F' | 'U'>('U')
+  const [birthdate, setBirthdate] = useState<string | null>(null)
+  const [gender, setGender] = useState<'M' | 'F' | 'U' | null>(null)
   const router = useRouter()
   const showToast = useToast()
   const { trigger, isMutating } = usePostUser()
 
-  const isValid = nickname.trim() !== '' && birthdate.trim() !== ''
+  const isValid =
+    nickname.trim() !== '' && birthdate !== null && gender !== null
 
   async function handleSubmit() {
     const nicknameCheck = validateNickname(nickname.trim())
     if (!nicknameCheck.valid) {
       showToast(nicknameCheck.error!, 'info')
+      return
+    }
+
+    if (birthdate === null) {
+      showToast('생년월일을 입력해주세요.', 'info')
       return
     }
 
@@ -38,8 +48,14 @@ export default function ProfileForm() {
       return
     }
 
+    const genderCheck = validateGender(gender)
+    if (!genderCheck.valid) {
+      showToast(genderCheck.error!, 'info')
+      return
+    }
+
     try {
-      await trigger({ nickname, birthdate, gender })
+      await trigger({ nickname, birthdate: birthdate!, gender: gender! })
       showToast('회원가입이 완료되었습니다.', 'info')
       router.push(SITE_MAP.EXERCISE)
     } catch {

@@ -27,9 +27,10 @@
 
 .error {
   /* 임시 */
-  background-color: var(--color-red)
+  background-color: var(--color-red);
 }
-.text{
+.text {
+  white-space: pre-line;
   color: var(--color-white-200);
 }
 

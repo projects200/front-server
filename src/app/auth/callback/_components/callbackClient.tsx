@@ -29,7 +29,7 @@ export default function CallbackClient() {
       hasBeenHandled.current = true
       auth.removeUser()
       showToast(
-        '기존의 계정과 성공적으로 통합되었습니다. 다시 로그인해주세요.',
+        '기존의 계정과 성공적으로 통합되었습니다.\n다시 로그인해주세요.',
         'info',
       )
       router.replace(SITE_MAP.LOGIN)

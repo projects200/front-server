@@ -7,7 +7,7 @@ import { Gender } from '@/types/auth'
 import styles from './genderSelector.module.css'
 
 interface GenderSelectorProps {
-  value: Gender
+  value: Gender | null
   onChange: (value: Gender) => void
 }
 
