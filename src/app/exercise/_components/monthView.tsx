@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useMemo, useEffect, useState, useRef } from 'react'
+import { memo, useMemo, useRef } from 'react'
 
 import {
   format,
