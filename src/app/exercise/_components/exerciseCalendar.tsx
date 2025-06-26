@@ -4,9 +4,6 @@ import { useState, useMemo, useRef } from 'react'
 import {
   startOfMonth,
   endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  addDays,
   subMonths,
   addMonths,
   format,
@@ -56,31 +53,10 @@ const MonthViewWithData = ({
     })
   }
 
-  // 주어진 월에 대한 주(week) 배열을 생성합니다.
-  const weeks = useMemo(() => {
-    const gridStart = startOfWeek(startOfMonth(monthToShow), {
-      weekStartsOn: 0,
-    })
-    const gridEnd = endOfWeek(endOfMonth(monthToShow), { weekStartsOn: 0 })
-
-    const newWeeks: Date[][] = []
-    let cursor = gridStart
-    while (cursor <= gridEnd) {
-      const days: Date[] = []
-      for (let i = 0; i < 7; i++) {
-        days.push(cursor)
-        cursor = addDays(cursor, 1)
-      }
-      newWeeks.push(days)
-    }
-    return newWeeks
-  }, [monthToShow])
-
   return (
     <div className={styles['month-view-wrapper']}>
       <MonthView
         key={monthToShow.toISOString()}
-        weeks={weeks}
         month={monthToShow}
         today={today}
         counts={counts}
