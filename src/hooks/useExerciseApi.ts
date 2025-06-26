@@ -128,7 +128,7 @@ export const useReadExercise = (exerciseId: number) =>
 // 운동 기록 수정
 export const usePatchExercise = (exerciseId: number) =>
   useApiMutation<{ exerciseId: number }, ExerciseContent>(
-    ['exercise/update'],
+    ['exercise/update', exerciseId],
     (token, body) => updateExercise(token, body, exerciseId),
     {
       onSuccess: () => {
@@ -150,7 +150,7 @@ export const usePatchExercise = (exerciseId: number) =>
 // 운동 기록 삭제
 export const useDeleteExercise = (exerciseId: number) =>
   useApiMutation<null, null>(
-    ['exercise/delete'],
+    ['exercise/delete', exerciseId],
     (token) => removeExercise(token, exerciseId),
     {
       onSuccess: () => {
@@ -172,7 +172,7 @@ export const useDeleteExercise = (exerciseId: number) =>
 // 운동 이미지 삭제
 export const useDeleteExercisePictures = (exerciseId: number) =>
   useApiMutation<null, number[]>(
-    ['exercise/delete/pictures'],
+    ['exercise/delete/pictures', exerciseId],
     (token, pictureIds) =>
       removeExercisePictures(token, pictureIds, exerciseId),
     {
