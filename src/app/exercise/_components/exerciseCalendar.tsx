@@ -1,5 +1,6 @@
 'use client'
 
+import useSWR from 'swr'
 import { useState, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -17,6 +18,7 @@ import { useReadExerciseRange } from '@/hooks/useExerciseApi'
 import LeftArrow from '@/assets/icon_left_arrow.svg'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import Typography from '@/components/ui/typography'
+import { ExerciseRange } from '@/types/exercise'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import MonthView from './monthView'
@@ -44,7 +46,14 @@ const MonthViewWithData = ({
   const endDate = isSameMonth(monthToShow, today)
     ? format(today, 'yyyy-MM-dd')
     : format(endOfMonth(monthToShow), 'yyyy-MM-dd')
-  const { data } = useReadExerciseRange(startDate, endDate, shouldFetch)
+  const { data: fetchedData } = useReadExerciseRange(
+    startDate,
+    endDate,
+    shouldFetch,
+  )
+  const swrKey = ['exercise/range', startDate.substring(0, 7)]
+  const { data: cachedData } = useSWR<ExerciseRange[]>(swrKey, null)
+  const data = fetchedData || cachedData
 
   // API 응답 데이터를 날짜별 기록 횟수 맵으로 변환합니다.
   // TODO: 향후 이 컴포넌트에 상태가 추가되면,

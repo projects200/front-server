@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useMemo, useEffect, useState } from 'react'
+import { memo, useMemo, useEffect, useState, useRef } from 'react'
 
 import {
   format,
@@ -33,11 +33,11 @@ const MonthView = memo(function MonthView({
   counts,
   onDateClick,
 }: Props) {
-  const [notCacheData, setNotCacheData] = useState(false)
-  // counts값이 변경될때마다 캐시된 데이터인지 여부를 판단하여 스탬프 아이콘에 fadeIn 효과를 줄지 즉시 표시해줄지 판단합니다.
-  useEffect(() => {
-    const isEmpty = Object.keys(counts).length === 0
-    if (!notCacheData && isEmpty) setNotCacheData(true)
+  const prevCounts = useRef(counts)
+  const shouldAnimate = useMemo(() => {
+    const prevData = Object.keys(prevCounts.current).length === 0
+    const currentData = Object.keys(counts).length > 0
+    return prevData && currentData
   }, [counts])
 
   const weeks = useMemo(() => {
@@ -57,16 +57,6 @@ const MonthView = memo(function MonthView({
     return newWeeks
   }, [month])
 
-  // console.log(counts)
-  // const isChacedData = useRef(false)
-  // const isStampAnimated = useMemo(() => {
-  //   if (!isChacedData.current && Object.keys(counts).length > 0) {
-  //     isChacedData.current = true
-  //     return true
-  //   }
-  //   return false
-  // }, [counts])
-
   return (
     <div className={styles['calendar']}>
       {weeks.map((week, wi) => (
@@ -79,8 +69,8 @@ const MonthView = memo(function MonthView({
             const count = counts[dateStr] ?? 0
 
             const stampIconClassName = clsx(styles['stamp-icon'], {
-              [styles['animate-fade-in']]: notCacheData,
-              [styles['show-immediately']]: !notCacheData,
+              [styles['animate-fade-in']]: shouldAnimate,
+              [styles['show-immediately']]: !shouldAnimate,
             })
 
             return (
