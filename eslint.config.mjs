@@ -16,7 +16,8 @@ const eslintConfig = [
       'react-hooks/exhaustive-deps': 'off',
       '@next/next/no-img-element': 'off',
       '@typescript-eslint/no-require-imports': 'off',
-      '@next/next/next-script-for-ga': 'off'
+      '@next/next/next-script-for-ga': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 ]
