@@ -1,5 +1,3 @@
-import { mutate } from 'swr'
-
 import {
   createExercise,
   createExercisePictures,
@@ -22,6 +20,7 @@ import {
   ExerciseContent,
   ExercisePicturesUpload,
 } from '@/types/exercise'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import useApiGet from './useApiGet'
 import useApiMutation from './useApiMutation'
@@ -32,18 +31,6 @@ export const usePostExercise = () =>
     ['exercise/create'],
     createExercise,
     {
-      onSuccess: (data) => {
-        mutate(
-          ['exercise/range', data.variables.startedAt.substring(0, 7)],
-          undefined,
-          { revalidate: true },
-        )
-        mutate(
-          ['exercise/list', data.variables.startedAt.substring(0, 10)],
-          undefined,
-          { revalidate: true },
-        )
-      },
       policy: { messages: { 400: '입력값이 올바르지 않습니다.' } },
     },
   )
@@ -58,16 +45,10 @@ export const usePostExercisePictures = () =>
     (token, { images, exerciseId }) =>
       createExercisePictures(token, { images }, exerciseId),
     {
-      onSuccess: (data) => {
-        mutate(['exercise/detail', data.data.exerciseId], undefined, {
-          revalidate: true,
-        })
-      },
       policy: {
         messages: {
           400: '이미지 업로드에 실패했습니다.',
           403: '이미지 업로드에 실패했습니다.',
-          500: '이미지 업로드에 실패했습니다.',
         },
       },
     },
@@ -86,35 +67,39 @@ export const useReadExerciseRange = (
     {
       revalidateOnFocus: false,
       shouldRetryOnError: false,
-      revalidateIfStale: false,
       shouldFetch,
+      policy: {
+        messages: { 400: '유효하지 않은 날짜입니다.' },
+        actions: { 400: { type: 'redirect', to: SITE_MAP.EXERCISE } },
+      },
     },
   )
 
 // 운동기록 하루 조회
-export const useReadExerciseList = (date: string) =>
+export const useReadExerciseList = (date: string, shouldFetch: boolean) =>
   useApiGet<ExerciseList[]>(
     ['exercise/list', date],
     (token) => readExerciseList(token, date).then(adaptExerciseList),
     {
       revalidateOnFocus: false,
       shouldRetryOnError: false,
-      revalidateIfStale: false,
+      shouldFetch,
       policy: {
-        messages: { 400: '올바르지 않은 날짜입니다.' },
+        messages: { 400: '유효하지 않은 날짜입니다.' },
         actions: { 400: 'back' },
       },
     },
   )
 
 // 운동 기록 내용 조회
-export const useReadExercise = (exerciseId: number) =>
+export const useReadExercise = (exerciseId: number, shouldFetch: boolean) =>
   useApiGet<ExerciseRecordRes>(
     ['exercise/detail', exerciseId],
     (token) => readExercise(token, exerciseId).then(adaptExerciseRecord),
     {
       revalidateOnFocus: false,
       shouldRetryOnError: false,
+      shouldFetch,
       policy: {
         messages: {
           403: '접근할 수 없는 운동기록 입니다.',
@@ -131,11 +116,6 @@ export const usePatchExercise = (exerciseId: number) =>
     ['exercise/update', exerciseId],
     (token, body) => updateExercise(token, body, exerciseId),
     {
-      onSuccess: () => {
-        mutate(['exercise/detail', exerciseId], undefined, {
-          revalidate: true,
-        })
-      },
       policy: {
         messages: {
           400: '입력값이 올바르지 않습니다.',
@@ -153,11 +133,6 @@ export const useDeleteExercise = (exerciseId: number) =>
     ['exercise/delete', exerciseId],
     (token) => removeExercise(token, exerciseId),
     {
-      onSuccess: () => {
-        mutate(['exercise/detail', exerciseId], undefined, {
-          revalidate: true,
-        })
-      },
       policy: {
         messages: {
           400: '운동ID값이 올바르지 않습니다.',
@@ -176,11 +151,6 @@ export const useDeleteExercisePictures = (exerciseId: number) =>
     (token, pictureIds) =>
       removeExercisePictures(token, pictureIds, exerciseId),
     {
-      onSuccess: () => {
-        mutate(['exercise/detail', exerciseId], undefined, {
-          revalidate: true,
-        })
-      },
       policy: {
         messages: {
           400: '운동ID값이 올바르지 않습니다.',
