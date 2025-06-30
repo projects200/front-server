@@ -28,7 +28,7 @@ const getInitialDateTime = (value?: string) => {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   const hour = date.getHours()
-  const minute = date.getMinutes()
+  const minute = Math.floor(date.getMinutes() / 5) * 5
 
   return {
     date: `${year}.${month}.${day}`,
@@ -49,9 +49,17 @@ const formatStorage = (dateTime: DateTime) => {
   const fullYear = Number(`20${year}`)
   const monthIndex = Number(month) - 1
   const dayNumber = Number(day)
-  const date = new Date(fullYear, monthIndex, dayNumber, dateTime.hour, dateTime.minute)
+  const date = new Date(
+    fullYear,
+    monthIndex,
+    dayNumber,
+    dateTime.hour,
+    dateTime.minute,
+  )
   const offsetMs = date.getTimezoneOffset() * 60000
-  const localIso = new Date(date.getTime() - offsetMs).toISOString().slice(0, 19)
+  const localIso = new Date(date.getTime() - offsetMs)
+    .toISOString()
+    .slice(0, 19)
   return localIso
 }
 
