@@ -1,15 +1,25 @@
-import { ReactNode } from 'react'
+'use client'
+
+import { ReactNode, useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 
-interface IPortalProps {
+interface Props {
   children: ReactNode
 }
 
-function Portal({ children }: IPortalProps) {
-  const element =
-    typeof window !== 'undefined' && document.getElementById('modal-root')
+function Portal({ children }: Props) {
 
-  return element && children ? ReactDOM.createPortal(children, element) : null
+  const [element, setElement] = useState<HTMLElement | null>(null)
+  useEffect(() => {
+    const modalRoot = document.getElementById('modal-root')
+    if (modalRoot) {
+      setElement(modalRoot)
+    }
+  }, []) 
+  if (!element) {
+    return null
+  }
+  return ReactDOM.createPortal(children, element)
 }
 
 export default Portal

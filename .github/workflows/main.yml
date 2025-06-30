@@ -81,18 +81,18 @@ jobs:
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" $SHORT_CACHE $S3_SYNC_OPTS
+              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
 
       - name: Upload assets to S3 (DEV)
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" $SHORT_CACHE $S3_SYNC_OPTS
+              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
 
       - name: Update CloudFront CSP header
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}

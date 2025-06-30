@@ -52,7 +52,10 @@ export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
         }}
       >
         <div className={styles['button-group']}>
-          <Link className={styles['button']} href={`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}&date=${date}`}>
+          <Link
+            className={styles['button']}
+            href={`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}&date=${date}`}
+          >
             <EditIcon className={styles['modal-icon']} />
             <Typography as="span" variant="text15">
               수정하기
@@ -72,7 +75,11 @@ export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
           </button>
         </div>
       </BottomModal>
-      <CenterModal isOpen={isOpenCenter} onClose={() => setIsOpenCenter(false)} onConfirm={handleRemove}>
+      <CenterModal
+        isOpen={isOpenCenter}
+        onClose={() => setIsOpenCenter(false)}
+        onConfirm={handleRemove}
+      >
         <Typography as="span" variant="text15" weight="bold">
           운동 기록을 삭제하시겠습니까?
         </Typography>

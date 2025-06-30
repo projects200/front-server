@@ -7,7 +7,7 @@ import ScrollPicker from '@/components/commons/scrollPicker'
 import styles from './datePicker.module.css'
 
 type DatePickerProps = {
-  value: string
+  value: string | null
   onChange: (value: string) => void
 }
 
@@ -17,13 +17,16 @@ type Birthday = {
   day: number
 }
 
-const getInitialDate = (value: string) => {
-  const parsed = value.split('-').map(Number)
-  return {
-    year: parsed[0],
-    month: parsed[1],
-    day: parsed[2],
+const getInitialDate = (value: string | null): Birthday => {
+  if (value) {
+    const parsed = value.split('-').map(Number)
+    return {
+      year: parsed[0],
+      month: parsed[1],
+      day: parsed[2],
+    }
   }
+  return { year: 2000, month: 1, day: 1 }
 }
 
 const formatDisplay = (birthday: Birthday): string => {
@@ -53,7 +56,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
         type="button"
         onClick={() => setIsOpen(true)}
       >
-        {formatDisplay(formatValue)}
+        {value ? formatDisplay(formatValue) : 'YYYY/MM/DD'}
       </button>
 
       {isOpen && (

@@ -31,6 +31,23 @@ export function validateBirthdate(birthdate: string): {
   return { valid: true }
 }
 
+// 성별이 M F U 인지 확인
+export function validateGender(gender: 'M' | 'F' | 'U' | null): {
+  valid: boolean
+  error?: string
+} {
+  if (gender === null) {
+    return { valid: false, error: '성별을 선택해 주세요.' }
+  }
+
+  const allowedGenders = ['M', 'F', 'U']
+  if (!allowedGenders.includes(gender)) {
+    return { valid: false, error: '올바르지 않은 성별 값입니다.' }
+  }
+
+  return { valid: true }
+}
+
 // 날짜가 YYYY-MM-DD 형식인지 확인
 export function isValidYYYYMMDD(date: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false

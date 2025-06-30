@@ -1,53 +1,76 @@
 'use client'
 
+import { useQueryState } from 'nuqs'
 import { useAuth } from 'react-oidc-context'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { ApiError } from '@/types/common'
+import LoadingScreen from '@/components/commons/loadingScreen'
 import { useToast } from '@/hooks/useToast'
-import { useAuthApi } from '@/hooks/useAuthApi'
+import { useReadRegistered } from '@/hooks/useAuthApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-export default function CallbackPage() {
+function CallbackLogic() {
   const auth = useAuth()
   const router = useRouter()
   const showToast = useToast()
-  const { checkRegistered } = useAuthApi()
+  const [errorDescription] = useQueryState('error_description')
+  const hasBeenHandled = useRef(false)
+  const { data: registeredData, isLoading: isRegisteredLoading } =
+    useReadRegistered(auth.isAuthenticated)
 
   useEffect(() => {
-    if (auth.isLoading) return
+    if (hasBeenHandled.current) return
 
-    if (!auth.isAuthenticated) {
-      showToast('로그인 정보가 없습니다.', 'info')
+    if (
+      errorDescription &&
+      errorDescription.includes('ACCOUNT_LINKED_SUCCESS')
+    ) {
+      hasBeenHandled.current = true
+      auth.removeUser()
+      showToast(
+        '기존의 계정과 성공적으로 통합되었습니다.\n다시 로그인해주세요.',
+        'info',
+      )
       router.replace(SITE_MAP.LOGIN)
       return
     }
 
-    ;(async () => {
-      try {
-        const data = await checkRegistered()
-        if (data.isRegistered) {
-          router.replace(SITE_MAP.EXERCISE)
-        } else {
-          router.replace(SITE_MAP.AGREEMENT)
-        }
-      } catch (err: unknown) {
-        if (err instanceof ApiError) {
-          if (err.status === 401) {
-            showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'info')
-          } else {
-            showToast(err.message, 'info')
-          }
-        } else if (err instanceof Error) {
-          showToast(err.message, 'info')
-        } else {
-          showToast('서버 오류가 발생했습니다.', 'info')
-        }
-        router.replace(SITE_MAP.LOGIN)
-      }
-    })()
-  }, [auth.isLoading, auth.isAuthenticated])
+    if (auth.isLoading) return
+
+    if (!auth.isAuthenticated) {
+      hasBeenHandled.current = true
+      showToast('로그인 정보가 만료되었습니다. 다시 로그인해주세요.', 'info')
+      router.replace(SITE_MAP.LOGIN)
+      return
+    }
+  }, [auth, errorDescription])
+
+  useEffect(() => {
+    if (isRegisteredLoading || !registeredData || hasBeenHandled.current) return
+    hasBeenHandled.current = true
+
+    if (registeredData.isRegistered) {
+      router.replace(SITE_MAP.EXERCISE)
+    } else {
+      router.replace(SITE_MAP.AGREEMENT)
+    }
+  }, [registeredData, isRegisteredLoading])
 
   return null
+}
+
+export default function Callback() {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  return (
+    <>
+      {isMounted && <CallbackLogic />}
+      <LoadingScreen />
+    </>
+  )
 }
