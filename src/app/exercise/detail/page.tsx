@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
+import { useToast } from '@/hooks/useToast'
+import { isValidExerciseId } from '@/utils/validation'
 import { useReadExercise } from '@/hooks/useExerciseApi'
-import SITE_MAP from '@/constants/siteMap.constant'
 
 import ImageField from './_components/imageField'
 import InputField from '../_components/inputField'
@@ -17,28 +18,53 @@ import styles from './detail.module.css'
 
 export default function Detail() {
   const router = useRouter()
+  const showToast = useToast()
   const [exerciseId] = useQueryState('id', parseAsInteger)
+  const invalidParam = !exerciseId || !isValidExerciseId(exerciseId)
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
-  const { data, isLoading } = useReadExercise(exerciseId ?? 0)
+  const { data, isLoading } = useReadExercise(exerciseId!, !invalidParam)
 
   useEffect(() => {
-    if (!exerciseId) {
-      router.replace(SITE_MAP.EXERCISE)
+    if (invalidParam) {
+      showToast('유효하지 않은 운동기록 ID입니다.', 'info')
+      router.back()
     }
-  }, [exerciseId])
+  }, [invalidParam])
 
-  if (!exerciseId || isLoading || !data) return null
+  if (invalidParam || isLoading || !data) return null
 
   return (
     <>
-      <Header rightIcon={<KebabIcon className={styles['header-icon']} />} onClick={() => setIsBottomModalOpen(true)}>
+      <Header
+        rightIcon={<KebabIcon className={styles['header-icon']} />}
+        onClick={() => setIsBottomModalOpen(true)}
+      >
         기록 상세
       </Header>
       {data.images?.length ? <ImageField images={data.images} /> : <></>}
       <InputField value={data.title} label="제목" id="title" readonly={true} />
-      <DateTimePicker label="운동 시간" startedAt={data.startedAt} endedAt={data.endedAt} readonly={true} />
-      {data.category && <InputField value={data.category} label="운동 종류" id="category" readonly={true} />}
-      {data.location && <InputField value={data.location} label="장소" id="location" readonly={true} />}
+      <DateTimePicker
+        label="운동 시간"
+        startedAt={data.startedAt}
+        endedAt={data.endedAt}
+        readonly={true}
+      />
+      {data.category && (
+        <InputField
+          value={data.category}
+          label="운동 종류"
+          id="category"
+          readonly={true}
+        />
+      )}
+      {data.location && (
+        <InputField
+          value={data.location}
+          label="장소"
+          id="location"
+          readonly={true}
+        />
+      )}
 
       {data.content && (
         <TextareaField
@@ -49,7 +75,12 @@ export default function Detail() {
           readonly={true}
         />
       )}
-      <KebabModal isOpen={isBottomModalOpen} setIsOpen={setIsBottomModalOpen} exerciseId={exerciseId} />
+      <KebabModal
+        isOpen={isBottomModalOpen}
+        setIsOpen={setIsBottomModalOpen}
+        exerciseId={exerciseId}
+        startedAt={data.startedAt}
+      />
     </>
   )
 }

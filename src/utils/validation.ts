@@ -48,12 +48,37 @@ export function validateGender(gender: 'M' | 'F' | 'U' | null): {
   return { valid: true }
 }
 
-// 날짜가 YYYY-MM-DD 형식인지 확인
+// 날짜가 YYYY-MM-DD 형식이고, 실존하며, 오늘 이후가 아닌지 확인합니다.
 export function isValidYYYYMMDD(date: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return false
+  }
 
-  const time = Date.parse(date)
-  if (Number.isNaN(time)) return false
+  const inputDate = new Date(date)
 
-  return new Date(time).toISOString().slice(0, 10) === date
+  if (Number.isNaN(inputDate.getTime())) {
+    return false
+  }
+
+  if (inputDate.toISOString().slice(0, 10) !== date) {
+    return false
+  }
+
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  tomorrow.setHours(0, 0, 0, 0)
+
+  if (inputDate >= tomorrow) {
+    return false
+  }
+
+  return true
+}
+
+export function isValidExerciseId(exerciseId: unknown): exerciseId is number {
+  return (
+    typeof exerciseId === 'number' &&
+    Number.isInteger(exerciseId) &&
+    exerciseId >= 0
+  )
 }

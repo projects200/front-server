@@ -1,10 +1,14 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { mutate } from 'swr'
 
 import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
-import { usePostExercise, usePostExercisePictures } from '@/hooks/useExerciseApi'
+import {
+  usePostExercise,
+  usePostExercisePictures,
+} from '@/hooks/useExerciseApi'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { ExerciseRecordReq } from '@/types/exercise'
 import SITE_MAP from '@/constants/siteMap.constant'
@@ -16,7 +20,8 @@ export default function Create() {
   const router = useRouter()
 
   const { trigger: createExercise, isMutating: creating } = usePostExercise()
-  const { trigger: uploadPictures, isMutating: uploading } = usePostExercisePictures()
+  const { trigger: uploadPictures, isMutating: uploading } =
+    usePostExercisePictures()
 
   const handleSubmit = async (value: ExerciseRecordReq) => {
     let exerciseId: number | undefined
@@ -41,7 +46,14 @@ export default function Create() {
       } catch {}
     }
 
-    router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}`)
+    await Promise.all([
+      mutate(['exercise/range'], value.startedAt.substring(0, 7)),
+      mutate(['exercise/list'], value.startedAt.substring(0, 10)),
+    ])
+
+    router.replace(
+      `${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.substring(0, 10)}`,
+    )
   }
 
   return (

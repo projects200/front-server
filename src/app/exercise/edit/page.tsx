@@ -3,6 +3,7 @@
 import { useQueryState, parseAsInteger } from 'nuqs'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { mutate } from 'swr'
 
 import Header from '@/components/commons/header'
 import LoadingScreen from '@/components/commons/loadingScreen'
@@ -14,6 +15,7 @@ import {
   usePostExercisePictures,
 } from '@/hooks/useExerciseApi'
 import { ExerciseRecordReq } from '@/types/exercise'
+import { isValidExerciseId } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import ExerciseForm from '../_components/exerciseForm'
@@ -22,14 +24,27 @@ export default function Edit() {
   const router = useRouter()
   const showToast = useToast()
   const [exerciseId] = useQueryState('id', parseAsInteger)
-  const { data, isLoading } = useReadExercise(exerciseId ?? 0)
-  const { trigger: patchExercise, isMutating: isPatching } = usePatchExercise(exerciseId ?? 0)
-  const { trigger: deletePictures, isMutating: isDeletingPics } = useDeleteExercisePictures(exerciseId ?? 0)
-  const { trigger: uploadPictures, isMutating: isUploadingPics } = usePostExercisePictures()
-
+  const invalidParam = !exerciseId || !isValidExerciseId(exerciseId)
+  const { data, isLoading } = useReadExercise(exerciseId!, !invalidParam)
+  const { trigger: patchExercise, isMutating: isPatching } = usePatchExercise(
+    exerciseId!,
+  )
+  const { trigger: deletePictures, isMutating: isDeletingPics } =
+    useDeleteExercisePictures(exerciseId!)
+  const { trigger: uploadPictures, isMutating: isUploadingPics } =
+    usePostExercisePictures()
   const loading = isLoading || isPatching || isDeletingPics || isUploadingPics
 
+  useEffect(() => {
+    if (invalidParam) {
+      showToast('유효하지 않은 운동기록 ID입니다.', 'info')
+      router.back()
+    }
+  }, [invalidParam])
+
   const handleSubmit = async (value: ExerciseRecordReq) => {
+    if (!data) return
+
     try {
       await patchExercise({
         title: value.title,
@@ -53,9 +68,20 @@ export default function Edit() {
 
     if (!deleteFailed && value.images?.length) {
       try {
-        await uploadPictures({ exerciseId: exerciseId ?? 0, images: value.images })
+        await uploadPictures({
+          exerciseId: exerciseId ?? 0,
+          images: value.images,
+        })
       } catch {}
     }
+  
+    await Promise.all([
+      mutate(['exercise/detail', exerciseId]),
+      mutate(['exercise/list', value.startedAt.substring(0, 10)]),
+      ...(data.startedAt !== value.startedAt
+        ? [mutate(['exercise/list', data.startedAt.substring(0, 10)])]
+        : []),
+    ])
 
     router.back()
     setTimeout(() => {
@@ -63,28 +89,21 @@ export default function Edit() {
     }, 0)
   }
 
-  useEffect(() => {
-    if (!exerciseId) {
-      showToast('해당 운동 기록이 없습니다.', 'info')
-      router.back()
-    }
-  }, [])
-
-  if (!exerciseId || !data) return null
+  if (invalidParam || !exerciseId || !data) return null
 
   return (
     <>
       <Header>운동 기록 수정</Header>
       <ExerciseForm
         defaultValues={{
-          title: data?.title,
-          category: data?.category,
-          startedAt: data?.startedAt,
-          endedAt: data?.endedAt,
-          location: data?.location,
-          content: data?.content,
+          title: data.title,
+          category: data.category,
+          startedAt: data.startedAt,
+          endedAt: data.endedAt,
+          location: data.location,
+          content: data.content,
         }}
-        defaultPictures={data?.images}
+        defaultPictures={data.images}
         onSubmit={handleSubmit}
         onError={(message) => showToast(message, 'info')}
       />

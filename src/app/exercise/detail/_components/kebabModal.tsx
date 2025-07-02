@@ -1,19 +1,17 @@
 'use client'
 
-import { useQueryState } from 'nuqs'
+import { mutate } from 'swr'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 
 import { useToast } from '@/hooks/useToast'
 import { useDeleteExercise } from '@/hooks/useExerciseApi'
-import { useApiErrorHandler } from '@/hooks/useApiErrorHandler'
 import BottomModal from '@/components/commons/bottomModal'
 import CenterModal from '@/components/commons/centerModal'
 import EditIcon from '@/assets/icon_edit.svg'
 import TrashIcon from '@/assets/icon_trash.svg'
 import Typography from '@/components/ui/typography'
-import LoadingScreen from '@/components/commons/loadingScreen'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './kebabmodal.module.css'
@@ -22,24 +20,34 @@ type Props = {
   isOpen: boolean
   setIsOpen: (open: boolean) => void
   exerciseId: number
+  startedAt: string
 }
 
-export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
+export default function KebabModal({
+  isOpen,
+  setIsOpen,
+  exerciseId,
+  startedAt,
+}: Props) {
   const [isOpenCenter, setIsOpenCenter] = useState(false)
-  const [date] = useQueryState('date')
   const showToast = useToast()
   const router = useRouter()
-  const handleError = useApiErrorHandler()
 
-  const { trigger: deleteExercise, isMutating } = useDeleteExercise(exerciseId)
+  const { trigger: deleteExercise } = useDeleteExercise(exerciseId)
 
   const handleRemove = async () => {
     try {
       await deleteExercise(null)
       showToast('운동 기록이 삭제되었습니다.', 'info')
+
+      await Promise.all([
+        mutate(['exercise/range'], startedAt.substring(0, 7)),
+        mutate(['exercise/list'], startedAt.substring(0, 10)),
+      ])
+
       router.back()
-    } catch (error) {
-      handleError(error)
+    } catch {
+      return
     }
   }
 
@@ -54,7 +62,7 @@ export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
         <div className={styles['button-group']}>
           <Link
             className={styles['button']}
-            href={`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}&date=${date}`}
+            href={`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}`}
           >
             <EditIcon className={styles['modal-icon']} />
             <Typography as="span" variant="text15">
@@ -84,7 +92,6 @@ export default function KebabModal({ isOpen, setIsOpen, exerciseId }: Props) {
           운동 기록을 삭제하시겠습니까?
         </Typography>
       </CenterModal>
-      {isMutating && <LoadingScreen />}
     </>
   )
 }

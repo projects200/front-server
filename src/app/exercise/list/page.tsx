@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 import Header from '@/components/commons/header'
+import { useToast } from '@/hooks/useToast'
 import BottomButton from '@/components/commons/bottomButton'
 import { isValidYYYYMMDD } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
@@ -16,18 +17,20 @@ import ExerciseCard from './_components/exerciseCard'
 import styles from './list.module.css'
 
 export default function List() {
+  const showToast = useToast()
   const router = useRouter()
   const [date, setDate] = useQueryState('date')
-  const { data = [], isLoading } = useReadExerciseList(date ?? '')
-  const invalidDate = !date || !isValidYYYYMMDD(date)
+  const invalidParam = !date || !isValidYYYYMMDD(date)
+  const { data = [], isLoading } = useReadExerciseList(date!, !invalidParam)
 
   useEffect(() => {
-    if (invalidDate) {
-      router.replace(SITE_MAP.EXERCISE)
+    if (invalidParam) {
+      showToast('유효하지 않은 날짜입니다.', 'info')
+      router.back()
     }
-  }, [invalidDate])
+  }, [invalidParam])
 
-  if (invalidDate || isLoading) return null
+  if (invalidParam || isLoading) return null
 
   return (
     <div className={styles['container']}>
@@ -57,7 +60,9 @@ export default function List() {
         </div>
       )}
 
-      <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>오늘 운동 기록하고 점수 얻기</BottomButton>
+      <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
+        오늘 운동 기록하고 점수 얻기
+      </BottomButton>
     </div>
   )
 }
