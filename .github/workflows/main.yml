@@ -49,6 +49,8 @@ jobs:
           fi
 
       - name: Build and Export
+        env:
+          NEXT_PUBLIC_CSP_NONCE: ${{ env.CSP_NONCE }}
         run: |
           npm install
           npm run build
