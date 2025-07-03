@@ -49,8 +49,6 @@ jobs:
           fi
 
       - name: Build and Export
-        env:
-          CSP_NONCE: ${{ env.CSP_NONCE }}
         run: |
           npm install
           npm run build
@@ -80,19 +78,29 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
-          aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
-          aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
+          TOTAL_CALLS=0
+
+          COUNT1=$(aws s3 sync ./out s3://$BUCKET --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS --debug 2>&1 | grep -c "Making S3 API call" || true)
+          COUNT2=$(aws s3 sync ./out s3://$BUCKET --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS --debug 2>&1 | grep -c "Making S3 API call" || true)
+          TOTAL_CALLS=$((TOTAL_CALLS + COUNT1 + COUNT2))
+
+          echo "------------------------------------------------"
+          echo "Total S3 API calls for this step: $TOTAL_CALLS"
+          echo "------------------------------------------------"
 
       - name: Upload assets to S3 (DEV)
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
-          aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
-          aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
+          TOTAL_CALLS=0
+
+          COUNT1=$(aws s3 sync ./out s3://$BUCKET --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS --debug 2>&1 | grep -c "Making S3 API call" || true)
+          COUNT2=$(aws s3 sync ./out s3://$BUCKET --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS --debug 2>&1 | grep -c "Making S3 API call" || true)
+          TOTAL_CALLS=$((TOTAL_CALLS + COUNT1 + COUNT2))
+
+          echo "------------------------------------------------"
+          echo "Total S3 API calls for this step: $TOTAL_CALLS"
+          echo "------------------------------------------------"
 
       - name: Update CloudFront CSP header
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
@@ -101,7 +109,7 @@ jobs:
           NONCE: ${{ env.CSP_NONCE }}
         run: |
           sleep 5 
-          
+
           aws cloudfront get-response-headers-policy-config --id "$POLICY_ID" > old.json
           ETag=$(jq -r '.ETag' old.json)
 

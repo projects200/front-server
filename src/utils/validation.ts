@@ -8,7 +8,7 @@ export function validateNickname(nickname: string): {
   }
   const regex = /^[a-zA-Z0-9가-힣]+$/
   if (!regex.test(nickname)) {
-    return { valid: false, error: '닉네임 조건을 학인해주세요.' }
+    return { valid: false, error: '닉네임 조건을 확인해주세요.' }
   }
   return { valid: true }
 }

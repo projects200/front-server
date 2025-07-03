@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 
-const nonce = process.env.CSP_NONCE
+const nonce = process.env.NEXT_PUBLIC_CSP_NONCE
 
 if (!nonce) {
   console.error('CSP_NONCE environment variable is not set.')
