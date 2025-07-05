@@ -18,7 +18,7 @@ import { ExerciseRecordReq } from '@/types/exercise'
 import { isValidExerciseId } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import ExerciseForm from '../_components/exerciseForm'
+import ExerciseForm from '../_components/exerciseForm/exerciseForm'
 
 export default function Edit() {
   const router = useRouter()

@@ -8,8 +8,8 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import Logo from '@/assets/logo.svg'
 import ServiceName from '@/assets/service_name.svg'
 import Setting from '@/assets/icon_setting.svg'
-
-import ExerciseCalendar from './_components/exerciseCalendar'
+import ScoreBoard from './_components/exercisePoint/scoreBoard'
+import ExerciseCalendar from './_components/exerciseCalendar/exerciseCalendar'
 import styles from './exercise.module.css'
 
 export default function Exercise() {
@@ -26,7 +26,13 @@ export default function Exercise() {
           <Setting className={styles['setting-icon']} />
         </Link>
       </header>
+
+      <ScoreBoard />
+
+      <div className={styles['temp-section']}></div>
+
       <ExerciseCalendar />
+
       <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
         오늘 운동 기록하고 점수 얻기
       </BottomButton>

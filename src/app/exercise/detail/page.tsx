@@ -10,9 +10,9 @@ import { isValidExerciseId } from '@/utils/validation'
 import { useReadExercise } from '@/hooks/useExerciseApi'
 
 import ImageField from './_components/imageField'
-import InputField from '../_components/inputField'
-import TextareaField from '../_components/textareaField'
-import DateTimePicker from '../_components/dateTimePicker'
+import InputField from '../_components/exerciseForm/inputField'
+import TextareaField from '../_components/exerciseForm/textareaField'
+import DateTimePicker from '../_components/exerciseForm/dateTimePicker'
 import KebabModal from './_components/kebabModal'
 import styles from './detail.module.css'
 
