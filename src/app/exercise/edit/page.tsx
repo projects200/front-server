@@ -44,7 +44,22 @@ export default function Edit() {
 
   const handleSubmit = async (value: ExerciseRecordReq) => {
     if (!data) return
+    const formValuesChanged =
+      data.title !== value.title ||
+      data.category !== value.category ||
+      data.location !== value.location ||
+      data.content !== value.content ||
+      data.startedAt !== value.startedAt ||
+      data.endedAt !== value.endedAt
 
+    const imagesChanged =
+      (value.deletedIds && value.deletedIds.length > 0) ||
+      (value.images && value.images.length > 0)
+
+    if (!formValuesChanged && !imagesChanged) {
+      showToast('변경사항이 없습니다.', 'info')
+      return
+    }
     try {
       await patchExercise({
         title: value.title,
@@ -74,7 +89,7 @@ export default function Edit() {
         })
       } catch {}
     }
-  
+
     await Promise.all([
       mutate(['exercise/detail', exerciseId]),
       mutate(['exercise/list', value.startedAt.substring(0, 10)]),

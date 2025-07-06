@@ -1,3 +1,5 @@
+import { parseISO, isValid, isAfter, startOfToday } from 'date-fns'
+
 // 닉네임 30글자제한, 특수문자 불가 확인
 export function validateNickname(nickname: string): {
   valid: boolean
@@ -48,33 +50,31 @@ export function validateGender(gender: 'M' | 'F' | 'U' | null): {
   return { valid: true }
 }
 
-// 날짜가 YYYY-MM-DD 형식이고, 실존하며, 오늘 이후가 아닌지 확인합니다.
-export function isValidYYYYMMDD(date: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+// 날짜가 YYYY-MM-DD 형식이고, 실존하는 날짜인지 확인합니다..
+export function isValidDateString(dateString: string): boolean {
+  if (!dateString || !/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
     return false
   }
 
-  const inputDate = new Date(date)
+  const date = parseISO(dateString)
 
-  if (Number.isNaN(inputDate.getTime())) {
-    return false
-  }
-
-  if (inputDate.toISOString().slice(0, 10) !== date) {
-    return false
-  }
-
-  const tomorrow = new Date()
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  tomorrow.setHours(0, 0, 0, 0)
-
-  if (inputDate >= tomorrow) {
-    return false
-  }
-
-  return true
+  return isValid(date)
 }
 
+// 날짜가 미래형식인지 확인합니다.
+export function isFutureDate(dateString: string): boolean {
+  if (!dateString) return false
+
+  if (!isValidDateString(dateString)) {
+    return false
+  }
+
+  const date = parseISO(dateString)
+
+  return isAfter(date, startOfToday())
+}
+
+// 유효한 운동 아이디 인지 확인합니다.
 export function isValidExerciseId(exerciseId: unknown): exerciseId is number {
   return (
     typeof exerciseId === 'number' &&

@@ -1,13 +1,14 @@
 'use client'
 
 import { useQueryState } from 'nuqs'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { format } from 'date-fns'
 
 import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
 import BottomButton from '@/components/commons/bottomButton'
-import { isValidYYYYMMDD } from '@/utils/validation'
+import { isValidDateString, isFutureDate } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
 import { useReadExerciseList } from '@/hooks/useExerciseApi'
 import Typography from '@/components/ui/typography'
@@ -20,17 +21,28 @@ export default function List() {
   const showToast = useToast()
   const router = useRouter()
   const [date, setDate] = useQueryState('date')
-  const invalidParam = !date || !isValidYYYYMMDD(date)
-  const { data = [], isLoading } = useReadExerciseList(date!, !invalidParam)
+  const [lastValidDate, setLastValidDate] = useState(() =>
+    format(new Date(), 'yyyy-MM-dd'),
+  )
+  const invalidParam = !date || !isValidDateString(date)
+  const isFuture = !invalidParam && isFutureDate(date)
+  const { data = [] } = useReadExerciseList(date!, !invalidParam || isFuture)
 
   useEffect(() => {
     if (invalidParam) {
-      showToast('유효하지 않은 날짜입니다.', 'info')
-      router.back()
+      showToast('유효하지 않은 날짜 형식입니다.', 'info')
+      setDate(lastValidDate)
+      return
     }
-  }, [invalidParam])
+    if (isFuture) {
+      showToast('미래 날짜는 조회할 수 없습니다.', 'info')
+      setDate(lastValidDate)
+      return
+    }
+    setLastValidDate(date)
+  }, [date])
 
-  if (invalidParam || isLoading) return null
+  if (invalidParam) return null
 
   return (
     <div className={styles['container']}>
