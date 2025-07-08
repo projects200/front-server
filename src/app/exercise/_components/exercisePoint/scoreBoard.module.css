@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+  padding: 20px;
+}
+
+.info-section {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-block {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+.info-block .count {
+  font-size: 30px;
+}
+.count-name {
+  color: var(--color-gray-200);
+}
+
+.text-icon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.info-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.indicator-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.indicator {
+  width: 140px;
+  height: 140px;
+}

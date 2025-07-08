@@ -13,7 +13,7 @@ import LoadingScreen from '@/components/commons/loadingScreen'
 import { ExerciseRecordReq } from '@/types/exercise'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import ExerciseForm from '../_components/exerciseForm'
+import ExerciseForm from '../_components/exerciseForm/exerciseForm'
 
 export default function Create() {
   const showToast = useToast()
