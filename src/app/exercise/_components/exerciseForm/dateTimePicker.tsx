@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import WarningIcon from '@/assets/icon_warning.svg'
 import ClockIcon from '@/assets/icon_clock.svg'
 import Typography from '@/components/ui/typography'
 import ScrollPicker from '@/components/commons/scrollPicker'
@@ -74,6 +75,8 @@ export default function DateTimePicker({
   const showToast = useToast()
   const [isOpenStart, setIsOpenStart] = useState(false)
   const [isOpenEnd, setIsOpenEnd] = useState(false)
+  // 정책 가져오기 or 점수획득 가능 여부 가져오기 API연결해서 상태관리
+
   const formatStartDate = getInitialDateTime(startedAt)
   const formatEndDate = getInitialDateTime(endedAt)
 
@@ -151,7 +154,16 @@ export default function DateTimePicker({
           )}
         </button>
       </div>
-
+      {/* <div className={styles['info-text']}>
+        <WarningIcon className={styles['warning']} />
+        <Typography
+          className={styles['warning-text']}
+          as="span"
+          variant="text12"
+        >
+          점수획득 불가능 관련 메세지로 대체
+        </Typography>
+      </div> */}
       {isOpenStart && (
         <ScrollPicker
           fields={['date', 'hour', 'minute']}

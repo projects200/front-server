@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { mutate } from 'swr'
+import { useState } from 'react'
 
 import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
@@ -11,11 +12,16 @@ import {
 } from '@/hooks/useExerciseApi'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { ExerciseRecordReq } from '@/types/exercise'
+import Celebration from './_components/celebration'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import ExerciseForm from '../_components/exerciseForm/exerciseForm'
 
 export default function Create() {
+  const [celebration, setCelebration] = useState(false)
+  const [createdExerciseId, setCreatedExerciseId] = useState<number | null>(
+    null,
+  )
   const showToast = useToast()
   const router = useRouter()
 
@@ -36,6 +42,7 @@ export default function Create() {
         endedAt: value.endedAt,
       })
       exerciseId = res.data.exerciseId
+      setCreatedExerciseId(exerciseId)
     } catch {
       return
     }
@@ -51,9 +58,15 @@ export default function Create() {
       mutate(['exercise/list'], value.startedAt.substring(0, 10)),
     ])
 
-    router.replace(
-      `${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}&date=${value.startedAt.substring(0, 10)}`,
-    )
+    setCelebration(true)
+  }
+
+  const handleCelebrationConfirm = () => {
+    if (createdExerciseId) {
+      router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${createdExerciseId}`)
+    } else {
+      router.replace(SITE_MAP.EXERCISE)
+    }
   }
 
   return (
@@ -72,6 +85,7 @@ export default function Create() {
         onError={(message) => showToast(message, 'info')}
       />
       {(creating || uploading) && <LoadingScreen />}
+      {!celebration && <Celebration onConfirm={handleCelebrationConfirm} />}
     </>
   )
 }
