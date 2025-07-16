@@ -16,11 +16,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const isDevelopment = process.env.NEXT_PUBLIC_ENV === 'dev'
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID
 
   return (
     <html lang="ko">
       <head>
+        {isDevelopment && <meta name="robots" content="noindex, nofollow" />}
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
