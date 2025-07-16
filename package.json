@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && node scripts/setNonce.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "phone": "set NODE_ENV=development&& dotenv -e .env.phone -- node server.js"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -39,6 +40,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "glob": "^11.0.3",
