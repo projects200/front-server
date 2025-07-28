@@ -91,54 +91,48 @@ export default function ExerciseCalendar() {
   const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(today))
   const prevMonth = useMemo(() => subMonths(currentMonth, 1), [currentMonth])
   const nextMonth = useMemo(() => addMonths(currentMonth, 1), [currentMonth])
-
   const containerRef = useRef<HTMLDivElement>(null)
   const [{ x }, api] = useSpring(() => ({ x: 0 }))
 
-  // 드래그 제스처를 처리하는 로직
   const bind = useDrag(
     ({ down, movement: [mx] }) => {
       if (down) {
-        const isCurrentMonthView = isSameMonth(currentMonth, today)
-        let newX = mx
-        if (isCurrentMonthView && mx < 0) {
-          newX = 0
-        }
-        api.start({ x: newX, immediate: true })
+        api.start({ x: mx, immediate: true })
         return
       }
+
       const containerWidth = containerRef.current?.clientWidth || 0
-      const threshold = containerWidth / 3
+      const threshold = containerWidth / 4
 
-      if (Math.abs(mx) > threshold) {
-        const newMonth = mx > 0 ? prevMonth : nextMonth
-        const isMovingToFuture =
-          newMonth.getTime() > startOfMonth(today).getTime()
-        if (isMovingToFuture) {
-          api.start({ x: 0 })
-        } else {
-          const direction = mx > 0 ? 1 : -1
-          const targetX = direction * containerWidth
-
-          api.start({
-            x: targetX,
-            config: { tension: 250, friction: 30 },
-            onRest: () => {
-              setCurrentMonth(newMonth)
-            },
-          })
-        }
-      } else {
+      if (Math.abs(mx) <= threshold) {
         api.start({ x: 0 })
+        return
       }
+
+      const newMonth = mx > 0 ? prevMonth : nextMonth
+      const isMovingToFuture =
+        newMonth.getTime() > startOfMonth(today).getTime()
+      if (isMovingToFuture) {
+        api.start({ x: 0 })
+        return
+      }
+
+      const direction = mx > 0 ? 1 : -1
+      const targetX = direction * containerWidth
+
+      api.start({
+        x: targetX,
+        config: { tension: 250, friction: 30 },
+        onRest: () => {
+          setCurrentMonth(newMonth)
+        },
+      })
     },
     {
       axis: 'x',
       filterTaps: true,
-      preventScroll: true,
     },
   )
-
   const handlePrev = () => setCurrentMonth(subMonths(currentMonth, 1))
   const handleNext = () => {
     if (currentMonth.getTime() >= startOfMonth(today).getTime()) return
@@ -148,7 +142,7 @@ export default function ExerciseCalendar() {
   // 애니메이션이 종료되면서 currentMonth 상태가 변경되면, x축을 즉각적으로 맞춰줍니다.
   useMemo(() => {
     api.start({ x: 0, immediate: true })
-  }, [currentMonth, api])
+  }, [currentMonth])
 
   return (
     <div className={styles['container']}>

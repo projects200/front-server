@@ -29,6 +29,7 @@ a {
 button {
   -webkit-tap-highlight-color: transparent;
   background: none;
+  color: inherit;
   border: none;
   cursor: pointer;
 }
