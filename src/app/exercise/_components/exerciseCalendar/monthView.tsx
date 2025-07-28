@@ -76,6 +76,8 @@ const MonthView = memo(function MonthView({
             return (
               <div
                 key={dateStr}
+                data-date={dateStr}
+                data-disabled={!isCurrent || isFuture}
                 className={clsx(
                   styles['cell'],
                   !isCurrent && styles['empty'],
