@@ -15,6 +15,7 @@ type DateTimePickerProps = {
   onEndedAtChange?: (value: string) => void
   label: string
   readonly?: boolean
+  warningText?: string
 }
 
 type DateTime = {
@@ -71,11 +72,11 @@ export default function DateTimePicker({
   onEndedAtChange,
   label,
   readonly = false,
+  warningText,
 }: DateTimePickerProps) {
   const showToast = useToast()
   const [isOpenStart, setIsOpenStart] = useState(false)
   const [isOpenEnd, setIsOpenEnd] = useState(false)
-  // 정책 가져오기 or 점수획득 가능 여부 가져오기 API연결해서 상태관리
 
   const formatStartDate = getInitialDateTime(startedAt)
   const formatEndDate = getInitialDateTime(endedAt)
@@ -154,16 +155,18 @@ export default function DateTimePicker({
           )}
         </button>
       </div>
-      {/* <div className={styles['info-text']}>
-        <WarningIcon className={styles['warning']} />
-        <Typography
-          className={styles['warning-text']}
-          as="span"
-          variant="text12"
-        >
-          점수획득 불가능 관련 메세지로 대체
-        </Typography>
-      </div> */}
+      {warningText && (
+        <div className={styles['score-warning']}>
+          <WarningIcon className={styles['warning-icon']} />
+          <Typography
+            as="span"
+            variant="text12"
+            className={styles['warning-text']}
+          >
+            {warningText}
+          </Typography>
+        </div>
+      )}
       {isOpenStart && (
         <ScrollPicker
           fields={['date', 'hour', 'minute']}

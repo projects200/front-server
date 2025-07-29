@@ -121,6 +121,7 @@ export default function Edit() {
         defaultPictures={data.images}
         onSubmit={handleSubmit}
         onError={(message) => showToast(message, 'info')}
+        isCreate={false}
       />
 
       {loading && <LoadingScreen />}

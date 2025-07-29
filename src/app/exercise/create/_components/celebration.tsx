@@ -7,9 +7,10 @@ import styles from './celebration.module.css'
 
 type Props = {
   onConfirm: () => void
+  earnedPoints: number
 }
 
-export default function Celebration({ onConfirm }: Props) {
+export default function Celebration({ onConfirm, earnedPoints }: Props) {
   return (
     <div className={styles['overlay']}>
       <div className={styles['modal']}>
@@ -17,7 +18,7 @@ export default function Celebration({ onConfirm }: Props) {
           축하해요!
         </Typography>
         <Typography as="div" variant="text18" weight="bold">
-          운동 점수를 획득했어요
+          운동 점수를 {earnedPoints}점 획득했어요
         </Typography>
         <DotLottieReact
           className={styles['lottie']}

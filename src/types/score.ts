@@ -10,3 +10,4 @@ export type ExerciseScore = {
   validPeriod: ValidPeriod
   ValidDate: string[]
 }
+  

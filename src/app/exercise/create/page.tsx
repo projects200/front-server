@@ -22,6 +22,7 @@ export default function Create() {
   const [createdExerciseId, setCreatedExerciseId] = useState<number | null>(
     null,
   )
+  const [earnedPoints, setEarnedPoints] = useState<number | null>(null)
   const showToast = useToast()
   const router = useRouter()
 
@@ -42,7 +43,9 @@ export default function Create() {
         endedAt: value.endedAt,
       })
       exerciseId = res.data.exerciseId
+
       setCreatedExerciseId(exerciseId)
+      setEarnedPoints(res.data.earnedPoints)
     } catch {
       return
     }
@@ -83,9 +86,15 @@ export default function Create() {
         }}
         onSubmit={handleSubmit}
         onError={(message) => showToast(message, 'info')}
+        isCreate={true}
       />
       {(creating || uploading) && <LoadingScreen />}
-      {!celebration && <Celebration onConfirm={handleCelebrationConfirm} />}
+      {celebration && earnedPoints !== null &&(
+        <Celebration
+          onConfirm={handleCelebrationConfirm}
+          earnedPoints={earnedPoints}
+        />
+      )}
     </>
   )
 }

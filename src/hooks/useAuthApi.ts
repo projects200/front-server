@@ -26,6 +26,6 @@ export const useReadRegistered = (shouldFetch?: boolean) =>
       dedupingInterval: 1000 * 60 * 60,
       policy: { actions: { 400: { type: 'redirect', to: SITE_MAP.LOGIN } } },
       isAccessToken: false,
-      shouldFetch
+      shouldFetch,
     },
   )

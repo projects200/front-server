@@ -3,7 +3,8 @@ export type ExercisePolicy = {
   maxScore: number
   defaultScore: number
   scorePerRecord: number
-  validRecordDays: number
+  recordValidityPeriod: number
+  recordMaxPerDay: number
   daysUntilPenalty: number
   penaltyScore: number
 }
