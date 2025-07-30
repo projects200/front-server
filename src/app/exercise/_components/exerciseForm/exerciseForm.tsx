@@ -137,7 +137,7 @@ const ExerciseForm = ({
 
   const startedDate = useStore(form.store, (state) => state.values.startedAt)
 
-  const scoreDescription = ((): string => {
+  const calculateScoreDescription = (): string => {
     if (!isCreate || !scoreData || !startedDate) {
       return ''
     }
@@ -148,21 +148,19 @@ const ExerciseForm = ({
     if (scoreData.currentScore >= scoreData.maxScore) {
       return '점수가 최대치에 도달했어요!'
     }
-
-    // 획득 가능 기간보다 이전 날짜를 선택한 경우
+    // ... 나머지 계산 로직은 동일 ...
     const validWindowStart = new Date(scoreData.validPeriod.startedAt)
     if (selectedDate < validWindowStart) {
       return '점수를 획득할 수 있는 기간이 지났어요'
     }
-
-    // 획득 가능 기간 내이지만, 이미 점수를 받은 날인 경우
     const selectedDateStr = format(selectedDate, 'yyyy-MM-dd')
     if (!scoreData.ValidDate.includes(selectedDateStr)) {
       return '이 날은 이미 점수를 획득했어요'
     }
 
     return ''
-  })()
+  }
+  const scoreDescription = calculateScoreDescription()
 
   return (
     <form
