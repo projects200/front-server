@@ -11,6 +11,8 @@ import {
 } from '@/types/exercise'
 import BottomButton from '@/components/commons/bottomButton'
 import { useReadExerciseScore } from '@/hooks/useScoreApi'
+import WarningIcon from '@/assets/icon_warning.svg'
+import Typography from '@/components/ui/typography'
 
 import DateTimePicker from './dateTimePicker'
 import InputField from './inputField'
@@ -135,7 +137,7 @@ const ExerciseForm = ({
 
   const startedDate = useStore(form.store, (state) => state.values.startedAt)
 
-  const scoreWarningMessage = ((): string => {
+  const scoreDescription = ((): string => {
     if (!isCreate || !scoreData || !startedDate) {
       return ''
     }
@@ -173,6 +175,7 @@ const ExerciseForm = ({
       <form.Field name="title">
         {(field) => (
           <InputField
+            className={styles['form-field']}
             value={field.state.value}
             onChange={(e) => field.handleChange(e.target.value)}
             label="제목 *"
@@ -187,16 +190,29 @@ const ExerciseForm = ({
         {(startedAtField) => (
           <form.Field name="endedAt">
             {(endedAtField) => (
-              <DateTimePicker
-                label="운동 시간 *"
-                startedAt={startedAtField.state.value}
-                endedAt={endedAtField.state.value}
-                onStartedAtChange={(value) =>
-                  startedAtField.handleChange(value)
-                }
-                onEndedAtChange={(value) => endedAtField.handleChange(value)}
-                warningText={scoreWarningMessage}
-              />
+              <div className={styles['form-field']}>
+                <DateTimePicker
+                  label="운동 시간 *"
+                  startedAt={startedAtField.state.value}
+                  endedAt={endedAtField.state.value}
+                  onStartedAtChange={(value) =>
+                    startedAtField.handleChange(value)
+                  }
+                  onEndedAtChange={(value) => endedAtField.handleChange(value)}
+                />
+                {scoreDescription && (
+                  <div className={styles['score-description']}>
+                    <WarningIcon className={styles['warning-icon']} />
+                    <Typography
+                      as="span"
+                      variant="text12"
+                      className={styles['description']}
+                    >
+                      {scoreDescription}
+                    </Typography>
+                  </div>
+                )}
+              </div>
             )}
           </form.Field>
         )}
@@ -205,6 +221,7 @@ const ExerciseForm = ({
       <form.Field name="category">
         {(field) => (
           <InputField
+            className={styles['form-field']}
             value={field.state.value ?? ''}
             onChange={(e) => field.handleChange(e.target.value)}
             label="운동 종류"
@@ -218,6 +235,7 @@ const ExerciseForm = ({
       <form.Field name="location">
         {(field) => (
           <InputField
+            className={styles['form-field']}
             value={field.state.value ?? ''}
             onChange={(e) => field.handleChange(e.target.value)}
             label="장소"
@@ -231,6 +249,7 @@ const ExerciseForm = ({
       <form.Field name="content">
         {(field) => (
           <TextareaField
+            className={styles['form-field']}
             value={field.state.value ?? ''}
             onChange={(e) => field.handleChange(e.target.value)}
             label="내용"

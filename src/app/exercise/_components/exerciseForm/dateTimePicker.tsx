@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import WarningIcon from '@/assets/icon_warning.svg'
 import ClockIcon from '@/assets/icon_clock.svg'
 import Typography from '@/components/ui/typography'
 import ScrollPicker from '@/components/commons/scrollPicker'
@@ -15,7 +14,6 @@ type DateTimePickerProps = {
   onEndedAtChange?: (value: string) => void
   label: string
   readonly?: boolean
-  warningText?: string
 }
 
 type DateTime = {
@@ -72,7 +70,6 @@ export default function DateTimePicker({
   onEndedAtChange,
   label,
   readonly = false,
-  warningText,
 }: DateTimePickerProps) {
   const showToast = useToast()
   const [isOpenStart, setIsOpenStart] = useState(false)
@@ -155,18 +152,6 @@ export default function DateTimePicker({
           )}
         </button>
       </div>
-      {warningText && (
-        <div className={styles['score-warning']}>
-          <WarningIcon className={styles['warning-icon']} />
-          <Typography
-            as="span"
-            variant="text12"
-            className={styles['warning-text']}
-          >
-            {warningText}
-          </Typography>
-        </div>
-      )}
       {isOpenStart && (
         <ScrollPicker
           fields={['date', 'hour', 'minute']}
