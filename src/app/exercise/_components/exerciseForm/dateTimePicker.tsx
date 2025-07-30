@@ -74,6 +74,7 @@ export default function DateTimePicker({
   const showToast = useToast()
   const [isOpenStart, setIsOpenStart] = useState(false)
   const [isOpenEnd, setIsOpenEnd] = useState(false)
+
   const formatStartDate = getInitialDateTime(startedAt)
   const formatEndDate = getInitialDateTime(endedAt)
 
@@ -151,7 +152,6 @@ export default function DateTimePicker({
           )}
         </button>
       </div>
-
       {isOpenStart && (
         <ScrollPicker
           fields={['date', 'hour', 'minute']}

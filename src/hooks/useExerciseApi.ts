@@ -27,7 +27,7 @@ import useApiMutation from './useApiMutation'
 
 // 운동 기록 생성
 export const usePostExercise = () =>
-  useApiMutation<{ exerciseId: number }, ExerciseContent>(
+  useApiMutation<{ exerciseId: number; earnedPoints: number }, ExerciseContent>(
     ['exercise/create'],
     createExercise,
     {

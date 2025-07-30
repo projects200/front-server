@@ -32,6 +32,9 @@ export default function Exercise() {
       <div className={styles['temp-section']}></div>
 
       <ExerciseCalendar />
+      {/* 화면작은 핸드폰에서 바텀버튼이 달력을 가려 임시공간 사용
+      추후 운동기록 목록이 달력 밑으로 옮겨질시 제거 */}
+      <div className={styles['temp-section-bottom']}></div>
 
       <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
         오늘 운동 기록하고 점수 얻기

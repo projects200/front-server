@@ -9,9 +9,9 @@ import { fetchWrapper } from '@/utils/fetchWrapper'
 import { adaptExerciseContent } from '@/lib/adapters/exercise.adapter'
 
 // 운동 기록 생성
-export function createExercise(token: string, data: ExerciseContent): Promise<{ exerciseId: number }> {
+export function createExercise(token: string, data: ExerciseContent): Promise<{ exerciseId: number, earnedPoints: number }> {
   const dto: ExerciseContentReqDto = adaptExerciseContent(data)
-  return fetchWrapper<{ exerciseId: number }>(
+  return fetchWrapper<{ exerciseId: number, earnedPoints: number }>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/exercises`,
     {
       method: 'POST',
