@@ -1,20 +1,28 @@
 @import '../styles/variables.css';
+body {
+  background-color: var(--color-background);
+  height: auto;
+  /* 임시 배경 이미지 */
+  background-image: url('/background.svg');
+  background-size: 1000px;
+  /* background-attachment: fixed; */
+}
 
 .responsive-container {
   width: 100%;
   max-width: 100%;
+  min-height: 100vh;
   margin: 0 auto;
   background-color: var(--color-white-300);
 }
 
-.container{
+.container {
   padding: 0 20px;
 }
 
 @media (min-width: 768px) {
-  .responsive-container{
+  .responsive-container {
     max-width: 500px;
-    margin:0 auto;
-
+    margin: 0 auto;
   }
 }

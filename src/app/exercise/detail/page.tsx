@@ -42,15 +42,25 @@ export default function Detail() {
         기록 상세
       </Header>
       {data.images?.length ? <ImageField images={data.images} /> : <></>}
-      <InputField value={data.title} label="제목" id="title" readonly={true} />
-      <DateTimePicker
-        label="운동 시간"
-        startedAt={data.startedAt}
-        endedAt={data.endedAt}
+      <InputField
+        className={styles['data-field']}
+        value={data.title}
+        label="제목"
+        id="title"
         readonly={true}
       />
+      <div className={styles['data-field']}>
+        <DateTimePicker
+          label="운동 시간"
+          startedAt={data.startedAt}
+          endedAt={data.endedAt}
+          readonly={true}
+        />
+      </div>
+
       {data.category && (
         <InputField
+          className={styles['data-field']}
           value={data.category}
           label="운동 종류"
           id="category"
@@ -59,6 +69,7 @@ export default function Detail() {
       )}
       {data.location && (
         <InputField
+          className={styles['data-field']}
           value={data.location}
           label="장소"
           id="location"

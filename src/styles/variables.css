@@ -1,5 +1,6 @@
 :root {
-  --color-green: #4F7942;
+  /* color */
+  --color-green: #4f7942;
   --color-brown: #f4a261;
   --color-red: #e53935;
 
@@ -13,7 +14,11 @@
   --color-white-200: #fafafa;
   --color-white-300: #ffffff;
 
+  --color-background: #ebf1e5;
+  --color-background-accent: #c7d5bf;
+
   --color-overlay: rgba(0, 0, 0, 0.3);
 
+  /* length */
   --bottom-button-height: 95px;
 }

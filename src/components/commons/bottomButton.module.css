@@ -10,7 +10,6 @@
 
 @media (min-width: 768px) {
   .wrapper {
-    bottom: 50px;
     max-width: 460px;
   }
 }

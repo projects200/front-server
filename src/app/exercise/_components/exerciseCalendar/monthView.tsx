@@ -12,12 +12,13 @@ import {
   startOfMonth,
   endOfMonth,
   addDays,
+  parseISO,
 } from 'date-fns'
 import clsx from 'clsx'
 
 import StampIcon from '@/assets/stamp.svg'
-
 import Typography from '@/components/ui/typography'
+
 import styles from './monthView.module.css'
 
 type Props = {
@@ -25,6 +26,7 @@ type Props = {
   today: Date
   counts: Record<string, number>
   onDateClick: (date: Date) => void
+  selectedDate: string
 }
 
 const MonthView = memo(function MonthView({
@@ -32,6 +34,7 @@ const MonthView = memo(function MonthView({
   today,
   counts,
   onDateClick,
+  selectedDate,
 }: Props) {
   const prevCounts = useRef(counts)
   const shouldAnimate = useMemo(() => {
@@ -43,7 +46,6 @@ const MonthView = memo(function MonthView({
   const weeks = useMemo(() => {
     const gridStart = startOfWeek(startOfMonth(month), { weekStartsOn: 0 })
     const gridEnd = endOfWeek(endOfMonth(month), { weekStartsOn: 0 })
-
     const newWeeks: Date[][] = []
     let cursor = gridStart
     while (cursor <= gridEnd) {
@@ -66,6 +68,7 @@ const MonthView = memo(function MonthView({
             const isCurrent = isSameMonth(day, month)
             const isFuture = isAfter(day, today)
             const isToday = isSameDay(day, today)
+            const isSelected = isSameDay(day, parseISO(selectedDate))
             const count = counts[dateStr] ?? 0
 
             const stampIconClassName = clsx(styles['stamp-icon'], {
@@ -81,6 +84,7 @@ const MonthView = memo(function MonthView({
                   !isCurrent && styles['empty'],
                   isFuture && styles['disabled'],
                   isToday && styles['today'],
+                  isSelected && styles['selected'],
                 )}
                 onClick={() => {
                   if (!isCurrent || isFuture) return

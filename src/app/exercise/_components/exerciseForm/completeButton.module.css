@@ -1,0 +1,12 @@
+.complete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-green);
+  width: 62px;
+  height: 32px;
+  border-radius: 5px;
+}
+.complete-button-text {
+  color: var(--color-white-300);
+}

@@ -1,92 +1,26 @@
 'use client'
 
-import useSWR from 'swr'
 import { useState, useMemo, useRef } from 'react'
-import { useRouter } from 'next/navigation'
-import {
-  startOfMonth,
-  endOfMonth,
-  subMonths,
-  addMonths,
-  format,
-  isSameMonth,
-} from 'date-fns'
+import { startOfMonth, subMonths, addMonths, format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { useSpring, animated } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
-import { useReadExerciseRange } from '@/hooks/useExerciseApi'
 import LeftArrow from '@/assets/icon_left_arrow.svg'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import Typography from '@/components/ui/typography'
-import { ExerciseRange } from '@/types/exercise'
-import SITE_MAP from '@/constants/siteMap.constant'
 
-import MonthView from './monthView'
+import MonthViewWithData from './monthViewWithData'
 import styles from './exerciseCalendar.module.css'
 
-/**
- * MonthView에 데이터를 주입하는 래퍼 컴포넌트입니다.
- * 각 월별로 독립적인 데이터 fetching과 계산을 수행합니다.
- */
-const MonthViewWithData = ({
-  today,
-  monthToShow,
-  isActive,
-}: {
-  today: Date
-  monthToShow: Date
-  isActive: boolean
-}) => {
-  const router = useRouter()
-
-  // 드래그 애니메이션을 위해 이전달,현재달,다음달을 렌더링하되 API호출은 현재달만 호출합니다.
-  const isFutureMonth = monthToShow.getTime() > startOfMonth(today).getTime()
-  const shouldFetch = !isFutureMonth && isActive
-  const startDate = format(startOfMonth(monthToShow), 'yyyy-MM-dd')
-  const endDate = isSameMonth(monthToShow, today)
-    ? format(today, 'yyyy-MM-dd')
-    : format(endOfMonth(monthToShow), 'yyyy-MM-dd')
-  const { data: fetchedData } = useReadExerciseRange(
-    startDate,
-    endDate,
-    shouldFetch,
-  )
-  const swrKey = ['exercise/range', startDate.substring(0, 7)]
-  const { data: cachedData } = useSWR<ExerciseRange[]>(swrKey, null)
-  const data = fetchedData || cachedData
-
-  // API 응답 데이터를 날짜별 기록 횟수 맵으로 변환합니다.
-  // TODO: 향후 이 컴포넌트에 상태가 추가되면,
-  // 아래 counts 계산 로직은 성능을 위해 useMemo로 감싸야 합니다.
-  const counts: Record<string, number> = {}
-  if (data) {
-    data.forEach(({ date, record }) => {
-      counts[date] = record
-    })
-  }
-
-  const handleDateClick = (date: Date) => {
-    const dateStr = format(date, 'yyyy-MM-dd')
-    router.push(`${SITE_MAP.EXERCISE_LIST}?date=${dateStr}`)
-  }
-
-  return (
-    <div className={styles['month-view-wrapper']}>
-      <MonthView
-        key={monthToShow.toISOString()}
-        month={monthToShow}
-        today={today}
-        counts={counts}
-        onDateClick={handleDateClick}
-      />
-    </div>
-  )
+type Props = {
+  onDateSelect: (date: Date) => void
+  selectedDate: string
 }
 
-/**
- * 운동 기록을 보여주는 스와이프 가능한 달력 컴포넌트입니다.
- */
-export default function ExerciseCalendar() {
+export default function ExerciseCalendar({
+  onDateSelect,
+  selectedDate,
+}: Props) {
   const today = new Date()
   const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(today))
   const prevMonth = useMemo(() => subMonths(currentMonth, 1), [currentMonth])
@@ -187,16 +121,22 @@ export default function ExerciseCalendar() {
             today={today}
             monthToShow={prevMonth}
             isActive={false}
+            onDateSelect={onDateSelect}
+            selectedDate={selectedDate}
           />
           <MonthViewWithData
             today={today}
             monthToShow={currentMonth}
             isActive={true}
+            onDateSelect={onDateSelect}
+            selectedDate={selectedDate}
           />
           <MonthViewWithData
             today={today}
             monthToShow={nextMonth}
             isActive={false}
+            onDateSelect={onDateSelect}
+            selectedDate={selectedDate}
           />
         </animated.div>
       </div>

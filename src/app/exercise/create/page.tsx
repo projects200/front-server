@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { mutate } from 'swr'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 import Header from '@/components/commons/header'
 import { useToast } from '@/hooks/useToast'
@@ -14,8 +14,12 @@ import LoadingScreen from '@/components/commons/loadingScreen'
 import { ExerciseRecordReq } from '@/types/exercise'
 import Celebration from './_components/celebration'
 import SITE_MAP from '@/constants/siteMap.constant'
+import CompleteButton from '../_components/exerciseForm/completeButton'
 
-import ExerciseForm from '../_components/exerciseForm/exerciseForm'
+import ExerciseForm, {
+  ExerciseFormHandle,
+} from '../_components/exerciseForm/exerciseForm'
+
 
 export default function Create() {
   const [celebration, setCelebration] = useState(false)
@@ -25,13 +29,27 @@ export default function Create() {
   const [earnedPoints, setEarnedPoints] = useState<number | null>(null)
   const showToast = useToast()
   const router = useRouter()
+  const formRef = useRef<ExerciseFormHandle>(null)
 
   const { trigger: createExercise, isMutating: creating } = usePostExercise()
   const { trigger: uploadPictures, isMutating: uploading } =
     usePostExercisePictures()
 
+  const triggerFormSubmit = () => {
+    formRef.current?.submit()
+  }
+
+  const handleCelebrationConfirm = () => {
+    if (createdExerciseId) {
+      router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${createdExerciseId}`)
+    } else {
+      router.replace(SITE_MAP.EXERCISE)
+    }
+  }
+
   const handleSubmit = async (value: ExerciseRecordReq) => {
     let exerciseId: number | undefined
+    let resPoints: number | null
 
     try {
       const res = await createExercise({
@@ -43,9 +61,10 @@ export default function Create() {
         endedAt: value.endedAt,
       })
       exerciseId = res.data.exerciseId
+      resPoints = res.data.earnedPoints
 
       setCreatedExerciseId(exerciseId)
-      setEarnedPoints(res.data.earnedPoints)
+      setEarnedPoints(resPoints)
     } catch {
       return
     }
@@ -61,21 +80,20 @@ export default function Create() {
       mutate(['exercise/list'], value.startedAt.substring(0, 10)),
     ])
 
-    setCelebration(true)
-  }
-
-  const handleCelebrationConfirm = () => {
-    if (createdExerciseId) {
-      router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${createdExerciseId}`)
+    if (resPoints > 0) {
+      setCelebration(true)
     } else {
-      router.replace(SITE_MAP.EXERCISE)
+      router.replace(`${SITE_MAP.EXERCISE_DETAIL}?id=${exerciseId}`)
     }
   }
 
   return (
     <>
-      <Header>운동 기록하기</Header>
+      <Header rightIcon={CompleteButton} onClick={triggerFormSubmit}>
+        운동 기록하기
+      </Header>
       <ExerciseForm
+        ref={formRef}
         defaultValues={{
           title: '',
           category: '',
@@ -89,7 +107,7 @@ export default function Create() {
         isCreate={true}
       />
       {(creating || uploading) && <LoadingScreen />}
-      {celebration && earnedPoints !== null &&(
+      {celebration && earnedPoints !== null && earnedPoints !== 0 && (
         <Celebration
           onConfirm={handleCelebrationConfirm}
           earnedPoints={earnedPoints}

@@ -5,7 +5,6 @@ const SITE_MAP = {
   SIGHUP: '/auth/sign-up',
   SETTINGS: '/settings',
   EXERCISE: '/exercise',
-  EXERCISE_LIST: '/exercise/list',
   EXERCISE_CREATE: '/exercise/create',
   EXERCISE_DETAIL: '/exercise/detail',
   EXERCISE_EDIT: '/exercise/edit',
