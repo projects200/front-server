@@ -1,8 +1,15 @@
+.divider {
+  height: 5px;
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  background-color: var(--color-background);
+}
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 65px;
+  background-color: var(--color-white-300);
 }
 
 .brand {
@@ -33,16 +40,4 @@
 .setting-icon {
   width: 26px;
   height: 26px;
-}
-
-/* 임시 구역 나눔(변경 예정) */
-.temp-section {
-  background-color: #ffffff;
-  height: 11px;
-  width: calc(100% + 40px);
-  margin-left: -20px;
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-.temp-section-bottom {
-  height: 100px;
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useQueryState, parseAsInteger } from 'nuqs'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { mutate } from 'swr'
 
@@ -17,10 +17,14 @@ import {
 import { ExerciseRecordReq } from '@/types/exercise'
 import { isValidExerciseId } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
+import CompleteButton from '../_components/exerciseForm/completeButton'
 
-import ExerciseForm from '../_components/exerciseForm/exerciseForm'
+import ExerciseForm, {
+  ExerciseFormHandle,
+} from '../_components/exerciseForm/exerciseForm'
 
 export default function Edit() {
+  const formRef = useRef<ExerciseFormHandle>(null)
   const router = useRouter()
   const showToast = useToast()
   const [exerciseId] = useQueryState('id', parseAsInteger)
@@ -41,6 +45,10 @@ export default function Edit() {
       router.back()
     }
   }, [invalidParam])
+
+  const triggerFormSubmit = () => {
+    formRef.current?.submit()
+  }
 
   const handleSubmit = async (value: ExerciseRecordReq) => {
     if (!data) return
@@ -108,8 +116,11 @@ export default function Edit() {
 
   return (
     <>
-      <Header>운동 기록 수정</Header>
+      <Header rightIcon={CompleteButton} onClick={triggerFormSubmit}>
+        운동 기록 수정
+      </Header>
       <ExerciseForm
+        ref={formRef}
         defaultValues={{
           title: data.title,
           category: data.category,

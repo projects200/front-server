@@ -1,18 +1,24 @@
 .container {
+  height: 400px;
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  padding: 0 20px;
+  background-color: var(--color-background);
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  overflow: auto;
+  scrollbar-width: none;
 }
 .empty-container {
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding-bottom: var(--bottom-button-height);
 }
 .text {
   color: var(--color-gray-200);
 }
 .card-container {
+  margin-top: 10px;
   padding-bottom: 150px;
 }

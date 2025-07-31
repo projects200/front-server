@@ -1,7 +1,10 @@
-.header-icon{
+.header-icon {
   width: 16px;
   height: 16px;
 }
-.text-field{
+.data-field {
+  margin-bottom: 24px;
+}
+.text-field {
   padding-bottom: 50px;
 }

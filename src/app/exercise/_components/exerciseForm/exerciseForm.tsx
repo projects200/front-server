@@ -1,5 +1,6 @@
 'use client'
 
+import { forwardRef, useImperativeHandle } from 'react'
 import * as z from 'zod'
 import { format } from 'date-fns'
 import { useForm, useStore } from '@tanstack/react-form'
@@ -9,7 +10,6 @@ import {
   ExercisePicture,
   ExerciseRecordReq,
 } from '@/types/exercise'
-import BottomButton from '@/components/commons/bottomButton'
 import { useReadExerciseScore } from '@/hooks/useScoreApi'
 import WarningIcon from '@/assets/icon_warning.svg'
 import Typography from '@/components/ui/typography'
@@ -19,6 +19,10 @@ import InputField from './inputField'
 import TextareaField from './textareaField'
 import ImageUploader from './imageUploader'
 import styles from './exerciseForm.module.css'
+
+export type ExerciseFormHandle = {
+  submit: () => void
+}
 
 type Props = {
   defaultValues: ExerciseContent
@@ -91,183 +95,189 @@ const exerciseSchema = () =>
       path: ['exerciseEndedAt'],
     })
 
-const ExerciseForm = ({
-  defaultValues,
-  defaultPictures = [],
-  onSubmit,
-  onError,
-  isCreate = true,
-}: Props) => {
-  const { data: scoreData } = useReadExerciseScore(isCreate)
-  const existingPictures = defaultPictures.map((picture) => picture.pictureUrl)
+const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
+  (
+    { defaultValues, defaultPictures = [], onSubmit, onError, isCreate = true },
+    ref,
+  ) => {
+    const { data: scoreData } = useReadExerciseScore(isCreate)
+    const existingPictures = defaultPictures.map(
+      (picture) => picture.pictureUrl,
+    )
 
-  const form = useForm({
-    defaultValues: {
-      ...defaultValues,
-      images: existingPictures as (File | string)[],
-    },
-    validators: { onSubmit: exerciseSchema() },
-    canSubmitWhenInvalid: true,
+    const form = useForm({
+      defaultValues: {
+        ...defaultValues,
+        images: existingPictures as (File | string)[],
+      },
+      validators: { onSubmit: exerciseSchema() },
+      canSubmitWhenInvalid: true,
 
-    onSubmitInvalid: ({ formApi }) => {
-      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
-        string,
-        z.ZodIssue[]
-      >
-      const firstIssueArr = Object.values(fieldErrorMap)[0]
-      const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
-      onError(message)
-    },
-    onSubmit: ({ value }) => {
-      const deletedIds = defaultPictures
-        .filter((picture) => !value.images.includes(picture.pictureUrl))
-        .map((picture) => picture.pictureId)
+      onSubmitInvalid: ({ formApi }) => {
+        const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
+          string,
+          z.ZodIssue[]
+        >
+        const firstIssueArr = Object.values(fieldErrorMap)[0]
+        const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
+        onError(message)
+      },
+      onSubmit: ({ value }) => {
+        const deletedIds = defaultPictures
+          .filter((picture) => !value.images.includes(picture.pictureUrl))
+          .map((picture) => picture.pictureId)
 
-      const newFiles = value.images.filter((v): v is File => v instanceof File)
+        const newFiles = value.images.filter(
+          (v): v is File => v instanceof File,
+        )
 
-      const payload: ExerciseRecordReq = {
-        ...value,
-        deletedIds,
-        images: newFiles,
+        const payload: ExerciseRecordReq = {
+          ...value,
+          deletedIds,
+          images: newFiles,
+        }
+
+        onSubmit(payload)
+      },
+    })
+
+    useImperativeHandle(ref, () => ({
+      submit: () => {
+        form.handleSubmit()
+      },
+    }))
+    const startedDate = useStore(form.store, (state) => state.values.startedAt)
+
+    const calculateScoreDescription = (): string => {
+      if (!isCreate || !scoreData || !startedDate) {
+        return ''
       }
 
-      onSubmit(payload)
-    },
-  })
+      const selectedDate = new Date(startedDate)
+      if (scoreData.currentScore >= scoreData.maxScore) {
+        return '점수가 최대치에 도달했어요!'
+      }
 
-  const startedDate = useStore(form.store, (state) => state.values.startedAt)
+      const validWindowStart = new Date(scoreData.validPeriod.startedAt)
+      if (selectedDate < validWindowStart) {
+        return '점수를 획득할 수 있는 기간이 지났어요'
+      }
+      const selectedDateStr = format(selectedDate, 'yyyy-MM-dd')
+      if (!scoreData.ValidDate.includes(selectedDateStr)) {
+        return '이 날은 이미 점수를 획득했어요'
+      }
 
-  const calculateScoreDescription = (): string => {
-    if (!isCreate || !scoreData || !startedDate) {
       return ''
     }
+    const scoreDescription = calculateScoreDescription()
 
-    const selectedDate = new Date(startedDate)
+    return (
+      <form
+        className={styles['form']}
+        onSubmit={(e) => {
+          e.preventDefault()
+          form.handleSubmit(e)
+        }}
+      >
+        <form.Field name="title">
+          {(field) => (
+            <InputField
+              className={styles['form-field']}
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+              label="제목 *"
+              id="title"
+              maxLength={255}
+              placeholder="제목을 입력해주세요."
+            />
+          )}
+        </form.Field>
 
-    // 점수가 최대치인 경우
-    if (scoreData.currentScore >= scoreData.maxScore) {
-      return '점수가 최대치에 도달했어요!'
-    }
-    // ... 나머지 계산 로직은 동일 ...
-    const validWindowStart = new Date(scoreData.validPeriod.startedAt)
-    if (selectedDate < validWindowStart) {
-      return '점수를 획득할 수 있는 기간이 지났어요'
-    }
-    const selectedDateStr = format(selectedDate, 'yyyy-MM-dd')
-    if (!scoreData.ValidDate.includes(selectedDateStr)) {
-      return '이 날은 이미 점수를 획득했어요'
-    }
+        <form.Field name="startedAt">
+          {(startedAtField) => (
+            <form.Field name="endedAt">
+              {(endedAtField) => (
+                <div className={styles['form-field']}>
+                  <DateTimePicker
+                    label="운동 시간 *"
+                    startedAt={startedAtField.state.value}
+                    endedAt={endedAtField.state.value}
+                    onStartedAtChange={(value) =>
+                      startedAtField.handleChange(value)
+                    }
+                    onEndedAtChange={(value) =>
+                      endedAtField.handleChange(value)
+                    }
+                  />
+                  {scoreDescription && (
+                    <div className={styles['score-description']}>
+                      <WarningIcon className={styles['warning-icon']} />
+                      <Typography
+                        as="span"
+                        variant="text12"
+                        className={styles['description']}
+                      >
+                        {scoreDescription}
+                      </Typography>
+                    </div>
+                  )}
+                </div>
+              )}
+            </form.Field>
+          )}
+        </form.Field>
 
-    return ''
-  }
-  const scoreDescription = calculateScoreDescription()
+        <form.Field name="category">
+          {(field) => (
+            <InputField
+              className={styles['form-field']}
+              value={field.state.value ?? ''}
+              onChange={(e) => field.handleChange(e.target.value)}
+              label="운동 종류"
+              id="category"
+              maxLength={255}
+              placeholder="운동 종류를 입력해주세요."
+            />
+          )}
+        </form.Field>
 
-  return (
-    <form
-      className={styles['form']}
-      onSubmit={(e) => {
-        e.preventDefault()
-        form.handleSubmit(e)
-      }}
-    >
-      <form.Field name="title">
-        {(field) => (
-          <InputField
-            className={styles['form-field']}
-            value={field.state.value}
-            onChange={(e) => field.handleChange(e.target.value)}
-            label="제목 *"
-            id="title"
-            maxLength={255}
-            placeholder="제목을 입력해주세요."
-          />
-        )}
-      </form.Field>
+        <form.Field name="location">
+          {(field) => (
+            <InputField
+              className={styles['form-field']}
+              value={field.state.value ?? ''}
+              onChange={(e) => field.handleChange(e.target.value)}
+              label="장소"
+              id="location"
+              maxLength={255}
+              placeholder="운동장소를 입력해주세요."
+            />
+          )}
+        </form.Field>
 
-      <form.Field name="startedAt">
-        {(startedAtField) => (
-          <form.Field name="endedAt">
-            {(endedAtField) => (
-              <div className={styles['form-field']}>
-                <DateTimePicker
-                  label="운동 시간 *"
-                  startedAt={startedAtField.state.value}
-                  endedAt={endedAtField.state.value}
-                  onStartedAtChange={(value) =>
-                    startedAtField.handleChange(value)
-                  }
-                  onEndedAtChange={(value) => endedAtField.handleChange(value)}
-                />
-                {scoreDescription && (
-                  <div className={styles['score-description']}>
-                    <WarningIcon className={styles['warning-icon']} />
-                    <Typography
-                      as="span"
-                      variant="text12"
-                      className={styles['description']}
-                    >
-                      {scoreDescription}
-                    </Typography>
-                  </div>
-                )}
-              </div>
-            )}
-          </form.Field>
-        )}
-      </form.Field>
+        <form.Field name="content">
+          {(field) => (
+            <TextareaField
+              className={styles['form-field']}
+              value={field.state.value ?? ''}
+              onChange={(e) => field.handleChange(e.target.value)}
+              label="내용"
+              id="content"
+            />
+          )}
+        </form.Field>
+        <form.Field name="images">
+          {(field) => (
+            <ImageUploader
+              files={field.state.value ?? []}
+              setFiles={(files) => field.handleChange(files)}
+            />
+          )}
+        </form.Field>
+      </form>
+    )
+  },
+)
 
-      <form.Field name="category">
-        {(field) => (
-          <InputField
-            className={styles['form-field']}
-            value={field.state.value ?? ''}
-            onChange={(e) => field.handleChange(e.target.value)}
-            label="운동 종류"
-            id="category"
-            maxLength={255}
-            placeholder="운동 종류를 입력해주세요."
-          />
-        )}
-      </form.Field>
-
-      <form.Field name="location">
-        {(field) => (
-          <InputField
-            className={styles['form-field']}
-            value={field.state.value ?? ''}
-            onChange={(e) => field.handleChange(e.target.value)}
-            label="장소"
-            id="location"
-            maxLength={255}
-            placeholder="운동장소를 입력해주세요."
-          />
-        )}
-      </form.Field>
-
-      <form.Field name="content">
-        {(field) => (
-          <TextareaField
-            className={styles['form-field']}
-            value={field.state.value ?? ''}
-            onChange={(e) => field.handleChange(e.target.value)}
-            label="내용"
-            id="content"
-          />
-        )}
-      </form.Field>
-      <form.Field name="images">
-        {(field) => (
-          <ImageUploader
-            files={field.state.value ?? []}
-            setFiles={(files) => field.handleChange(files)}
-          />
-        )}
-      </form.Field>
-      <BottomButton className={styles['button']} type="submit">
-        완료
-      </BottomButton>
-    </form>
-  )
-}
-
+ExerciseForm.displayName = 'ExerciseForm'
 export default ExerciseForm
