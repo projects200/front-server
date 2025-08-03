@@ -116,7 +116,7 @@ export default function Edit() {
 
   return (
     <>
-      <Header rightIcon={CompleteButton} onClick={triggerFormSubmit}>
+      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
         운동 기록 수정
       </Header>
       <ExerciseForm
