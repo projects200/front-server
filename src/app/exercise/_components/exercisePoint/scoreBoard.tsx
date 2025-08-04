@@ -23,7 +23,7 @@ const startDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
 const endDate = format(new Date(), 'yyyy-MM-dd')
 
 const LEGAL_DOC_URLS = {
-  SCORE_POLICY: '/legal/exercise-score-policy',
+  SCORE_POLICY: 'https://www.undabang.store/legal/exercise-point-policy.html',
 }
 
 const ScoreBoard = () => {

@@ -20,7 +20,6 @@ import ExerciseForm, {
   ExerciseFormHandle,
 } from '../_components/exerciseForm/exerciseForm'
 
-
 export default function Create() {
   const [celebration, setCelebration] = useState(false)
   const [createdExerciseId, setCreatedExerciseId] = useState<number | null>(
@@ -89,7 +88,7 @@ export default function Create() {
 
   return (
     <>
-      <Header rightIcon={CompleteButton} onClick={triggerFormSubmit}>
+      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
         운동 기록하기
       </Header>
       <ExerciseForm
