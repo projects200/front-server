@@ -37,10 +37,11 @@ const ScoreBoard = () => {
   const score = scoreData === undefined ? 0 : scoreData.memberScore
   const maxScore = scoreData?.maxScore ?? 100
   const minScore = scoreData?.minScore ?? 0
-  const progressBarValue = 1 + (score * 94) / 100
+  const progressBarValue = 1 + (score * 94) / 100 //추후 최소,최대 점수가 변경되면 자동으로 계산되도록 변경
   const { color, state } = getScoreAttributes({
     score,
     maxScore: maxScore,
+    minScore: minScore,
     isLoading,
   })
 
