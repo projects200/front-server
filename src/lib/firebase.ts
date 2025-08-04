@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from 'react'
 import { initializeApp, getApps, getApp } from 'firebase/app'
 import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
