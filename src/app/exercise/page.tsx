@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { format } from 'date-fns'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -11,21 +11,48 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import Logo from '@/assets/logo.svg'
 import ServiceName from '@/assets/service_name.svg'
 import Setting from '@/assets/icon_setting.svg'
+import { useReadExerciseScore } from '@/hooks/useScoreApi'
+
 import ScoreBoard from './_components/exercisePoint/scoreBoard'
 import ExerciseCalendar from './_components/exerciseCalendar/exerciseCalendar'
 import styles from './exercise.module.css'
+import { ExerciseScore } from '@/types/score'
 
 export default function Exercise() {
+  const { data: scoreData } = useReadExerciseScore(true)
   const [selectedDate, setSelectedDate] = useState<string>(() =>
     format(new Date(), 'yyyy-MM-dd'),
   )
   const router = useRouter()
+  const calendarRef = useRef<HTMLDivElement>(null)
 
   const handleDateSelect = (date: Date) => {
-    const dateStr = format(date, 'yyyy-MM-dd')
-    setSelectedDate(dateStr)
+    setSelectedDate(format(date, 'yyyy-MM-dd'))
+    calendarRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
   }
 
+  const calculateBottomText = (
+    scoreData: ExerciseScore | undefined,
+    day: string,
+  ): string => {
+    if (!scoreData) {
+      return '운동기록하기'
+    }
+    const isMaxScoreReached = scoreData.currentScore >= scoreData.maxScore
+    const isBeforeValidPeriod =
+      new Date(day) < new Date(scoreData.validPeriod.startedAt)
+    const isDateAlreadyRecorded = !scoreData.ValidDate.includes(day)
+
+    if (isMaxScoreReached || isBeforeValidPeriod || isDateAlreadyRecorded) {
+      return '운동기록하기'
+    }
+
+    return `운동기록하고 ${scoreData.expectedScore}점 획득하기`
+  }
+  const bottomText = calculateBottomText(scoreData, selectedDate)
   return (
     <>
       <header className={styles['header']}>
@@ -42,13 +69,14 @@ export default function Exercise() {
       <div className={styles['divider']}></div>
 
       <ExerciseCalendar
+        ref={calendarRef}
         onDateSelect={handleDateSelect}
         selectedDate={selectedDate}
       />
       <ExerciseList selectedDate={selectedDate} />
 
       <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
-        오늘 운동 기록하고 점수 얻기
+        {bottomText}
       </BottomButton>
     </>
   )

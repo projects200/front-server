@@ -67,7 +67,6 @@ const MonthView = memo(function MonthView({
             const dateStr = format(day, 'yyyy-MM-dd')
             const isCurrent = isSameMonth(day, month)
             const isFuture = isAfter(day, today)
-            const isToday = isSameDay(day, today)
             const isSelected = isSameDay(day, parseISO(selectedDate))
             const count = counts[dateStr] ?? 0
 
@@ -83,7 +82,6 @@ const MonthView = memo(function MonthView({
                   styles['cell'],
                   !isCurrent && styles['empty'],
                   isFuture && styles['disabled'],
-                  isToday && styles['today'],
                   isSelected && styles['selected'],
                 )}
                 onClick={() => {
