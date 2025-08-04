@@ -34,12 +34,13 @@ const ScoreBoard = () => {
     return fetchedData?.reduce((total, data) => total + data.record, 0) || 0
   }, [fetchedData])
 
-  // 현재 백엔드 api가 수정중이라 memberScore시작점수가 0이고 maxScore가 없어 임의 값(기본60점, 최대100)으로 대체하였습니다.
-  const TEMP_MAXSCORE = 100
   const score = scoreData === undefined ? 0 : scoreData.memberScore
+  const maxScore = scoreData?.maxScore ?? 100
+  const minScore = scoreData?.minScore ?? 0
+  const progressBarValue = 1 + (score * 94) / 100
   const { color, state } = getScoreAttributes({
     score,
-    maxScore: TEMP_MAXSCORE,
+    maxScore: maxScore,
     isLoading,
   })
 
@@ -97,13 +98,15 @@ const ScoreBoard = () => {
         <div className={styles['indicator-section']}>
           <div className={styles['indicator']}>
             <CircularProgressbarWithChildren
-              value={score * 0.95}
+              value={progressBarValue}
               strokeWidth={7}
               styles={buildStyles({
                 pathColor: color,
                 trailColor: 'none',
                 pathTransitionDuration: 0.8,
               })}
+              maxValue={maxScore}
+              minValue={minScore}
             >
               <CharacterFace state={state} />
             </CircularProgressbarWithChildren>

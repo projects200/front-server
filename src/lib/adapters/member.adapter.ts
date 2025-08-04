@@ -5,5 +5,7 @@ export function adaptMemberScore(dto: MemberSocreDto): MemberScore {
   return {
     memberId: dto.memberId,
     memberScore: dto.memberScore,
+    maxScore: dto.policyMaxScore,
+    minScore: dto.policyMinScore,
   }
 }
