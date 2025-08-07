@@ -2,7 +2,8 @@ import withPWAInit from '@ducanh2912/next-pwa'
 
 const pwaConfig = {
   dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
+  swSrc: 'src/firebase-messaging-sw.js',
+  // disable: process.env.NODE_ENV === 'development',
   register: true,
   skipWaiting: true,
 }
