@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { Analytics } from '@/lib/firebase'
+import Analytics from '@/lib/firebase/analytics'
 
 import { ClientProviders } from './_components/clientProviders'
 import './reset.css'
