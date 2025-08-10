@@ -11,6 +11,7 @@ import LogoutIcon from '@/assets/icon_logout.svg'
 import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
 import InfoIcon from '@/assets/icon_info.svg'
+import BottomNavigation from '@/components/commons/bottomNavigation'
 
 import MenuItem from './_components/menuItem'
 import styles from './settings.module.css'
@@ -89,6 +90,8 @@ export default function Settings() {
           로그아웃 하시겠습니까?
         </Typography>
       </CenterModal>
+
+      <BottomNavigation />
 
       {/* 각종 약관 */}
       {legalDocUrl && (
