@@ -4,11 +4,14 @@ const SITE_MAP = {
   AGREEMENT: '/auth/agreement',
   SIGHUP: '/auth/sign-up',
   SETTINGS: '/settings',
+
   EXERCISE: '/exercise',
   EXERCISE_CREATE: '/exercise/create',
   EXERCISE_DETAIL: '/exercise/detail',
   EXERCISE_EDIT: '/exercise/edit',
 
   TIMER_LIST: '/timer/list',
+  TIMER_SIMPLE: '/timer/simple',
+  TIMER_CREATE: '/timer/create',
 } as const
 export default SITE_MAP

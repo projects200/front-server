@@ -7,11 +7,10 @@ import { useRouter } from 'next/navigation'
 import ExerciseList from './_components/exerciseList/exerciseList'
 import BottomButton from '@/components/commons/bottomButton'
 import SITE_MAP from '@/constants/siteMap.constant'
-import Logo from '@/assets/logo.svg'
-import ServiceName from '@/assets/service_name.svg'
 import { useReadExerciseScore } from '@/hooks/useScoreApi'
 import { ExerciseScore } from '@/types/score'
 import BottomNavigation from '@/components/commons/bottomNavigation'
+import LogoTitle from '@/components/ui/logoTitle'
 
 import ScoreBoard from './_components/exercisePoint/scoreBoard'
 import ExerciseCalendar from './_components/exerciseCalendar/exerciseCalendar'
@@ -54,23 +53,15 @@ export default function Exercise() {
   const bottomText = calculateBottomText(scoreData, selectedDate)
   return (
     <>
-      <header className={styles['header']}>
-        <div className={styles['brand']}>
-          <Logo className={styles['logo']} />
-          <ServiceName className={styles['service-name']} />
-        </div>
-      </header>
-
+      <LogoTitle />
       <ScoreBoard />
       <div className={styles['divider']}></div>
-
       <ExerciseCalendar
         ref={calendarRef}
         onDateSelect={handleDateSelect}
         selectedDate={selectedDate}
       />
       <ExerciseList selectedDate={selectedDate} />
-
       <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
         {bottomText}
       </BottomButton>

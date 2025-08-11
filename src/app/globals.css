@@ -20,6 +20,14 @@ body {
   padding: 0 20px;
 }
 
+/* 추후 container 또한 아래 양식처럼 바꿔서 전체적인 layout디자인을 통일 */
+.container-timer {
+  padding: 0 20px;
+  background-color: var(--color-background);
+  width: 100%;
+  min-height: 100vh;
+}
+
 @media (min-width: 768px) {
   .responsive-container {
     max-width: 500px;

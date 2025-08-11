@@ -10,6 +10,7 @@ type TypographyWeight = 'regular' | 'medium' | 'bold'
 type TypographyVariant =
   | 'text32'
   | 'text24'
+  | 'text22'
   | 'text18'
   | 'text15'
   | 'text14'
