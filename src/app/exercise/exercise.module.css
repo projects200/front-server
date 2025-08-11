@@ -27,17 +27,3 @@
   height: 50px;
   width: auto;
 }
-
-.setting-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  width: 26px;
-  height: 26px;
-}
-
-.setting-icon {
-  width: 26px;
-  height: 26px;
-}

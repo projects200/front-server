@@ -2,7 +2,6 @@
 
 import { useState, useRef } from 'react'
 import { format } from 'date-fns'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import ExerciseList from './_components/exerciseList/exerciseList'
@@ -10,13 +9,13 @@ import BottomButton from '@/components/commons/bottomButton'
 import SITE_MAP from '@/constants/siteMap.constant'
 import Logo from '@/assets/logo.svg'
 import ServiceName from '@/assets/service_name.svg'
-import Setting from '@/assets/icon_setting.svg'
 import { useReadExerciseScore } from '@/hooks/useScoreApi'
+import { ExerciseScore } from '@/types/score'
+import BottomNavigation from '@/components/commons/bottomNavigation'
 
 import ScoreBoard from './_components/exercisePoint/scoreBoard'
 import ExerciseCalendar from './_components/exerciseCalendar/exerciseCalendar'
 import styles from './exercise.module.css'
-import { ExerciseScore } from '@/types/score'
 
 export default function Exercise() {
   const { data: scoreData } = useReadExerciseScore(true)
@@ -60,9 +59,6 @@ export default function Exercise() {
           <Logo className={styles['logo']} />
           <ServiceName className={styles['service-name']} />
         </div>
-        <Link href={SITE_MAP.SETTINGS} className={styles['setting-button']}>
-          <Setting className={styles['setting-icon']} />
-        </Link>
       </header>
 
       <ScoreBoard />
@@ -78,6 +74,7 @@ export default function Exercise() {
       <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
         {bottomText}
       </BottomButton>
+      <BottomNavigation />
     </>
   )
 }
