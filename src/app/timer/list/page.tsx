@@ -25,7 +25,7 @@ export default function List() {
           className={styles['simple-timer-text']}
           as="span"
           variant="text22"
-          weight="bold"
+          weight="medium"
         >
           심플 타이머
         </Typography>
@@ -38,7 +38,7 @@ export default function List() {
         className={styles['custom-timer-container']}
         href={SITE_MAP.TIMER_CREATE}
       >
-        <Typography as="span" variant="text22" weight="bold">
+        <Typography as="span" variant="text22" weight="medium">
           나만의 타이머
         </Typography>
         <PlusIcon className={styles['plus-icon']} />
