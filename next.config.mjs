@@ -1,12 +1,12 @@
-import withPWAInit from '@ducanh2912/next-pwa'
+// import withPWAInit from '@ducanh2912/next-pwa'
 
-const pwaConfig = {
-  dest: 'public',
-  swSrc: 'src/firebase-messaging-sw.js',
-  // disable: process.env.NODE_ENV === 'development',
-  register: true,
-  skipWaiting: true,
-}
+// const pwaConfig = {
+//   dest: 'public',
+//   customWorkerSrc: 'src/firebase-messaging-sw.js',
+//   register: true,
+//   skipWaiting: true,
+//   // disable: process.env.NODE_ENV === 'development',
+// }
 
 const nextConfig = {
   reactStrictMode: false,
@@ -37,7 +37,7 @@ const nextConfig = {
     return config
   },
 }
+export default nextConfig
 
-const withPWA = withPWAInit(pwaConfig)
-
-export default withPWA(nextConfig)
+// const withPWA = withPWAInit(pwaConfig)
+// export default withPWA(nextConfig)

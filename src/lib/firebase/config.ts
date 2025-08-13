@@ -28,26 +28,19 @@ const initializeMessaging = () => {
 
 const requestFcmToken = async (): Promise<string | null> => {
   const messagingInstance = initializeMessaging()
-
   if (!messagingInstance) return null
 
   try {
-    const serviceWorkerRegistration =
-      await navigator.serviceWorker.register('/sw.js')
-
     const permission = await Notification.requestPermission()
-    if (permission !== 'granted') {
-      return null
-    }
+    if (permission !== 'granted') return null
 
     const currentToken = await getToken(messagingInstance, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-      serviceWorkerRegistration: serviceWorkerRegistration,
     })
 
     return currentToken
   } catch (err) {
-    console.error('An error occurred while retrieving token. ', err)
+    console.error('FCM 토큰 발급 중 에러:', err)
     return null
   }
 }
