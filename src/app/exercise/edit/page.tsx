@@ -17,7 +17,7 @@ import {
 import { ExerciseRecordReq } from '@/types/exercise'
 import { isValidExerciseId } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
-import CompleteButton from '../_components/exerciseForm/completeButton'
+import CompleteButton from '@/components/commons/completeButton'
 
 import ExerciseForm, {
   ExerciseFormHandle,

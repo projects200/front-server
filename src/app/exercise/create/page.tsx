@@ -14,7 +14,7 @@ import LoadingScreen from '@/components/commons/loadingScreen'
 import { ExerciseRecordReq } from '@/types/exercise'
 import Celebration from './_components/celebration'
 import SITE_MAP from '@/constants/siteMap.constant'
-import CompleteButton from '../_components/exerciseForm/completeButton'
+import CompleteButton from '@/components/commons/completeButton'
 
 import ExerciseForm, {
   ExerciseFormHandle,

@@ -43,7 +43,7 @@ export default function List() {
         </Typography>
         <PlusIcon className={styles['plus-icon']} />
       </Link>
-
+      
       <BottomNavigation />
     </>
   )
