@@ -11,6 +11,7 @@ import LogoutIcon from '@/assets/icon_logout.svg'
 import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
 import InfoIcon from '@/assets/icon_info.svg'
+import { useDeleteFcmToken } from '@/hooks/useFcmApi'
 
 import MenuItem from './_components/menuItem'
 import styles from './settings.module.css'
@@ -28,8 +29,18 @@ const GOOGLE_FORM_URLS = {
 export default function Settings() {
   const [isCenterModalOpen, setIsCenterModalOpen] = useState(false)
   const [legalDocUrl, setLegalDocUrl] = useState('')
+  const { trigger: unregisterToken } = useDeleteFcmToken()
 
   const handleSignOut = async () => {
+    const fcmToken = sessionStorage.getItem('fcm_token')
+    sessionStorage.removeItem('fcm_token')
+    if (fcmToken) {
+      try {
+        await unregisterToken(fcmToken)
+      } catch {
+        console.log('FCM 토큰 등록해제 오류')
+      }
+    }
     await signOutRedirect()
   }
 
