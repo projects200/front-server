@@ -1,5 +1,5 @@
 import { ExerciseScore } from '@/types/score'
-import { ExerciseScoreDto } from '@/types/dto/score'
+import { ExerciseScoreDto } from '@/types/dto/score.dto'
 
 export function adapterExerciseScore(dto: ExerciseScoreDto): ExerciseScore {
   return {

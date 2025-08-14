@@ -1,4 +1,4 @@
-import { MemberSocreDto } from '@/types/dto/member'
+import { MemberSocreDto } from '@/types/dto/member.dto'
 import { fetchWrapper } from '@/utils/fetchWrapper'
 
 // 회원 운동점수 조회

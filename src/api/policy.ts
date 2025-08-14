@@ -1,4 +1,4 @@
-import { ExercisePolicyDto } from '@/types/dto/policy'
+import { ExercisePolicyDto } from '@/types/dto/policy.dto'
 import { fetchWrapper } from '@/utils/fetchWrapper'
 
 // 운동점수 정책 조회

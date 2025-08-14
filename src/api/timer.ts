@@ -1,4 +1,4 @@
-import { SimpleTimerListDto, CustomTimerListDto } from '@/types/dto/timer'
+import { SimpleTimerListDto, CustomTimerListDto } from '@/types/dto/timer.dto'
 import { fetchWrapper } from '@/utils/fetchWrapper'
 
 //심플 타이머 리스트 조회

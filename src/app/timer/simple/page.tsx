@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
-// import { useReadSimpleTimerList } from '@/hooks/useTimerApi'
+import { useReadSimpleTimerList } from '@/hooks/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 
@@ -16,24 +16,16 @@ import Typography from '@/components/ui/typography'
 const SMOOTH_INTERVAL = 10
 
 export default function Simple() {
-  // const { data } = useReadSimpleTimerList()
+  const { data } = useReadSimpleTimerList()
   const [initialTime, setInitialTime] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isActive, setIsActive] = useState(false)
+  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
   const timerEndSound = useRef<HTMLAudioElement | null>(null)
 
-  // 임시 데이터
-  const data = {
-    simpleTimerCount: 6,
-    simpleTimers: [
-      { simpleTimerId: 1, time: 2 },
-      { simpleTimerId: 2, time: 5 },
-      { simpleTimerId: 3, time: 10 },
-      { simpleTimerId: 4, time: 30 },
-      { simpleTimerId: 5, time: 60 },
-      { simpleTimerId: 6, time: 59 * 60 + 59 },
-    ],
-  }
+  useEffect(() => {
+    timerEndSound.current = new Audio('/timerEnd.mp3')
+  }, [])
 
   const handleTimerFinish = useCallback(() => {
     if (timerEndSound.current) {
@@ -55,30 +47,24 @@ export default function Simple() {
     }
   }
 
+  useEffect(() => {
+    if (isActive && timeLeft > 0) {
+      timeoutIdRef.current = setTimeout(() => {
+        setTimeLeft((prevTime) => prevTime - SMOOTH_INTERVAL)
+      }, SMOOTH_INTERVAL)
+    } else if (timeLeft <= 0 && isActive) {
+      handleTimerFinish()
+      setIsActive(false)
+    }
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current)
+      }
+    }
+  }, [isActive, timeLeft])
+
   const progressBarValue =
     initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
-
-  useEffect(() => {
-    timerEndSound.current = new Audio('/timerEnd.mp3')
-  }, [])
-
-  useEffect(() => {
-    if (isActive) {
-      const interval = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= SMOOTH_INTERVAL) {
-            handleTimerFinish()
-            setInitialTime(0)
-            setIsActive(false)
-            return 0
-          }
-          return prevTime - SMOOTH_INTERVAL
-        })
-      }, SMOOTH_INTERVAL)
-
-      return () => clearInterval(interval)
-    }
-  }, [isActive])
 
   return (
     <div className={styles['page-container']}>
@@ -105,17 +91,18 @@ export default function Simple() {
 
       <div className={styles['timer-button-section']}>
         <div className={styles['timer-button-grid']}>
-          {data.simpleTimers.map((preset) => (
-            <button
-              className={styles['timer-button']}
-              key={preset.simpleTimerId}
-              onClick={() => handlePresetClick(preset.time)}
-            >
-              <Typography as="span" variant="text22" weight="bold">
-                {formatNumberToTime(preset.time)}
-              </Typography>
-            </button>
-          ))}
+          {data &&
+            data.simpleTimerList.map((preset) => (
+              <button
+                className={styles['timer-button']}
+                key={preset.simpleTimerId}
+                onClick={() => handlePresetClick(preset.time)}
+              >
+                <Typography as="span" variant="text22" weight="bold">
+                  {formatNumberToTime(preset.time)}
+                </Typography>
+              </button>
+            ))}
         </div>
       </div>
     </div>
