@@ -1,4 +1,4 @@
-import { ExerciseScoreDto } from '@/types/dto/score'
+import { ExerciseScoreDto } from '@/types/dto/score.dto'
 import { fetchWrapper } from '@/utils/fetchWrapper'
 
 // 예상 획득 점수 정보 조회

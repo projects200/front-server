@@ -3,7 +3,7 @@ import {
   ExerciseListResDto,
   ExerciseRecordResDto,
   ExerciseContentReqDto,
-} from '@/types/dto/exercise'
+} from '@/types/dto/exercise.dto'
 import {
   ExerciseRange,
   ExerciseList,
