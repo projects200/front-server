@@ -1,4 +1,4 @@
-import BackIcon from '@/assets/icon_back_arrow.svg'
+import BackIcon from '@/assets/icon_left_arrow.svg'
 
 import Portal from '../ui/portal'
 import styles from './legalDocModal.module.css'

@@ -3,7 +3,7 @@
 import { ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 
-import LeftArrow from '@/assets/icon_back_arrow.svg'
+import LeftArrow from '@/assets/icon_left_arrow.svg'
 
 import styles from './header.module.css'
 import Typography from '../ui/typography'

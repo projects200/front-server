@@ -4,26 +4,3 @@
   margin-left: -20px;
   background-color: var(--color-background);
 }
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 65px;
-  background-color: var(--color-white-300);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.logo {
-  width: 34px;
-  height: 34px;
-}
-
-.service-name {
-  height: 50px;
-  width: auto;
-}

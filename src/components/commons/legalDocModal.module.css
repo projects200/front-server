@@ -28,6 +28,7 @@
   width: 16px;
   height: 16px;
   vertical-align: middle;
+  color: var(--color-black);
 }
 .iframe-container {
   position: relative;
