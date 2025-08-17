@@ -12,6 +12,7 @@ const SITE_MAP = {
 
   TIMER_LIST: '/timer/list',
   TIMER_SIMPLE: '/timer/simple',
+  TIMER_CUSTOM: '/timer/custom',
   TIMER_CREATE: '/timer/create',
 } as const
 export default SITE_MAP
