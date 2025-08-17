@@ -7,12 +7,14 @@ import LogoTitle from '@/components/ui/logoTitle'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import PlusIcon from '@/assets/icon_plus.svg'
 import Typography from '@/components/ui/typography'
+import { useReadCustomTimerList } from '@/hooks/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './list.module.css'
 
 export default function List() {
-  // 추후 커스텀 타이머 리스트를 훅으로 불러오기
+  const { data } = useReadCustomTimerList()
+  console.log(data)
 
   return (
     <>

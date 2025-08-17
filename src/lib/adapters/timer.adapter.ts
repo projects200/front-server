@@ -22,6 +22,7 @@ export function adapterCustomTimerList(
   dto: CustomTimerListDto,
 ): CustomTimerList {
   return {
+    customTimerCount: dto.customTimerCount,
     customTimerList: dto.customTimers.map(adapterCustomTimer),
   }
 }

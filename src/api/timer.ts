@@ -14,6 +14,22 @@ export function readSimpleTimerList(
   )
 }
 
+//심플 타이머 수정
+export function updateSimpleTimer(
+  token: string,
+  time: number,
+  simpleTimerId: number,
+): Promise<null> {
+  return fetchWrapper<null>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/simple-timers/${simpleTimerId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ time: time }),
+    },
+    token,
+  )
+}
+
 // 커스텀 타이머 리스트 조회
 export function readCustomTimerList(
   token: string,

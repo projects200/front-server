@@ -1,10 +1,14 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { mutate } from 'swr'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
-import { useReadSimpleTimerList } from '@/hooks/useTimerApi'
+import {
+  useReadSimpleTimerList,
+  usePatchSimpleTimer,
+} from '@/hooks/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 
@@ -17,6 +21,7 @@ const SMOOTH_INTERVAL = 10
 
 export default function Simple() {
   const { data } = useReadSimpleTimerList()
+  const { trigger: testPatch } = usePatchSimpleTimer()
   const [initialTime, setInitialTime] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isActive, setIsActive] = useState(false)
@@ -69,7 +74,22 @@ export default function Simple() {
   return (
     <div className={styles['page-container']}>
       <Header>심플 타이머</Header>
-
+      <button
+        onClick={() => {
+          const test = async () => {
+            try {
+              await testPatch({
+                time: 30,
+                simpleTimerId: 1,
+              })
+              await mutate(['timer/simple/list'])
+            } catch {}
+          }
+          test()
+        }}
+      >
+        테스트
+      </button>
       <div className={styles['indicator-section']}>
         <div className={styles['indicator']}>
           <CircularTimerDisplay value={progressBarValue}>

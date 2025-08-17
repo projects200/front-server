@@ -14,5 +14,6 @@ export type CustomTimerDto = {
 }
 
 export type CustomTimerListDto = {
+  customTimerCount: number
   customTimers: CustomTimerDto[]
 }
