@@ -1,27 +1,25 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-// import { mutate } from 'swr'
+
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
 import {
   useReadSimpleTimerList,
-  // usePatchSimpleTimer,
 } from '@/hooks/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 
+import PresetCard from './_components/presetCard'
 import CircularTimerDisplay from '../_components/circularTimer'
 import styles from './simple.module.css'
-import Typography from '@/components/ui/typography'
 
 // 타이머 업데이트 주기(단위ms)
 const SMOOTH_INTERVAL = 10
 
 export default function Simple() {
   const { data } = useReadSimpleTimerList()
-  // const { trigger: timerUpdate } = usePatchSimpleTimer()
   const [initialTime, setInitialTime] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isActive, setIsActive] = useState(false)
@@ -97,15 +95,11 @@ export default function Simple() {
         <div className={styles['timer-button-grid']}>
           {data &&
             data.simpleTimerList.map((preset) => (
-              <button
-                className={styles['timer-button']}
+              <PresetCard
                 key={preset.simpleTimerId}
-                onClick={() => handlePresetClick(preset.time)}
-              >
-                <Typography as="span" variant="text22" weight="bold">
-                  {formatNumberToTime(preset.time)}
-                </Typography>
-              </button>
+                preset={preset}
+                onPresetClick={handlePresetClick}
+              />
             ))}
         </div>
       </div>
