@@ -1,7 +1,7 @@
 'use client'
 
 import { useQueryState, parseAsInteger } from 'nuqs'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import clsx from 'clsx'
 
 import ClockIcon from '@/assets/icon_clock.svg'
@@ -10,7 +10,6 @@ import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import Button from '@/components/ui/button'
 import Typography from '@/components/ui/typography'
-import { CustomTimerDetail } from '@/types/timer'
 // import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
 
 import KebabModal from './_components/kebabModal'
@@ -31,24 +30,20 @@ export default function Custom() {
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isTimerStarted, setIsTimerStarted] = useState(false)
-  const [initialTime, setInitialTime] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isActive, setIsActive] = useState(false)
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
   const stepRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  //첫번째 스탭의 시간으로 타이머 초기화
-  const initTimer = useCallback((data: CustomTimerDetail) => {
-    if (data && data.customTimerStepCount > 0) {
-      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
-      setInitialTime(firstStepTime)
-      setTimeLeft(firstStepTime * 1000)
-    }
-  }, [])
+  const initialTime =
+    data?.customTimerStepList[currentStepIndex]?.customTimerStepsTime || 0
 
   // data 로드후 타이머 초기화
   useEffect(() => {
-    initTimer(data)
+    if (data && data.customTimerStepCount > 0) {
+      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
+      setTimeLeft(firstStepTime * 1000)
+    }
   }, [data])
 
   useEffect(() => {
@@ -65,7 +60,6 @@ export default function Custom() {
         setCurrentStepIndex(nextStepIndex)
         const nextStepTime =
           data.customTimerStepList[nextStepIndex].customTimerStepsTime
-        setInitialTime(nextStepTime)
         setTimeLeft(nextStepTime * 1000)
       } else {
         handleStopButton()
@@ -88,7 +82,9 @@ export default function Custom() {
     setIsActive(false)
     setIsTimerStarted(false)
     setCurrentStepIndex(0)
-    initTimer(data)
+    if (data && data.customTimerStepCount > 0) {
+      setTimeLeft(data.customTimerStepList[0].customTimerStepsTime * 1000)
+    }
   }
 
   const progressBarValue =
