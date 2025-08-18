@@ -128,18 +128,18 @@ export default function Custom() {
       <div className={styles['controls-section']}>
         <Button
           className={styles['control-button']}
-          onClick={handleStartPauseButton}
-          variant={isActive ? 'secondary' : 'primary'}
+          onClick={handleStopButton}
+          disabled={!isTimerStarted}
+          variant={'secondary'}
         >
-          {isActive ? '일시정지' : '시작'}
+          종료
         </Button>
         <Button
           className={styles['control-button']}
-          onClick={handleStopButton}
-          disabled={!isTimerStarted}
-          variant={isTimerStarted ? 'warning' : 'secondary'}
+          onClick={handleStartPauseButton}
+          variant={isActive ? 'warning' : 'primary'}
         >
-          종료
+          {isActive ? '일시정지' : '시작'}
         </Button>
       </div>
 
