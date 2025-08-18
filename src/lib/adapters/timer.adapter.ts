@@ -9,7 +9,7 @@ import {
   SimpleTimerListDto,
   CustomTimerDto,
   CustomTimerListDto,
-} from '@/types/dto/timer'
+} from '@/types/dto/timer.dto'
 
 export function adapterCustomTimer(dto: CustomTimerDto): CustomTimer {
   return {
@@ -22,6 +22,7 @@ export function adapterCustomTimerList(
   dto: CustomTimerListDto,
 ): CustomTimerList {
   return {
+    customTimerCount: dto.customTimerCount,
     customTimerList: dto.customTimers.map(adapterCustomTimer),
   }
 }

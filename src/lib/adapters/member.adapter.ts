@@ -1,5 +1,5 @@
 import { MemberScore } from '@/types/member'
-import { MemberSocreDto } from '@/types/dto/member'
+import { MemberSocreDto } from '@/types/dto/member.dto'
 
 export function adaptMemberScore(dto: MemberSocreDto): MemberScore {
   return {

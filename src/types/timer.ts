@@ -14,5 +14,6 @@ export type CustomTimer = {
 }
 
 export type CustomTimerList = {
+  customTimerCount: number
   customTimerList: CustomTimer[]
 }

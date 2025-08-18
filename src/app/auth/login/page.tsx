@@ -10,28 +10,14 @@ import Logo from '@/assets/logo.svg'
 
 import styles from './login.module.css'
 
-// 임시 알람 요청 테스트코드
-import { requestFcmToken } from '@/lib/firebase/config'
-
 export default function Login() {
-  // 임시 알람 요청 테스트코드
-  const handleTestClick = async () => {
-    const token = await requestFcmToken()
-    if (token) {
-      console.log('발급 토큰 : ', token)
-      alert('토큰 발급 성공')
-    } else {
-      alert('토큰 발급 실패')
-    }
-  }
+
   return (
     <section className={styles['container']}>
-      {/* 임시로 테스트를 위해 로고 클릭시 fcm토큰 요청하도록 구현했습니다. */}
       <Logo
         className={styles['logo']}
         width={150}
         height={150}
-        onClick={handleTestClick}
       />
       <Typography
         className={styles['title']}
