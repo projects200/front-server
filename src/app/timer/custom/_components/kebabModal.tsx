@@ -17,13 +17,13 @@ import styles from './kebabmodal.module.css'
 
 type Props = {
   isOpen: boolean
-  setIsOpen: (open: boolean) => void
+  onClose: () => void 
   customTimerId: number
 }
 
 export default function KebabModal({
   isOpen,
-  setIsOpen,
+  onClose,
   customTimerId,
 }: Props) {
   const [isOpenCenter, setIsOpenCenter] = useState(false)
@@ -49,9 +49,7 @@ export default function KebabModal({
     <>
       <BottomModal
         isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false)
-        }}
+        onClose={onClose}
       >
         <div className={styles['button-group']}>
           <Link
@@ -67,7 +65,7 @@ export default function KebabModal({
           <button
             className={styles['button']}
             onClick={() => {
-              setIsOpen(false)
+              onClose()
               setIsOpenCenter(true)
             }}
           >

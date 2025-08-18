@@ -177,7 +177,7 @@ export default function Custom() {
 
       <KebabModal
         isOpen={isBottomModalOpen}
-        setIsOpen={setIsBottomModalOpen}
+        onClose={() => setIsBottomModalOpen(false)}
         customTimerId={customTimerId}
       />
     </div>
