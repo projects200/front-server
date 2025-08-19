@@ -10,7 +10,7 @@ import Typography from '@/components/ui/typography'
 import { SimpleTimer } from '@/types/timer'
 import { useToast } from '@/hooks/useToast'
 
-import TimerPicker from '../../_components/timePicker'
+import TimePicker from '../../_components/timePicker'
 import KebabModal from './kebabModal'
 import styles from './presetCard.module.css'
 
@@ -51,7 +51,6 @@ export default function PresetCard({ preset, onPresetClick }: Props) {
       await mutate(['timer/simple/list'])
     } catch {}
   }
-
 
   // 메뉴 외부를 클릭하면 닫히도록 하는 로직
   const menuRef = useRef<(event: MouseEvent) => void>(null)
@@ -101,8 +100,8 @@ export default function PresetCard({ preset, onPresetClick }: Props) {
       </div>
 
       {isTimePickerOpen && (
-        <TimerPicker
-          preset={preset}
+        <TimePicker
+          time={preset.time}
           onClose={() => setIsTimePickerOpen(false)}
           onComplete={handleEditComplete}
         />

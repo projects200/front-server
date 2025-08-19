@@ -1,15 +1,5 @@
-.title-section {
-  height: 80px;
-  width: calc(100% + 40px);
-  margin-left: -20px;
-  background-color: var(--color-white-300);
-  padding: 0 20px 20px 20px;
+.page-container {
   display: flex;
-  align-items: end;
-}
-
-.title-input {
-  border: none;
-  font-weight: bold;
-  font-size: 24px;
+  flex-direction: column;
+  height: 100vh;
 }
