@@ -17,3 +17,17 @@ export type CustomTimerList = {
   customTimerCount: number
   customTimerList: CustomTimer[]
 }
+
+export type CustomTimerStep = {
+  customTimerStepsId: number
+  customTimerStepsName: string
+  customTimerStepsOrder: number
+  customTimerStepsTime: number
+}
+
+export type CustomTimerDetail = {
+  customTimerId: number
+  customTimerName: string
+  customTimerStepCount: number
+  customTimerStepList: CustomTimerStep[]
+}

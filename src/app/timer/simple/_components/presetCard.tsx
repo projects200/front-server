@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState } from 'react'
 import { mutate } from 'swr'
 
 import { usePatchSimpleTimer } from '@/hooks/useTimerApi'
@@ -53,22 +53,19 @@ export default function PresetCard({ preset, onPresetClick }: Props) {
   }
 
   // 메뉴 외부를 클릭하면 닫히도록 하는 로직
-  const menuRef = useRef<(event: MouseEvent) => void>(null)
-  const menuCallbackRef = useCallback((node: HTMLDivElement | null) => {
-    if (menuRef.current) {
-      document.removeEventListener('mousedown', menuRef.current)
-    }
-
-    menuRef.current = (event: MouseEvent) => {
-      if (node && !node.contains(event.target as Node)) {
+  const menuRef = (node: HTMLDivElement) => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!node.contains(event.target as Node)) {
         setIsMenuOpen(false)
       }
     }
 
-    if (node) {
-      document.addEventListener('mousedown', menuRef.current)
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
+  }
 
   return (
     <div className={styles['container']}>
@@ -81,12 +78,13 @@ export default function PresetCard({ preset, onPresetClick }: Props) {
         </Typography>
       </button>
 
-      <div ref={menuCallbackRef} className={styles['kebab-container']}>
+      <div className={styles['kebab-container']}>
         <button className={styles['kebab-button']} onClick={handleKebabClick}>
           <KebabIcon className={styles['kebab-icon']} />
         </button>
         {isMenuOpen && (
           <KebabModal
+            ref={menuRef}
             onEdit={() => {
               handleOnEdit()
               setIsMenuOpen(false)

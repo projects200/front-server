@@ -2,12 +2,19 @@ import {
   readSimpleTimerList,
   updateSimpleTimer,
   readCustomTimerList,
+  readCustomTimerDetail,
 } from '@/api/timer'
 import {
   adapterSimpleTimerList,
   adapterCustomTimerList,
+  adapterCustomTimerDetail,
 } from '@/lib/adapters/timer.adapter'
-import { SimpleTimer, SimpleTimerList, CustomTimerList } from '@/types/timer'
+import {
+  SimpleTimer,
+  SimpleTimerList,
+  CustomTimerList,
+  CustomTimerDetail,
+} from '@/types/timer'
 
 import useApiGet from './useApiGet'
 import useApiMutation from './useApiMutation'
@@ -33,5 +40,16 @@ export const useReadCustomTimerList = () =>
   useApiGet<CustomTimerList>(
     ['timer/custom/list'],
     (token) => readCustomTimerList(token).then(adapterCustomTimerList),
+    {},
+  )
+
+// 커스텀 타이머 상세 조회
+export const useReadCustomTimerDetail = (customTimerId: number) =>
+  useApiGet<CustomTimerDetail>(
+    ['timer/custom/list'],
+    (token) =>
+      readCustomTimerDetail(token, customTimerId).then(
+        adapterCustomTimerDetail,
+      ),
     {},
   )
