@@ -9,16 +9,18 @@
 /* Variants */
 .primary {
   background-color: var(--color-green);
-  color: #fff;
+  color: var(--color-white-300);
 }
-
 .secondary {
   background-color: var(--color-gray-300);
-  color: #fff;
+  color: var(--color-white-300);
+}
+.warning {
+  background-color: var(--color-red);
+  color: var(--color-white-300);
 }
 
-.button:hover{
-
+.button:hover {
 }
 
 .button:disabled {

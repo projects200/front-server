@@ -1,18 +1,16 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-
+import { useState, useEffect, useRef } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
-import {
-  useReadSimpleTimerList,
-} from '@/hooks/useTimerApi'
+import { useReadSimpleTimerList } from '@/hooks/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 
 import PresetCard from './_components/presetCard'
 import CircularTimerDisplay from '../_components/circularTimer'
+import { timerEndSound } from '../_utils/timerEndSound'
 import styles from './simple.module.css'
 
 // 타이머 업데이트 주기(단위ms)
@@ -24,19 +22,6 @@ export default function Simple() {
   const [timeLeft, setTimeLeft] = useState(0)
   const [isActive, setIsActive] = useState(false)
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
-  const timerEndSound = useRef<HTMLAudioElement | null>(null)
-
-  useEffect(() => {
-    timerEndSound.current = new Audio('/timerEnd.mp3')
-  }, [])
-
-  const handleTimerFinish = useCallback(() => {
-    if (timerEndSound.current) {
-      timerEndSound.current.play().catch((error) => {
-        console.error('오디오 재생 오류:', error)
-      })
-    }
-  }, [])
 
   const handlePresetClick = (seconds: number) => {
     setInitialTime(seconds)
@@ -56,7 +41,7 @@ export default function Simple() {
         setTimeLeft((prevTime) => prevTime - SMOOTH_INTERVAL)
       }, SMOOTH_INTERVAL)
     } else if (timeLeft <= 0 && isActive) {
-      handleTimerFinish()
+      timerEndSound()
       setIsActive(false)
     }
     return () => {
@@ -72,6 +57,7 @@ export default function Simple() {
   return (
     <div className={styles['page-container']}>
       <Header>심플 타이머</Header>
+
       <div className={styles['indicator-section']}>
         <div className={styles['indicator']}>
           <CircularTimerDisplay value={progressBarValue}>

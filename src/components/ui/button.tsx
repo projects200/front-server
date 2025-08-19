@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import Typography from './typography'
 import styles from './button.module.css'
 
-type ButtonVariant = 'primary' | 'secondary'
+type ButtonVariant = 'primary' | 'secondary' | 'warning'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode

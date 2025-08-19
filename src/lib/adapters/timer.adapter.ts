@@ -3,13 +3,33 @@ import {
   SimpleTimerList,
   CustomTimer,
   CustomTimerList,
+  CustomTimerStep,
+  CustomTimerDetail,
 } from '@/types/timer'
 import {
   SimpleTimerDto,
   SimpleTimerListDto,
   CustomTimerDto,
   CustomTimerListDto,
+  CustomTimerStepDto,
+  CustomTimerDetailDto,
 } from '@/types/dto/timer.dto'
+
+export function adapterSimpleTimer(dto: SimpleTimerDto): SimpleTimer {
+  return {
+    simpleTimerId: dto.simpleTimerId,
+    time: dto.time,
+  }
+}
+
+export function adapterSimpleTimerList(
+  dto: SimpleTimerListDto,
+): SimpleTimerList {
+  return {
+    count: dto.simpleTimerCount,
+    simpleTimerList: dto.simpleTimers.map(adapterSimpleTimer),
+  }
+}
 
 export function adapterCustomTimer(dto: CustomTimerDto): CustomTimer {
   return {
@@ -27,18 +47,24 @@ export function adapterCustomTimerList(
   }
 }
 
-export function adapterSimpleTimer(dto: SimpleTimerDto): SimpleTimer {
+export function adapterCustomTimerStep(
+  dto: CustomTimerStepDto,
+): CustomTimerStep {
   return {
-    simpleTimerId: dto.simpleTimerId,
-    time: dto.time,
+    customTimerStepsId: dto.customTimerStepsId,
+    customTimerStepsName: dto.customTimerStepsName,
+    customTimerStepsOrder: dto.customTimerStepsOrder,
+    customTimerStepsTime: dto.customTimerStepsTime,
   }
 }
 
-export function adapterSimpleTimerList(
-  dto: SimpleTimerListDto,
-): SimpleTimerList {
+export function adapterCustomTimerDetail(
+  dto: CustomTimerDetailDto,
+): CustomTimerDetail {
   return {
-    count: dto.simpleTimerCount,
-    simpleTimerList: dto.simpleTimers.map(adapterSimpleTimer),
+    customTimerId: dto.customTimerId,
+    customTimerName: dto.customTimerName,
+    customTimerStepCount: dto.customTimerStepCount,
+    customTimerStepList: dto.customTimerSteps.map(adapterCustomTimerStep),
   }
 }
