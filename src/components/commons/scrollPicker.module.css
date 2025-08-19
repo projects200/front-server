@@ -16,7 +16,7 @@
   z-index: 1000;
 }
 .modal {
-  background: #FFF;
+  background: #fff;
   border-radius: 15px;
   padding: 20px;
   width: 85%;
@@ -24,15 +24,21 @@
 }
 
 .picker-container {
+  position: relative;
   cursor: default;
   display: flex;
   justify-content: center;
   padding: 10px 0;
 }
 
-.unselected {
-  color: black;
-  padding: 8vw;
+.picker-container > div {
+  width: 85%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.item {
+
 }
 
 .footer {
@@ -47,7 +53,7 @@
     padding: 30px;
     max-width: 400px;
   }
-  .unselected {
-    padding: 50px;
+  .item {
+
   }
 }

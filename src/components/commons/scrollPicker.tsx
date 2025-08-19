@@ -7,9 +7,17 @@ import Button from '@/components/ui/button'
 
 import styles from './scrollPicker.module.css'
 
-type FieldKey = 'date' | 'year' | 'month' | 'day' | 'hour' | 'minute'
+type FieldKey =
+  | 'date'
+  | 'year'
+  | 'month'
+  | 'day'
+  | 'hour'
+  | 'minute'
+  | 'minute1'
+  | 'second'
 
-type ScrollPickerProps = {
+type Props = {
   fields: FieldKey[]
   value: Record<string, string | number>
   onChange: (value: Record<string, string | number>) => void
@@ -30,6 +38,8 @@ const generateOptions = () => {
     day: Array.from({ length: 31 }, (_, i) => i + 1),
     hour: Array.from({ length: 24 }, (_, i) => i),
     minute: Array.from({ length: 12 }, (_, i) => i * 5),
+    minute1: Array.from({ length: 60 }, (_, i) => i),
+    second: Array.from({ length: 60 }, (_, i) => i),
     date: (() => {
       const result: string[] = []
       for (let i = 0; i < 365; i++) {
@@ -52,7 +62,7 @@ export default function ScrollPicker({
   value,
   onChange,
   onClose,
-}: ScrollPickerProps) {
+}: Props) {
   const [selected, setSelected] =
     useState<Record<string, string | number>>(value)
 
@@ -70,10 +80,10 @@ export default function ScrollPicker({
               <Picker.Column key={field} name={field}>
                 {OPTIONS[field].map((option) => (
                   <Picker.Item key={option} value={option}>
-                    {({ selected }) => (
+                    {() => (
                       <div
                         className={
-                          selected ? styles.selected : styles.unselected
+                          styles['item']
                         }
                       >
                         {typeof option === 'number'
