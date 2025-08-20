@@ -1,0 +1,36 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.title-section {
+  height: 80px;
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  background-color: var(--color-white-300);
+  padding: 38px 20px 0 20px;
+}
+
+.steps-section {
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  padding: 0 20px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+  scrollbar-width: none;
+}
+.steps-section::-webkit-scrollbar {
+  display: none;
+}
+
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* first-child, last-child 대신 padding으로 스크롤 영역의 여백을 확보합니다. */
+  padding: 20px 0;
+}
