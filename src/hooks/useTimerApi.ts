@@ -4,6 +4,8 @@ import {
   createCustomTimer,
   readCustomTimerList,
   readCustomTimerDetail,
+  updateCustomTimer,
+  removeCustomTime,
 } from '@/api/timer'
 import {
   adapterSimpleTimerList,
@@ -21,6 +23,7 @@ import {
 import useApiGet from './useApiGet'
 import useApiMutation from './useApiMutation'
 
+/* 심플 타이머 */
 // 심플 타이머 조회
 export const useReadSimpleTimerList = () =>
   useApiGet<SimpleTimerList>(
@@ -37,6 +40,7 @@ export const usePatchSimpleTimer = () =>
     {},
   )
 
+/* 커스텀 타이머 */
 // 커스텀 타이머 생성
 export const usePostCustomTimer = () =>
   useApiMutation<{ customTimerId: number }, CustomTimerForm>(
@@ -61,5 +65,21 @@ export const useReadCustomTimerDetail = (customTimerId: number) =>
       readCustomTimerDetail(token, customTimerId).then(
         adapterCustomTimerDetail,
       ),
+    {},
+  )
+
+// 커스텀 타이머 수정
+export const usePutCustomTimer = () =>
+  useApiMutation<{ customTimerId: number }, CustomTimerForm>(
+    ['timer/custom/put'],
+    updateCustomTimer,
+    {},
+  )
+
+// 운동 기록 삭제
+export const useDeleteCustomTimer = (customTimerId: number) =>
+  useApiMutation<null, null>(
+    ['timer/custom/delete', customTimerId],
+    (token) => removeCustomTime(token, customTimerId),
     {},
   )

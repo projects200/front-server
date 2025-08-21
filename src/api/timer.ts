@@ -80,4 +80,33 @@ export function readCustomTimerDetail(
   )
 }
 
+// 커스텀 타이머 수정
+export function updateCustomTimer(
+  token: string,
+  data: CustomTimerForm,
+): Promise<{ customTimerId: number }> {
+  //반환값이 id가 아닐수 있음 확인필요
+  const dto: CustomTimerFormDto = adapterCustomTimerFormToDto(data)
+  return fetchWrapper<{ customTimerId: number }>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/custom-timers`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(dto),
+    },
+    token,
+  )
+}
 
+// 커스텀 타이머 삭제
+export function removeCustomTime(
+  token: string,
+  customTimerId: number,
+): Promise<null> {
+  return fetchWrapper<null>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/custom-timers/${customTimerId}`,
+    {
+      method: 'DELETE',
+    },
+    token,
+  )
+}

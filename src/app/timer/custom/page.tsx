@@ -21,7 +21,7 @@ import styles from './custom.module.css'
 const SMOOTH_INTERVAL = 10
 
 // 테스트 데이터
-import { data } from './testData'
+import { data } from '../testData'
 
 export default function Custom() {
   const [customTimerId] = useQueryState('id', parseAsInteger)
