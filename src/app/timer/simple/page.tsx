@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
@@ -8,48 +8,33 @@ import { useReadSimpleTimerList } from '@/hooks/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 
-import PresetCard from './_components/presetCard'
+import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
-import { timerEndSound } from '../_utils/timerEndSound'
+import { simpleTimerEndSound } from '../_utils/timerEndSound'
+import PresetCard from './_components/presetCard'
 import styles from './simple.module.css'
-
-// 타이머 업데이트 주기(단위ms)
-const SMOOTH_INTERVAL = 10
 
 export default function Simple() {
   const { data } = useReadSimpleTimerList()
   const [initialTime, setInitialTime] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(0)
-  const [isActive, setIsActive] = useState(false)
-  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
+
+  const { timeLeft, isActive, start, pause, resume } = useTimer({
+    onEnd: simpleTimerEndSound,
+  })
 
   const handlePresetClick = (seconds: number) => {
     setInitialTime(seconds)
-    setTimeLeft(seconds * 1000)
-    setIsActive(true)
+    start(seconds)
   }
 
   const handleToggleIconClick = () => {
-    if (initialTime > 0) {
-      setIsActive(!isActive)
+    if (initialTime <= 0) return
+    if (isActive) {
+      pause()
+    } else {
+      resume()
     }
   }
-
-  useEffect(() => {
-    if (isActive && timeLeft > 0) {
-      timeoutIdRef.current = setTimeout(() => {
-        setTimeLeft((prevTime) => prevTime - SMOOTH_INTERVAL)
-      }, SMOOTH_INTERVAL)
-    } else if (timeLeft <= 0 && isActive) {
-      timerEndSound()
-      setIsActive(false)
-    }
-    return () => {
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current)
-      }
-    }
-  }, [isActive, timeLeft])
 
   const progressBarValue =
     initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
