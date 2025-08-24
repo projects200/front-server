@@ -37,12 +37,14 @@ export default function StepItem({
       />
       <button
         className={styles['step-time-input']}
+        type="button"
         onClick={onTimeClick}
       >
         {formatNumberToTime(step.time)}
       </button>
       <button
         onClick={onRemove}
+        type="button"
         className={styles['step-button']}
       >
         <MinusIcon className={styles['icon-minus']} />

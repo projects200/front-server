@@ -27,22 +27,22 @@ type Props = {
 const customTimerSchema = z.object({
   title: z
     .string()
-    .trim()
     .min(1, '타이머 이름을 입력해주세요.')
     .max(100, '타이머 이름은 최대 100자까지 입력 가능합니다.')
     .refine(
       (val) => val.trim().length > 0,
-      '공백만으로는 입력할 수 없습니다.',
+      '타이머 이름을 공백만으로 입력할 수 없습니다.',
     ),
   steps: z
     .array(
       z.object({
         name: z
           .string()
+          .min(1, '모든 스탭의 이름을 입력해주세요.')
           .max(50, '스탭 이름은 최대 50자까지 가능합니다.')
           .refine(
-            (val) => val.trim().length > 0 || val.length === 0,
-            '스탭 이름은 공백만으로 입력할 수 없습니다.',
+            (val) => val.trim().length > 0,
+            '스탭 이름을 공백만으로 입력할 수 없습니다.',
           ),
         time: z
           .number()
@@ -73,23 +73,13 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
         const firstIssueArr = Object.values(fieldErrorMap)[0]
         onError(firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.')
       },
-      onSubmit: ({ value }) => {
-        const hasEmptyStepName = value.steps.some(
-          (step) => step.name.trim().length === 0,
-        )
-
-        if (hasEmptyStepName) {
-          onError('모든 스탭의 이름을 입력해주세요.')
-        }
-
-        onSubmit(value)
-      },
+      onSubmit: ({ value }) => onSubmit(value),
     })
 
     useImperativeHandle(ref, () => ({ submit: () => form.handleSubmit() }))
 
     const steps = useStore(form.store, (state) => state.values.steps)
-
+    // const steps = form.state.values.steps
     // StepCreator에서 새로운 스탭을 추가할 때 호출되는 콜백 함수
     const handleAddStep = (name: string, time: number) => {
       const currentSteps = form.state.values.steps
@@ -100,6 +90,10 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
 
     // TimePicker에서 시간 선택 완료 시 호출되는 콜백 함수
     const handlePickerComplete = (newTotalSeconds: number) => {
+      if (newTotalSeconds < 1) {
+        onError('시간은 최소 1초 이상이어야 합니다.')
+        return // 0초는 반영하지 않고 함수를 종료
+      }
       if (editingTimeIndex === -1) {
         setNewStepTime(newTotalSeconds)
       } else if (editingTimeIndex !== null) {
