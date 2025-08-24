@@ -79,7 +79,7 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
     useImperativeHandle(ref, () => ({ submit: () => form.handleSubmit() }))
 
     const steps = useStore(form.store, (state) => state.values.steps)
-    // const steps = form.state.values.steps
+
     // StepCreator에서 새로운 스탭을 추가할 때 호출되는 콜백 함수
     const handleAddStep = (name: string, time: number) => {
       const currentSteps = form.state.values.steps
@@ -92,7 +92,7 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
     const handlePickerComplete = (newTotalSeconds: number) => {
       if (newTotalSeconds < 1) {
         onError('시간은 최소 1초 이상이어야 합니다.')
-        return // 0초는 반영하지 않고 함수를 종료
+        return
       }
       if (editingTimeIndex === -1) {
         setNewStepTime(newTotalSeconds)
