@@ -12,6 +12,13 @@
   background-color: var(--color-white-300);
   padding: 38px 20px 0 20px;
 }
+.title-input {
+  border: none;
+  width: 100%;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--color-black);
+}
 
 .steps-section {
   width: calc(100% + 40px);
