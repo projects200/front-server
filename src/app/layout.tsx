@@ -8,7 +8,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   manifest: '/manifest.json',
-  title: '운다방',
+  title: process.env.NEXT_PUBLIC_TITLE,
   description: '운동매칭 & 운동기록',
 }
 
