@@ -49,3 +49,6 @@ public/sw.js
 public/workbox-*.js
 public/worker-*.js
 public/fallback-*.js
+
+# manifest는 CI/CD에서 동적으로 생성합니다.
+public/manifest.json
