@@ -1,9 +1,12 @@
+import { CustomTimerForm } from '@/types/timer'
 import {
   SimpleTimerListDto,
   CustomTimerListDto,
   CustomTimerDetailDto,
+  CustomTimerFormDto,
 } from '@/types/dto/timer.dto'
 import { fetchWrapper } from '@/utils/fetchWrapper'
+import { adapterCustomTimerFormToDto } from '@/lib/adapters/timer.adapter'
 
 //심플 타이머 리스트 조회
 export function readSimpleTimerList(
@@ -29,6 +32,22 @@ export function updateSimpleTimer(
     {
       method: 'PATCH',
       body: JSON.stringify({ time: time }),
+    },
+    token,
+  )
+}
+
+// 커스텀 타이머 생성
+export function createCustomTimer(
+  token: string,
+  data: CustomTimerForm,
+): Promise<{ customTimerId: number }> {
+  const dto: CustomTimerFormDto = adapterCustomTimerFormToDto(data)
+  return fetchWrapper<{ customTimerId: number }>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/custom-timers`,
+    {
+      method: 'POST',
+      body: JSON.stringify(dto),
     },
     token,
   )
@@ -60,3 +79,5 @@ export function readCustomTimerDetail(
     token,
   )
 }
+
+

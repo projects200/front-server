@@ -4,7 +4,9 @@ import {
   CustomTimer,
   CustomTimerList,
   CustomTimerStep,
+  CustomTimerStepContents,
   CustomTimerDetail,
+  CustomTimerForm,
 } from '@/types/timer'
 import {
   SimpleTimerDto,
@@ -12,7 +14,9 @@ import {
   CustomTimerDto,
   CustomTimerListDto,
   CustomTimerStepDto,
+  CustomTimerStepContentsDto,
   CustomTimerDetailDto,
+  CustomTimerFormDto,
 } from '@/types/dto/timer.dto'
 
 export function adapterSimpleTimer(dto: SimpleTimerDto): SimpleTimer {
@@ -66,5 +70,26 @@ export function adapterCustomTimerDetail(
     customTimerName: dto.customTimerName,
     customTimerStepCount: dto.customTimerStepCount,
     customTimerStepList: dto.customTimerSteps.map(adapterCustomTimerStep),
+  }
+}
+
+export function adapterCustomTimerStepContentsToDto(
+  contents: CustomTimerStepContents,
+): CustomTimerStepContentsDto {
+  return {
+    customTimerStepsName: contents.customTimerStepsName,
+    customTimerStepsOrder: contents.customTimerStepsOrder,
+    customTimerStepsTime: contents.customTimerStepsTime,
+  }
+}
+
+export function adapterCustomTimerFormToDto(
+  form: CustomTimerForm,
+): CustomTimerFormDto {
+  return {
+    customTimerName: form.customTimerName,
+    customTimerSteps: form.customTimerStepList.map(
+      adapterCustomTimerStepContentsToDto,
+    ),
   }
 }

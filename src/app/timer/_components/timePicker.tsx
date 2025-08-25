@@ -1,7 +1,6 @@
 'use client'
 
 import ScrollPicker from '@/components/commons/scrollPicker'
-import { SimpleTimer } from '@/types/timer'
 
 type Time = {
   minute: number
@@ -9,7 +8,7 @@ type Time = {
 }
 
 type Props = {
-  preset: SimpleTimer
+  time: number
   onClose: () => void
   onComplete: (newTotalSeconds: number) => void
 }
@@ -20,10 +19,10 @@ const secondsToTime = (secs: number): Time => {
   return { minute: minutes, second: seconds }
 }
 
-export default function TimerPicker({ preset, onClose, onComplete }: Props) {
+export default function TimePicker({ time, onClose, onComplete }: Props) {
   const initialPickerValue = {
-    minute1: secondsToTime(preset.time).minute,
-    second: secondsToTime(preset.time).second,
+    minute1: secondsToTime(time).minute,
+    second: secondsToTime(time).second,
   }
 
   const handleTimeChange = (pickedTime: Record<string, string | number>) => {

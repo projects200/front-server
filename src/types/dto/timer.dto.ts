@@ -18,16 +18,26 @@ export type CustomTimerListDto = {
   customTimers: CustomTimerDto[]
 }
 
-export type CustomTimerStepDto = {
+export type CustomTimerStepIdDto = {
   customTimerStepsId: number
+}
+
+export type CustomTimerStepContentsDto = {
   customTimerStepsName: string
   customTimerStepsOrder: number
   customTimerStepsTime: number
 }
+
+export type CustomTimerStepDto = CustomTimerStepIdDto & CustomTimerStepContentsDto
 
 export type CustomTimerDetailDto = {
   customTimerId: number
   customTimerName: string
   customTimerStepCount: number
   customTimerSteps: CustomTimerStepDto[]
+}
+
+export type CustomTimerFormDto = {
+  customTimerName: string
+  customTimerSteps: CustomTimerStepContentsDto[]
 }
