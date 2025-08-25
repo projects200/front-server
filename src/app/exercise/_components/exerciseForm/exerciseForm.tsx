@@ -32,68 +32,67 @@ type Props = {
   isCreate?: boolean
 }
 
-const exerciseSchema = () =>
-  z
-    .object({
-      title: z
-        .string()
-        .trim()
-        .min(1, '운동 제목을 입력해주세요.')
-        .max(255, '운동 제목은 최대 255자까지 입력 가능합니다.')
-        .refine(
-          (val) => val.trim().length > 0,
-          '공백만으로는 입력할 수 없습니다.',
-        ),
-      category: z
-        .string()
-        .trim()
-        .max(255, '운동 종류는 최대 255자까지 입력 가능합니다.')
-        .optional(),
+const exerciseSchema = z
+  .object({
+    title: z
+      .string()
+      .trim()
+      .min(1, '운동 제목을 입력해주세요.')
+      .max(255, '운동 제목은 최대 255자까지 입력 가능합니다.')
+      .refine(
+        (val) => val.trim().length > 0,
+        '공백만으로는 입력할 수 없습니다.',
+      ),
+    category: z
+      .string()
+      .trim()
+      .max(255, '운동 종류는 최대 255자까지 입력 가능합니다.')
+      .optional(),
 
-      startedAt: z
-        .string()
-        .refine(
-          (val) => new Date(val) < new Date(),
-          '시작 일시는 현재 이전이어야 합니다.',
-        ),
-      endedAt: z
-        .string()
-        .refine(
-          (val) => new Date(val) < new Date(),
-          '종료 일시는 현재 이전이어야 합니다.',
-        ),
-      location: z
-        .string()
-        .trim()
-        .max(255, '운동 장소는 최대 255자까지 입력 가능합니다.')
-        .optional(),
-      content: z
-        .string()
-        .refine(
-          (val) => new TextEncoder().encode(val).length <= 65535,
-          '운동 상세 내용은 최대 65,535바이트까지 입력 가능합니다.',
-        )
-        .optional(),
-      images: z
-        .array(
-          z.union([
-            z
-              .instanceof(File)
-              .refine(
-                (file) =>
-                  file.size <= 10 * 1024 * 1024 &&
-                  ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
-                'jpg, jpeg, png 파일만 가능하며, 용량은 10MB 이하만 업로드할 수 있습니다.',
-              ),
-            z.string().url('유효하지 않은 이미지 URL입니다.'),
-          ]),
-        )
-        .max(5, '이미지는 최대 5개까지 업로드할 수 있습니다.'),
-    })
-    .refine((data) => new Date(data.startedAt) <= new Date(data.endedAt), {
-      message: '종료 일시는 시작 일시 이후여야 합니다.',
-      path: ['exerciseEndedAt'],
-    })
+    startedAt: z
+      .string()
+      .refine(
+        (val) => new Date(val) < new Date(),
+        '시작 일시는 현재 이전이어야 합니다.',
+      ),
+    endedAt: z
+      .string()
+      .refine(
+        (val) => new Date(val) < new Date(),
+        '종료 일시는 현재 이전이어야 합니다.',
+      ),
+    location: z
+      .string()
+      .trim()
+      .max(255, '운동 장소는 최대 255자까지 입력 가능합니다.')
+      .optional(),
+    content: z
+      .string()
+      .refine(
+        (val) => new TextEncoder().encode(val).length <= 65535,
+        '운동 상세 내용은 최대 65,535바이트까지 입력 가능합니다.',
+      )
+      .optional(),
+    images: z
+      .array(
+        z.union([
+          z
+            .instanceof(File)
+            .refine(
+              (file) =>
+                file.size <= 10 * 1024 * 1024 &&
+                ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
+              'jpg, jpeg, png 파일만 가능하며, 용량은 10MB 이하만 업로드할 수 있습니다.',
+            ),
+          z.string().url('유효하지 않은 이미지 URL입니다.'),
+        ]),
+      )
+      .max(5, '이미지는 최대 5개까지 업로드할 수 있습니다.'),
+  })
+  .refine((data) => new Date(data.startedAt) <= new Date(data.endedAt), {
+    message: '종료 일시는 시작 일시 이후여야 합니다.',
+    path: ['exerciseEndedAt'],
+  })
 
 const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
   (
@@ -110,7 +109,7 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
         ...defaultValues,
         images: existingPictures as (File | string)[],
       },
-      validators: { onSubmit: exerciseSchema() },
+      validators: { onSubmit: exerciseSchema },
       canSubmitWhenInvalid: true,
 
       onSubmitInvalid: ({ formApi }) => {

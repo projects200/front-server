@@ -40,11 +40,16 @@ export default function StepCreator({
         className={styles['step-name-input']}
         maxLength={50}
       />
-      <button className={styles['step-time-input']} onClick={onTimeClick}>
+      <button
+        className={styles['step-time-input']}
+        type="button"
+        onClick={onTimeClick}
+      >
         {formatNumberToTime(newStepTime)}
       </button>
       <button
         onClick={handleAddClick}
+        type="button"
         className={styles['step-button']}
       >
         <PlusIcon className={styles['icon-plus']} />
