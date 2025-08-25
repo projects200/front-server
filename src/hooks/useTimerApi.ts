@@ -4,6 +4,8 @@ import {
   createCustomTimer,
   readCustomTimerList,
   readCustomTimerDetail,
+  updateCustomTimer,
+  removeCustomTime,
 } from '@/api/timer'
 import {
   adapterSimpleTimerList,
@@ -21,6 +23,7 @@ import {
 import useApiGet from './useApiGet'
 import useApiMutation from './useApiMutation'
 
+/* 심플 타이머 */
 // 심플 타이머 조회
 export const useReadSimpleTimerList = () =>
   useApiGet<SimpleTimerList>(
@@ -32,15 +35,16 @@ export const useReadSimpleTimerList = () =>
 // 심플 타이머 수정
 export const usePatchSimpleTimer = () =>
   useApiMutation<null, SimpleTimer>(
-    ['timer/simple/update'],
+    ['timer/simple/list'],
     (token, body) => updateSimpleTimer(token, body.time, body.simpleTimerId),
     {},
   )
 
+/* 커스텀 타이머 */
 // 커스텀 타이머 생성
 export const usePostCustomTimer = () =>
   useApiMutation<{ customTimerId: number }, CustomTimerForm>(
-    ['timer/custom/create'],
+    ['timer/custom/list'],
     createCustomTimer,
     {},
   )
@@ -56,10 +60,26 @@ export const useReadCustomTimerList = () =>
 // 커스텀 타이머 상세 조회
 export const useReadCustomTimerDetail = (customTimerId: number) =>
   useApiGet<CustomTimerDetail>(
-    ['timer/custom/detail'],
+    ['timer/custom/detail', customTimerId],
     (token) =>
       readCustomTimerDetail(token, customTimerId).then(
         adapterCustomTimerDetail,
       ),
+    {},
+  )
+
+// 커스텀 타이머 수정
+export const usePutCustomTimer = (customTimerId: number) =>
+  useApiMutation<{ customTimerId: number }, CustomTimerForm>(
+    ['timer/custom/detail', customTimerId],
+    updateCustomTimer,
+    {},
+  )
+
+// 커스텀 타이머 삭제
+export const useDeleteCustomTimer = (customTimerId: number) =>
+  useApiMutation<null, null>(
+    ['timer/custom/list'],
+    (token) => removeCustomTime(token, customTimerId),
     {},
   )

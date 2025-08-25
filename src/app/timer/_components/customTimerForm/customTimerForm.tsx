@@ -6,7 +6,6 @@ import * as z from 'zod'
 import { useForm } from '@tanstack/react-form'
 
 import TimePicker from '../timePicker'
-import InputField from './inputField'
 import StepItem from './stepItem'
 import StepCreator from './stepCreator'
 import styles from './customTimerForm.module.css'
@@ -124,10 +123,16 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
           <div className={styles['title-section']}>
             <form.Field name="title">
               {(field) => (
-                <InputField
+                <input
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                    }
+                  }}
+                  className={styles['title-input']}
+                  id={'title'}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  id="title"
                   maxLength={100}
                   placeholder="나만의 타이머 이름"
                 />

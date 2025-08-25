@@ -59,17 +59,16 @@
 
 /* 컨트롤 버튼 섹션 */
 .controls-section {
-  height: 70px;
   width: calc(100% + 40px);
   margin-left: -20px;
   background-color: var(--color-white-300);
   display: flex;
   justify-content: center;
   gap: 60px;
-  padding-top: 5px;
+  padding: 10px 0 20px 0;
 }
 
-.control-button {
+button.control-button {
   width: 125px;
   height: 45px;
 }
