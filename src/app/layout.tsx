@@ -27,7 +27,7 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
-        <meta name="theme-color" content="#4F7942" />
+        <meta name="theme-color" content="#EBF1E5" />
       </head>
       <body>
         <ClientProviders>

@@ -38,6 +38,16 @@ jobs:
           else
             echo "${{ secrets.DEV_ENV }}" > .env
           fi
+          
+      - name: Prepare Manifest
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "Using production manifest"
+            cp manifest.prod.json public/manifest.json
+          else
+            echo "Using development manifest"
+            cp manifest.dev.json public/manifest.json
+          fi
 
       - name: Build and Export
         run: |

@@ -4,8 +4,8 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/", 
-  "name": "운다방dev",
-  "short_name": "운다방dev",
+  "name": "운다방",
+  "short_name": "운다방",
   "description": "운동매칭 & 운동기록",
   "icons": [
     {
