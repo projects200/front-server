@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import * as z from 'zod'
 
-import { useForm, useStore } from '@tanstack/react-form'
+import { useForm } from '@tanstack/react-form'
 
 import TimePicker from '../timePicker'
 import InputField from './inputField'
@@ -78,7 +78,7 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
 
     useImperativeHandle(ref, () => ({ submit: () => form.handleSubmit() }))
 
-    const steps = useStore(form.store, (state) => state.values.steps)
+    const steps = form.state.values.steps
 
     // StepCreator에서 새로운 스탭을 추가할 때 호출되는 콜백 함수
     const handleAddStep = (name: string, time: number) => {
