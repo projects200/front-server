@@ -95,6 +95,7 @@
   padding-top: 12px;
 }
 .step-item {
+  width: 100%;
   height: 60px;
   padding: 0 22px 0 12px;
   border-radius: 8px;

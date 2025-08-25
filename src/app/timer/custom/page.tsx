@@ -122,6 +122,14 @@ export default function Custom() {
     }
   }, [data, reset])
 
+  // 스텝을 클릭했을 때 실행될 핸들러
+  const handleStepClick = useCallback((index: number) => {
+    setIsTimerStarted(true)
+    setCurrentStepIndex(index)
+    const stepTime = data.customTimerStepList[index].customTimerStepsTime
+    start(stepTime)
+  }, [])
+
   const progressBarValue =
     initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
 
@@ -194,10 +202,11 @@ export default function Custom() {
             }}
             key={`step-${step.customTimerStepsId}`}
           >
-            <div
+            <button
               className={clsx(styles['step-item'], {
                 [styles['active-step']]: index === currentStepIndex,
               })}
+              onClick={() => handleStepClick(index)}
             >
               <div className={styles['step-info']}>
                 <ClockIcon className={styles['clock-icon']} />
@@ -208,7 +217,7 @@ export default function Custom() {
               <Typography as="span" variant="text18" weight="bold">
                 {formatNumberToTime(step.customTimerStepsTime)}
               </Typography>
-            </div>
+            </button>
           </div>
         ))}
       </div>
