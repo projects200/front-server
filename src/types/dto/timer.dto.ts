@@ -1,3 +1,4 @@
+// 심플타이머
 export type SimpleTimerDto = {
   simpleTimerId: number
   time: number
@@ -6,6 +7,18 @@ export type SimpleTimerDto = {
 export type SimpleTimerListDto = {
   simpleTimerCount: number
   simpleTimers: SimpleTimerDto[]
+}
+
+// 커스텀 타이머
+export type CustomTimerStepContentsDto = {
+  customTimerStepsName: string
+  customTimerStepsOrder: number
+  customTimerStepsTime: number
+}
+
+export type CustomTimerFormDto = {
+  customTimerName: string
+  customTimerSteps: CustomTimerStepContentsDto[]
 }
 
 export type CustomTimerDto = {
@@ -22,22 +35,12 @@ export type CustomTimerStepIdDto = {
   customTimerStepsId: number
 }
 
-export type CustomTimerStepContentsDto = {
-  customTimerStepsName: string
-  customTimerStepsOrder: number
-  customTimerStepsTime: number
-}
-
-export type CustomTimerStepDto = CustomTimerStepIdDto & CustomTimerStepContentsDto
+export type CustomTimerStepDto = CustomTimerStepIdDto &
+  CustomTimerStepContentsDto
 
 export type CustomTimerDetailDto = {
   customTimerId: number
   customTimerName: string
   customTimerStepCount: number
   customTimerSteps: CustomTimerStepDto[]
-}
-
-export type CustomTimerFormDto = {
-  customTimerName: string
-  customTimerSteps: CustomTimerStepContentsDto[]
 }

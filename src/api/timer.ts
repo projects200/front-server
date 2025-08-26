@@ -8,6 +8,22 @@ import {
 import { fetchWrapper } from '@/utils/fetchWrapper'
 import { adapterCustomTimerFormToDto } from '@/lib/adapters/timer.adapter'
 
+/* 심플 타이머 */
+// 심플 타이머 생성
+export function createSimpleTimer(
+  token: string,
+  time: number,
+): Promise<{ simpleTimerId: number }> {
+  return fetchWrapper<{ simpleTimerId: number }>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/simple-timers`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ time: time }),
+    },
+    token,
+  )
+}
+
 //심플 타이머 리스트 조회
 export function readSimpleTimerList(
   token: string,
@@ -36,7 +52,21 @@ export function updateSimpleTimer(
     token,
   )
 }
+// 심플 타이머 삭제
+export function removeSimpleTimer(
+  token: string,
+  simpleTimerId: number,
+): Promise<null> {
+  return fetchWrapper<null>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/simple-timers/${simpleTimerId}`,
+    {
+      method: 'DELETE',
+    },
+    token,
+  )
+}
 
+/* 커스텀 타이머 */
 // 커스텀 타이머 생성
 export function createCustomTimer(
   token: string,
@@ -80,7 +110,7 @@ export function readCustomTimerDetail(
   )
 }
 
-// 커스텀 타이머 수정
+// 커스텀 타이머 수정(백엔드 미개발)
 export function updateCustomTimer(
   token: string,
   data: CustomTimerForm,
@@ -96,9 +126,10 @@ export function updateCustomTimer(
     token,
   )
 }
+// 커스텀 타이머 제목 수정(백엔드 미개발)
 
 // 커스텀 타이머 삭제
-export function removeCustomTime(
+export function removeCustomTimer(
   token: string,
   customTimerId: number,
 ): Promise<null> {
