@@ -1,3 +1,4 @@
+// 심플타이머
 export type SimpleTimer = {
   simpleTimerId: number
   time: number
@@ -6,6 +7,18 @@ export type SimpleTimer = {
 export type SimpleTimerList = {
   count: number
   simpleTimerList: SimpleTimer[]
+}
+
+// 커스텀 타이머
+export type CustomTimerStepContents = {
+  customTimerStepsName: string
+  customTimerStepsOrder: number
+  customTimerStepsTime: number
+}
+
+export type CustomTimerForm = {
+  customTimerName: string
+  customTimerStepList: CustomTimerStepContents[]
 }
 
 export type CustomTimer = {
@@ -22,12 +35,6 @@ export type CustomTimerStepId = {
   customTimerStepsId: number
 }
 
-export type CustomTimerStepContents = {
-  customTimerStepsName: string
-  customTimerStepsOrder: number
-  customTimerStepsTime: number
-}
-
 export type CustomTimerStep = CustomTimerStepId & CustomTimerStepContents
 
 export type CustomTimerDetail = {
@@ -35,9 +42,4 @@ export type CustomTimerDetail = {
   customTimerName: string
   customTimerStepCount: number
   customTimerStepList: CustomTimerStep[]
-}
-
-export type CustomTimerForm = {
-  customTimerName: string
-  customTimerStepList: CustomTimerStepContents[]
 }

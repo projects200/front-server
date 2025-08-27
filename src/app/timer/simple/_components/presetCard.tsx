@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { mutate } from 'swr'
 
-import { usePatchSimpleTimer } from '@/hooks/useTimerApi'
+import { usePatchSimpleTimer, useDeleteSimpleTimer } from '@/hooks/useTimerApi'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { formatNumberToTime } from '@/utils/timer'
 import Typography from '@/components/ui/typography'
@@ -17,10 +16,18 @@ import styles from './presetCard.module.css'
 type Props = {
   preset: SimpleTimer
   onPresetClick: (seconds: number) => void
+  onUpdate: (updatedTimer: SimpleTimer) => void
+  onDelete: (deletedTimerId: number) => void
 }
 
-export default function PresetCard({ preset, onPresetClick }: Props) {
+export default function PresetCard({
+  preset,
+  onPresetClick,
+  onUpdate,
+  onDelete,
+}: Props) {
   const { trigger: timerUpdate } = usePatchSimpleTimer()
+  const { trigger: timerDelete } = useDeleteSimpleTimer()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false)
   const showToast = useToast()
@@ -33,8 +40,11 @@ export default function PresetCard({ preset, onPresetClick }: Props) {
   const handleOnEdit = () => {
     setIsTimePickerOpen(true)
   }
-  const handleOnDelete = (preset: SimpleTimer) => {
-    alert(`삭제기능 미구현 ${preset.simpleTimerId}`)
+  const handleOnDelete = async (simpleTimerId: number) => {
+    try {
+      await timerDelete({ simpleTimerId: simpleTimerId })
+      onDelete(simpleTimerId)
+    } catch {}
   }
 
   const handleEditComplete = async (editedTime: number) => {
@@ -44,11 +54,12 @@ export default function PresetCard({ preset, onPresetClick }: Props) {
     }
 
     try {
-      await timerUpdate({
+      const updatedTimerData = {
         simpleTimerId: preset.simpleTimerId,
         time: editedTime,
-      })
-      await mutate(['timer/simple/list'])
+      }
+      await timerUpdate(updatedTimerData)
+      onUpdate(updatedTimerData)
     } catch {}
   }
 
@@ -90,7 +101,7 @@ export default function PresetCard({ preset, onPresetClick }: Props) {
               setIsMenuOpen(false)
             }}
             onDelete={() => {
-              handleOnDelete(preset)
+              handleOnDelete(preset.simpleTimerId)
               setIsMenuOpen(false)
             }}
           />
