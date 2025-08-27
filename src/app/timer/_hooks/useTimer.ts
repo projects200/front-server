@@ -3,19 +3,14 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 const TIMER_INTERVAL = 10
 
 type Props = {
-  onEnd?: () => void
   onSecondChange?: (secondsLeft: number) => void
 }
 
-/**
- * 정확한 시간 기반의 타이머 로직을 제공하는 커스텀 훅
- * @param onEnd - 타이머 종료 시 실행할 콜백
- * @param onSecondChange - 타이머의 남은 시간(초)이 바뀔 때마다 호출될 콜백
- */
-export const useTimer = ({ onEnd, onSecondChange }: Props) => {
+export const useTimer = ({ onSecondChange }: Props) => {
   const [timeLeft, setTimeLeft] = useState(0)
   const [targetTime, setTargetTime] = useState(0)
   const [isActive, setIsActive] = useState(false)
+  const [isFinished, setIsFinished] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const lastNotifiedSecondRef = useRef<number | null>(null)
 
@@ -40,9 +35,7 @@ export const useTimer = ({ onEnd, onSecondChange }: Props) => {
         } else {
           setTimeLeft(0)
           setIsActive(false)
-          if (onEnd) {
-            onEnd()
-          }
+          setIsFinished(true)
         }
       }, TIMER_INTERVAL)
     }
@@ -52,7 +45,7 @@ export const useTimer = ({ onEnd, onSecondChange }: Props) => {
         clearInterval(intervalRef.current)
       }
     }
-  }, [isActive, targetTime, onEnd, onSecondChange])
+  }, [isActive, targetTime])
 
   // 지정된 시간으로 타이머를 시작합니다.
   const start = useCallback((seconds: number) => {
@@ -62,6 +55,7 @@ export const useTimer = ({ onEnd, onSecondChange }: Props) => {
     setTargetTime(newTargetTime)
     setTimeLeft(seconds * 1000)
     setIsActive(true)
+    setIsFinished(false)
   }, [])
 
   //  타이머를 일시정지합니다.
@@ -74,6 +68,7 @@ export const useTimer = ({ onEnd, onSecondChange }: Props) => {
     if (timeLeft > 0) {
       setTargetTime(Date.now() + timeLeft)
       setIsActive(true)
+      setIsFinished(false)
     }
   }, [timeLeft])
 
@@ -84,7 +79,8 @@ export const useTimer = ({ onEnd, onSecondChange }: Props) => {
     setIsActive(false)
     setTargetTime(0)
     setTimeLeft(seconds > 0 ? seconds * 1000 : 0)
+    setIsFinished(false)
   }, [])
 
-  return { timeLeft, isActive, start, pause, resume, reset }
+  return { timeLeft, isActive, isFinished,start, pause, resume, reset }
 }

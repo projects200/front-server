@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
@@ -18,10 +18,14 @@ export default function Simple() {
   const { data } = useReadSimpleTimerList()
   const [initialTime, setInitialTime] = useState(0)
 
-  const { timeLeft, isActive, start, pause, resume } = useTimer({
-    onEnd: simpleTimerEndSound,
-  })
+  const { timeLeft, isActive, isFinished, start, pause, resume } = useTimer({})
 
+  useEffect(() => {
+    if (isFinished) {
+      simpleTimerEndSound()
+    }
+  }, [isFinished])
+  
   const handlePresetClick = (seconds: number) => {
     setInitialTime(seconds)
     start(seconds)

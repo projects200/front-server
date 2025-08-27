@@ -36,7 +36,6 @@ export default function Custom() {
   const [isTimerStarted, setIsTimerStarted] = useState(false)
   const [isLooping, setIsLooping] = useState(false)
   const stepRefs = useRef<(HTMLDivElement | null)[]>([])
-  const handleStepEndRef = useRef<() => void>(() => {})
 
   // 매초 시간이 변경될 때 실행될 로직
   const handleSecondChange = useCallback((secondsLeft: number) => {
@@ -45,16 +44,10 @@ export default function Custom() {
     }
   }, [])
 
-  // 타이머가 완전히 0초가 되었을 때 실행될 로직
-  const handleTimerEnd = useCallback(() => {
-    customTimerEndSound()
-    handleStepEndRef.current()
-  }, [])
-
-  const { timeLeft, isActive, start, pause, resume, reset } = useTimer({
-    onEnd: handleTimerEnd,
-    onSecondChange: handleSecondChange,
-  })
+  const { timeLeft, isActive, isFinished, start, pause, resume, reset } =
+    useTimer({
+      onSecondChange: handleSecondChange,
+    })
 
   // 종료 버튼 핸들러
   const handleStopButton = useCallback(() => {
@@ -92,8 +85,11 @@ export default function Custom() {
   }, [currentStepIndex, data, isLooping, start, handleStopButton])
 
   useEffect(() => {
-    handleStepEndRef.current = handleStepEnd
-  }, [handleStepEnd])
+    if (isFinished) {
+      customTimerEndSound()
+      handleStepEnd()
+    }
+  }, [isFinished, handleStepEnd])
 
   // 시작, 일시정지 버튼 클릭 핸들러
   const handleStartPauseButton = () => {
