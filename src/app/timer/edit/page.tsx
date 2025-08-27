@@ -28,6 +28,7 @@ export default function Edit() {
   const initialValues: CustomTimerFormValues = {
     title: data.customTimerName,
     steps: data.customTimerStepList.map((step) => ({
+      id: step.customTimerStepsId,
       name: step.customTimerStepsName,
       time: step.customTimerStepsTime,
     })),

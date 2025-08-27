@@ -1,0 +1,15 @@
+.step-list {
+  margin-top: 20px;
+  position: relative;
+  width: 100%;
+}
+
+.animated-step-item {
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  touch-action: none;
+  will-change: transform, z-index;
+}
+
+

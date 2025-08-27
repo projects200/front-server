@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import clsx from 'clsx'
 
 import ClockIcon from '@/assets/icon_clock.svg'
 import PlusIcon from '@/assets/icon_plus.svg'
@@ -30,7 +29,7 @@ export default function StepCreator({
   return (
     <div className={styles['step-item']}>
       <ClockIcon
-        className={clsx(styles['clock-icon'], styles['clock-icon-create'])}
+        className={styles['clock-icon']}
       />
       <input
         type="text"

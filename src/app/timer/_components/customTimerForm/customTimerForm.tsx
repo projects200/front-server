@@ -6,15 +6,14 @@ import * as z from 'zod'
 import { useForm } from '@tanstack/react-form'
 
 import TimePicker from '../timePicker'
-import StepItem from './stepItem'
-import StepCreator from './stepCreator'
+import StepList from './stepList'
 import styles from './customTimerForm.module.css'
 
 export type CustomTimerFormHandle = { submit: () => void }
 
 export type CustomTimerFormValues = {
   title: string
-  steps: { name: string; time: number }[]
+  steps: { id: number; name: string; time: number }[]
 }
 
 type Props = {
@@ -35,6 +34,7 @@ const customTimerSchema = z.object({
   steps: z
     .array(
       z.object({
+        id: z.number(),
         name: z
           .string()
           .min(1, '모든 스탭의 이름을 입력해주세요.')
@@ -77,13 +77,13 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
 
     useImperativeHandle(ref, () => ({ submit: () => form.handleSubmit() }))
 
-    const steps = form.state.values.steps
-
     // StepCreator에서 새로운 스탭을 추가할 때 호출되는 콜백 함수
     const handleAddStep = (name: string, time: number) => {
-      const currentSteps = form.state.values.steps
-      const newStep = { name: name || 'Step', time }
-      form.setFieldValue('steps', [...currentSteps, newStep])
+      form.pushFieldValue('steps', {
+        id: Date.now(),
+        name: name || 'Step',
+        time,
+      })
       setNewStepTime(60)
     }
 
@@ -96,15 +96,14 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
       if (editingTimeIndex === -1) {
         setNewStepTime(newTotalSeconds)
       } else if (editingTimeIndex !== null) {
-        const currentSteps = [...form.state.values.steps]
-        currentSteps[editingTimeIndex].time = newTotalSeconds
-        form.setFieldValue('steps', currentSteps)
+        form.setFieldValue(`steps[${editingTimeIndex}].time`, newTotalSeconds)
       }
       setEditingTimeIndex(null)
     }
 
     // TimePicker에 전달할 초기 시간을 계산하는 함수
     const getPickerInitialTime = () => {
+      const steps = form.getFieldValue('steps')
       if (editingTimeIndex === null) return 0
       return editingTimeIndex === -1
         ? newStepTime
@@ -143,28 +142,14 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
           <div className={styles['steps-section']}>
             <form.Field name="steps">
               {(field) => (
-                <div className={styles['step-list']}>
-                  {field.state.value.map((step, index) => (
-                    <StepItem
-                      key={index}
-                      step={step}
-                      onNameChange={(newName) => {
-                        const newSteps = [...field.state.value]
-                        newSteps[index].name = newName
-                        field.handleChange(newSteps)
-                      }}
-                      onTimeClick={() => setEditingTimeIndex(index)}
-                      onRemove={() => field.removeValue(index)}
-                    />
-                  ))}
-                  {steps.length < 50 && (
-                    <StepCreator
-                      onAdd={handleAddStep}
-                      onTimeClick={() => setEditingTimeIndex(-1)}
-                      newStepTime={newStepTime}
-                    />
-                  )}
-                </div>
+                <StepList
+                  steps={field.state.value}
+                  onStepsChange={field.handleChange}
+                  onRemoveStep={field.removeValue}
+                  onTimeClick={setEditingTimeIndex}
+                  onAddStep={handleAddStep}
+                  newStepTime={newStepTime}
+                />
               )}
             </form.Field>
           </div>

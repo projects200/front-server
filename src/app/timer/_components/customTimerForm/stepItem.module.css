@@ -4,10 +4,16 @@
   align-items: center;
   gap: 8px;
   background-color: var(--color-white-300);
-  padding: 0 10px 0 15px;
+  padding: 0 10px 0 5px;
   border-radius: 8px;
   box-shadow: var(--color-boxshadow-100);
   flex-shrink: 0;
+}
+.knob-icon {
+  width: 20px;
+  height: 20px;
+  touch-action: none;
+  cursor: pointer;
 }
 
 .clock-icon {
