@@ -1,14 +1,14 @@
 'use client'
 
 import { useRef } from 'react'
-// import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 // import { mutate } from 'swr'
 
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
 import { useToast } from '@/hooks/useToast'
-// import { usePostCustomTimer } from '@/hooks/useTimerApi'
-// import LoadingScreen from '@/components/commons/loadingScreen'
+import { usePostCustomTimer } from '@/hooks/useTimerApi'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import CustomTimerForm, {
   CustomTimerFormHandle,
@@ -17,29 +17,31 @@ import CustomTimerForm, {
 import styles from './create.module.css'
 
 export default function Create() {
+  const { trigger: createCustomTimer } = usePostCustomTimer()
   const showToast = useToast()
+    const router = useRouter()
   const formRef = useRef<CustomTimerFormHandle>(null)
-  // const { trigger: createCustomTimer, isMutating: creating } =
-  //   usePostCustomTimer()
+
 
   const triggerFormSubmit = () => {
     formRef.current?.submit()
   }
+
   const handleSubmit = async (values: CustomTimerFormValues) => {
-    console.log(values)
-    // 백엔드 API 개발완료 후 연동
-    // try {
-    //   await createCustomTimer({
-    //     customTimerName: values.title,
-    //     customTimerStepList: values.steps.map((step, index) => ({
-    //       customTimerStepsName: step.name,
-    //       customTimerStepsTime: step.time,
-    //       customTimerStepsOrder: index + 1,
-    //     })),
-    //   })
-    // } catch {
-    //   return
-    // }
+    try {
+      const res = await createCustomTimer({
+        customTimerName: values.title,
+        customTimerStepList: values.steps.map((step, index) => ({
+          customTimerStepName: step.name,
+          customTimerStepTime: step.time,
+          customTimerStepOrder: index,
+        })),
+      })
+      showToast('타이머가 생성되었습니다.', 'info')
+      router.replace(`${SITE_MAP.TIMER_CUSTOM}?id=${res.data.customTimerId}`)
+    } catch {
+      return
+    }
   }
   return (
     <div className={styles['page-container']}>

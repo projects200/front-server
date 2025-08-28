@@ -11,9 +11,9 @@ export type SimpleTimerList = {
 
 // 커스텀 타이머
 export type CustomTimerStepContents = {
-  customTimerStepsName: string
-  customTimerStepsOrder: number
-  customTimerStepsTime: number
+  customTimerStepName: string
+  customTimerStepOrder: number
+  customTimerStepTime: number
 }
 
 export type CustomTimerForm = {
@@ -32,7 +32,7 @@ export type CustomTimerList = {
 }
 
 export type CustomTimerStepId = {
-  customTimerStepsId: number
+  customTimerStepId: number
 }
 
 export type CustomTimerStep = CustomTimerStepId & CustomTimerStepContents

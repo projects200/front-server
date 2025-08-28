@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import clsx from 'clsx'
 
 import BottomNavigation from '@/components/commons/bottomNavigation'
 import LogoTitle from '@/components/ui/logoTitle'
@@ -14,10 +15,9 @@ import styles from './list.module.css'
 
 export default function List() {
   const { data } = useReadCustomTimerList()
-  console.log(data)
 
   return (
-    <>
+    <div className={styles['container']}>
       <LogoTitle />
       <Link
         className={styles['simple-timer-container']}
@@ -34,19 +34,49 @@ export default function List() {
         <RightArrow className={styles['right-arrow-icon']} />
       </Link>
 
-      {/* 커스텀 타이머 리스트 개수만큼 map함수로 컴포넌트 생성 */}
+      {data &&
+        data.customTimerList.map((list) => (
+          <Link
+            key={list.customTimerId}
+            className={styles['custom-timer-container']}
+            href={`${SITE_MAP.TIMER_CUSTOM}?id=${list.customTimerId}`}
+          >
+            <Typography as="span" variant="text22" weight="medium">
+              {list.customTimerName}
+            </Typography>
+            <RightArrow
+              className={clsx(
+                styles['right-arrow-icon'],
+                styles['right-arrow-icon-black'],
+              )}
+            />
+          </Link>
+        ))}
 
       <Link
-        className={styles['custom-timer-container']}
+        className={clsx(
+          styles['custom-timer-container'],
+          styles['creator-container'],
+        )}
         href={SITE_MAP.TIMER_CREATE}
       >
-        <Typography as="span" variant="text22" weight="medium">
-          나만의 타이머
-        </Typography>
-        <PlusIcon className={styles['plus-icon']} />
+        {data && data.customTimerList.length === 0 ? (
+          <>
+            {' '}
+            <Typography as="span" variant="text22" weight="medium">
+              나만의 타이머
+            </Typography>
+            <PlusIcon className={styles['plus-icon']} />
+          </>
+        ) : (
+          <>
+            {' '}
+            <PlusIcon className={styles['plus-icon-center']} />
+          </>
+        )}
       </Link>
-      
+
       <BottomNavigation />
-    </>
+    </div>
   )
 }

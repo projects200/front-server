@@ -46,6 +46,7 @@ server.js
 
 # next-pwa 패키지가 생성하는 파일들입니다.
 public/sw.js
+public/firebase-messaging-sw.js
 public/workbox-*.js
 public/worker-*.js
 public/fallback-*.js

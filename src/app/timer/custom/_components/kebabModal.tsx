@@ -12,7 +12,7 @@ import EditIcon from '@/assets/icon_edit.svg'
 import TrashIcon from '@/assets/icon_trash.svg'
 import Typography from '@/components/ui/typography'
 import SITE_MAP from '@/constants/siteMap.constant'
-// import { useDeleteCustomTimer } from '@/hooks/useTimerApi'
+import { useDeleteCustomTimer } from '@/hooks/useTimerApi'
 
 import styles from './kebabmodal.module.css'
 
@@ -23,18 +23,14 @@ type Props = {
 }
 
 export default function KebabModal({ isOpen, onClose, customTimerId }: Props) {
+  const { trigger: deleteCustomTimer } = useDeleteCustomTimer()
   const [isOpenCenter, setIsOpenCenter] = useState(false)
   const showToast = useToast()
   const router = useRouter()
 
-  // 백엔드 개발 완료시 커스텀 타이머 삭제 추가
-  // const { trigger: deleteCustomTimer } = useDeleteCustomTimer(customTimerId)
-
   const handleRemove = async () => {
     try {
-      // 커스텀 타이머 삭제 추가
-      // await deleteCustomTimer(null)
-      alert(customTimerId)
+      await deleteCustomTimer({ customTimerId })
       showToast('타이머가 삭제되었습니다.', 'info')
       router.back()
     } catch {
@@ -46,7 +42,10 @@ export default function KebabModal({ isOpen, onClose, customTimerId }: Props) {
     <>
       <BottomModal isOpen={isOpen} onClose={onClose}>
         <div className={styles['button-group']}>
-          <Link className={styles['button']} href={`${SITE_MAP.TIMER_EDIT}`}>
+          <Link
+            className={styles['button']}
+            href={`${SITE_MAP.TIMER_EDIT}?id=${customTimerId}`}
+          >
             <EditIcon className={styles['modal-icon']} />
             <Typography as="span" variant="text15">
               수정하기

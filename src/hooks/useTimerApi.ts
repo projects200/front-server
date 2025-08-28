@@ -1,3 +1,5 @@
+import { mutate } from 'swr'
+
 import {
   createSimpleTimer,
   readSimpleTimerList,
@@ -7,6 +9,7 @@ import {
   readCustomTimerList,
   readCustomTimerDetail,
   updateCustomTimer,
+  updateCustomTimerName,
   removeCustomTimer,
 } from '@/api/timer'
 import {
@@ -89,22 +92,41 @@ export const useReadCustomTimerDetail = (customTimerId: number) =>
       readCustomTimerDetail(token, customTimerId).then(
         adapterCustomTimerDetail,
       ),
-    {},
+    {
+      policy: {
+        messages: {
+          403: '접근할 수 없습니다.',
+          404: '타이머가 존재하지 않습니다.',
+        },
+        actions: { 403: 'back', 404: 'back' },
+      },
+    },
   )
 
-// 커스텀 타이머 수정(백엔드 미개발)
+// 커스텀 타이머 수정
 export const usePutCustomTimer = (customTimerId: number) =>
-  useApiMutation<{ customTimerId: number }, CustomTimerForm>(
+  useApiMutation<null, CustomTimerForm>(
     ['timer/custom/detail', customTimerId],
-    updateCustomTimer,
+    (token, body) => updateCustomTimer(token, body, customTimerId),
     {},
   )
-// 커스텀 타이머 제목 수정(백엔드 미개발)
+// 커스텀 타이머 제목 수정
+export const usePatchCustomTimer = (customTimerId: number) =>
+  useApiMutation<null, { name: string }>(
+    ['timer/custom/detail', customTimerId],
+    (token, body) => updateCustomTimerName(token, body.name, customTimerId),
+    {},
+  )
 
 // 커스텀 타이머 삭제
 export const useDeleteCustomTimer = () =>
   useApiMutation<null, { customTimerId: number }>(
     ['timer/custom/list'],
     (token, body) => removeCustomTimer(token, body.customTimerId),
-    {},
+    {
+      onSuccess: (result) => {
+        const { customTimerId } = result.variables
+        mutate(['timer/custom/detail', customTimerId], undefined)
+      },
+    },
   )

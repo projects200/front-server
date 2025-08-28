@@ -1,3 +1,10 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  scrollbar-width: none;
+}
+
 .simple-timer-container {
   position: relative;
   width: 100%;
@@ -22,6 +29,9 @@
   height: 24px;
   color: var(--color-white-300);
 }
+.right-arrow-icon.right-arrow-icon-black {
+  color: var(--color-black);
+}
 
 .custom-timer-container {
   position: relative;
@@ -35,6 +45,9 @@
   margin-top: 20px;
   box-shadow: var(--color-boxshadow-100);
 }
+.creator-container {
+  margin-bottom: 80px;
+}
 
 .plus-icon {
   position: absolute;
@@ -42,4 +55,8 @@
   width: 24px;
   height: 24px;
   color: var(--color-black);
+}
+.plus-icon-center {
+  width: 24px;
+  height: 24px;
 }

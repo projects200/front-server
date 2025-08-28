@@ -55,10 +55,10 @@ export function adapterCustomTimerStep(
   dto: CustomTimerStepDto,
 ): CustomTimerStep {
   return {
-    customTimerStepsId: dto.customTimerStepsId,
-    customTimerStepsName: dto.customTimerStepsName,
-    customTimerStepsOrder: dto.customTimerStepsOrder,
-    customTimerStepsTime: dto.customTimerStepsTime,
+    customTimerStepId: dto.customTimerStepId,
+    customTimerStepName: dto.customTimerStepName,
+    customTimerStepOrder: dto.customTimerStepOrder,
+    customTimerStepTime: dto.customTimerStepTime,
   }
 }
 
@@ -77,9 +77,9 @@ export function adapterCustomTimerStepContentsToDto(
   contents: CustomTimerStepContents,
 ): CustomTimerStepContentsDto {
   return {
-    customTimerStepsName: contents.customTimerStepsName,
-    customTimerStepsOrder: contents.customTimerStepsOrder,
-    customTimerStepsTime: contents.customTimerStepsTime,
+    customTimerStepName: contents.customTimerStepName,
+    customTimerStepOrder: contents.customTimerStepOrder,
+    customTimerStepTime: contents.customTimerStepTime,
   }
 }
 

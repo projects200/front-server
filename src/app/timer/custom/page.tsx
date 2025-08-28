@@ -12,8 +12,7 @@ import LoopOnIcon from '@/assets/icon_loop_on.svg'
 import LoopOffIcon from '@/assets/icon_loop_off.svg'
 import Button from '@/components/ui/button'
 import Typography from '@/components/ui/typography'
-
-// import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
+import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
 
 import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
@@ -24,13 +23,9 @@ import {
 import KebabModal from './_components/kebabModal'
 import styles from './custom.module.css'
 
-// 테스트 데이터
-import { data } from '../testData'
-
 export default function Custom() {
   const [customTimerId] = useQueryState('id', parseAsInteger)
-  // API 개발완료되면 실제 데이터 교체
-  // const { data } = useReadCustomTimerDetail(customTimerId)
+  const { data } = useReadCustomTimerDetail(customTimerId!)
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isTimerStarted, setIsTimerStarted] = useState(false)
@@ -54,26 +49,28 @@ export default function Custom() {
     setIsTimerStarted(false)
     setCurrentStepIndex(0)
     if (data && data.customTimerStepCount > 0) {
-      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
+      const firstStepTime = data.customTimerStepList[0].customTimerStepTime
       reset(firstStepTime)
     }
   }, [data, reset])
 
   // 현재 스텝의 타이머가 종료되었을 때 실행될 로직
   const handleStepEnd = useCallback(() => {
+    if (!data) return
+
     const nextStepIndex = currentStepIndex + 1
 
     // 다음 스텝 진행
     if (nextStepIndex < data.customTimerStepCount) {
       const nextStepTime =
-        data.customTimerStepList[nextStepIndex].customTimerStepsTime
+        data.customTimerStepList[nextStepIndex].customTimerStepTime
 
       setCurrentStepIndex(nextStepIndex)
       start(nextStepTime)
     }
     // 루프 활성화 시 첫 스텝으로
     else if (isLooping) {
-      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
+      const firstStepTime = data.customTimerStepList[0].customTimerStepTime
 
       setCurrentStepIndex(0)
       start(firstStepTime)
@@ -93,10 +90,12 @@ export default function Custom() {
 
   // 시작, 일시정지 버튼 클릭 핸들러
   const handleStartPauseButton = () => {
+    if (!data) return
+
     if (!isTimerStarted) {
       setIsTimerStarted(true)
       const firstStepTime =
-        data.customTimerStepList[currentStepIndex].customTimerStepsTime
+        data.customTimerStepList[currentStepIndex].customTimerStepTime
       start(firstStepTime)
     } else {
       if (isActive) {
@@ -109,22 +108,27 @@ export default function Custom() {
 
   // 데이터 로드 시 첫 스텝의 시간으로 타이머를 리셋
   const initialTime =
-    data?.customTimerStepList[currentStepIndex]?.customTimerStepsTime || 0
+    data?.customTimerStepList[currentStepIndex]?.customTimerStepTime || 0
 
   useEffect(() => {
     if (data && data.customTimerStepCount > 0) {
-      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
+      const firstStepTime = data.customTimerStepList[0].customTimerStepTime
       reset(firstStepTime)
     }
   }, [data, reset])
 
   // 스텝을 클릭했을 때 실행될 핸들러
-  const handleStepClick = useCallback((index: number) => {
-    setIsTimerStarted(true)
-    setCurrentStepIndex(index)
-    const stepTime = data.customTimerStepList[index].customTimerStepsTime
-    start(stepTime)
-  }, [])
+  const handleStepClick = useCallback(
+    (index: number) => {
+      if (!data) return
+      console.log(1)
+      setIsTimerStarted(true)
+      setCurrentStepIndex(index)
+      const stepTime = data.customTimerStepList[index].customTimerStepTime
+      start(stepTime)
+    },
+    [data],
+  )
 
   const progressBarValue =
     initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
@@ -196,7 +200,7 @@ export default function Custom() {
             ref={(element) => {
               stepRefs.current[index] = element
             }}
-            key={`step-${step.customTimerStepsId}`}
+            key={`step-${step.customTimerStepId}`}
           >
             <button
               className={clsx(styles['step-item'], {
@@ -207,11 +211,11 @@ export default function Custom() {
               <div className={styles['step-info']}>
                 <ClockIcon className={styles['clock-icon']} />
                 <Typography as="span" variant="text15" weight="bold">
-                  {step.customTimerStepsName}
+                  {step.customTimerStepName}
                 </Typography>
               </div>
               <Typography as="span" variant="text18" weight="bold">
-                {formatNumberToTime(step.customTimerStepsTime)}
+                {formatNumberToTime(step.customTimerStepTime)}
               </Typography>
             </button>
           </div>
