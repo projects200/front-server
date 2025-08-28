@@ -1,24 +1,28 @@
 'use client'
 
 import { useQueryState, parseAsInteger } from 'nuqs'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import clsx from 'clsx'
 
 import ClockIcon from '@/assets/icon_clock.svg'
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
+import LoopOnIcon from '@/assets/icon_loop_on.svg'
+import LoopOffIcon from '@/assets/icon_loop_off.svg'
 import Button from '@/components/ui/button'
 import Typography from '@/components/ui/typography'
+
 // import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
 
-import KebabModal from './_components/kebabModal'
+import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
-import { timerEndSound } from '../_utils/timerEndSound'
+import {
+  customTimerBeforeSound,
+  customTimerEndSound,
+} from '../_utils/timerEndSound'
+import KebabModal from './_components/kebabModal'
 import styles from './custom.module.css'
-
-// 타이머 업데이트 주기(단위ms)
-const SMOOTH_INTERVAL = 10
 
 // 테스트 데이터
 import { data } from '../testData'
@@ -30,70 +34,104 @@ export default function Custom() {
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isTimerStarted, setIsTimerStarted] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(0)
-  const [isActive, setIsActive] = useState(false)
-  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
+  const [isLooping, setIsLooping] = useState(false)
   const stepRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  const initialTime =
-    data?.customTimerStepList[currentStepIndex]?.customTimerStepsTime || 0
-
-  // data 로드후 타이머 초기화
-  useEffect(() => {
-    if (data && data.customTimerStepCount > 0) {
-      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
-      setTimeLeft(firstStepTime * 1000)
+  // 매초 시간이 변경될 때 실행될 로직
+  const handleSecondChange = useCallback((secondsLeft: number) => {
+    if (secondsLeft <= 3 && secondsLeft >= 1) {
+      customTimerBeforeSound()
     }
-  }, [data])
+  }, [])
 
-  useEffect(() => {
-    if (isActive && timeLeft > 0) {
-      timeoutIdRef.current = setTimeout(() => {
-        setTimeLeft((prevTime) => prevTime - SMOOTH_INTERVAL)
-      }, SMOOTH_INTERVAL)
-    } else if (timeLeft <= 0 && isActive) {
-      timerEndSound()
+  const { timeLeft, isActive, isFinished, start, pause, resume, reset } =
+    useTimer({
+      onSecondChange: handleSecondChange,
+    })
 
-      // 다음 스탭이 있는지 확인 후 다음스탭으로 초기화
-      const nextStepIndex = currentStepIndex + 1
-      if (nextStepIndex < data.customTimerStepCount) {
-        setCurrentStepIndex(nextStepIndex)
-        const nextStepTime =
-          data.customTimerStepList[nextStepIndex].customTimerStepsTime
-        setTimeLeft(nextStepTime * 1000)
-      } else {
-        handleStopButton()
-      }
-    }
-
-    return () => {
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current)
-      }
-    }
-  }, [isActive, timeLeft, currentStepIndex, data])
-
-  const handleStartPauseButton = () => {
-    if (!isTimerStarted) setIsTimerStarted(true)
-    setIsActive(!isActive)
-  }
-
-  const handleStopButton = () => {
-    setIsActive(false)
+  // 종료 버튼 핸들러
+  const handleStopButton = useCallback(() => {
     setIsTimerStarted(false)
     setCurrentStepIndex(0)
     if (data && data.customTimerStepCount > 0) {
-      setTimeLeft(data.customTimerStepList[0].customTimerStepsTime * 1000)
+      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
+      reset(firstStepTime)
+    }
+  }, [data, reset])
+
+  // 현재 스텝의 타이머가 종료되었을 때 실행될 로직
+  const handleStepEnd = useCallback(() => {
+    const nextStepIndex = currentStepIndex + 1
+
+    // 다음 스텝 진행
+    if (nextStepIndex < data.customTimerStepCount) {
+      const nextStepTime =
+        data.customTimerStepList[nextStepIndex].customTimerStepsTime
+
+      setCurrentStepIndex(nextStepIndex)
+      start(nextStepTime)
+    }
+    // 루프 활성화 시 첫 스텝으로
+    else if (isLooping) {
+      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
+
+      setCurrentStepIndex(0)
+      start(firstStepTime)
+    }
+    // 타이머 완전 종료
+    else {
+      handleStopButton()
+    }
+  }, [currentStepIndex, data, isLooping, start, handleStopButton])
+
+  useEffect(() => {
+    if (isFinished) {
+      customTimerEndSound()
+      handleStepEnd()
+    }
+  }, [isFinished, handleStepEnd])
+
+  // 시작, 일시정지 버튼 클릭 핸들러
+  const handleStartPauseButton = () => {
+    if (!isTimerStarted) {
+      setIsTimerStarted(true)
+      const firstStepTime =
+        data.customTimerStepList[currentStepIndex].customTimerStepsTime
+      start(firstStepTime)
+    } else {
+      if (isActive) {
+        pause()
+      } else {
+        resume()
+      }
     }
   }
+
+  // 데이터 로드 시 첫 스텝의 시간으로 타이머를 리셋
+  const initialTime =
+    data?.customTimerStepList[currentStepIndex]?.customTimerStepsTime || 0
+
+  useEffect(() => {
+    if (data && data.customTimerStepCount > 0) {
+      const firstStepTime = data.customTimerStepList[0].customTimerStepsTime
+      reset(firstStepTime)
+    }
+  }, [data, reset])
+
+  // 스텝을 클릭했을 때 실행될 핸들러
+  const handleStepClick = useCallback((index: number) => {
+    setIsTimerStarted(true)
+    setCurrentStepIndex(index)
+    const stepTime = data.customTimerStepList[index].customTimerStepsTime
+    start(stepTime)
+  }, [])
 
   const progressBarValue =
     initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
 
-  // 하이라이트 스탭 화면에 보이도록 자동 스크롤
+  // 현재 활성화된 스텝이 화면에 보이도록 자동 스크롤
   useEffect(() => {
     const activeStepWrapper = stepRefs.current[currentStepIndex]
-
     if (activeStepWrapper) {
       activeStepWrapper.scrollIntoView({
         behavior: 'smooth',
@@ -134,6 +172,14 @@ export default function Custom() {
         >
           종료
         </Button>
+        <button onClick={() => setIsLooping(!isLooping)}>
+          {isLooping ? (
+            <LoopOnIcon className={styles['loop-icon']} />
+          ) : (
+            <LoopOffIcon className={styles['loop-icon']} />
+          )}
+        </button>
+
         <Button
           className={styles['control-button']}
           onClick={handleStartPauseButton}
@@ -152,10 +198,11 @@ export default function Custom() {
             }}
             key={`step-${step.customTimerStepsId}`}
           >
-            <div
+            <button
               className={clsx(styles['step-item'], {
                 [styles['active-step']]: index === currentStepIndex,
               })}
+              onClick={() => handleStepClick(index)}
             >
               <div className={styles['step-info']}>
                 <ClockIcon className={styles['clock-icon']} />
@@ -166,7 +213,7 @@ export default function Custom() {
               <Typography as="span" variant="text18" weight="bold">
                 {formatNumberToTime(step.customTimerStepsTime)}
               </Typography>
-            </div>
+            </button>
           </div>
         ))}
       </div>

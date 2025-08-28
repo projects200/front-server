@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
@@ -13,26 +13,28 @@ import Typography from '@/components/ui/typography'
 import { useToast } from '@/hooks/useToast'
 import { SimpleTimer } from '@/types/timer'
 
-import PresetCard from './_components/presetCard'
+import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
-import { timerEndSound } from '../_utils/timerEndSound'
 import TimePicker from '../_components/timePicker'
+import { simpleTimerEndSound } from '../_utils/timerEndSound'
+import PresetCard from './_components/presetCard'
 import styles from './simple.module.css'
-
-// 타이머 업데이트 주기(단위ms)
-const SMOOTH_INTERVAL = 10
 
 export default function Simple() {
   const { data } = useReadSimpleTimerList()
   const [displayedTimers, setDisplayedTimers] = useState<SimpleTimer[]>([])
   const { trigger: timerCreate } = usePostSimpleTimer()
   const [initialTime, setInitialTime] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(0)
-  const [isActive, setIsActive] = useState(false)
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const showToast = useToast()
-  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
+  const { timeLeft, isActive, isFinished, start, pause, resume } = useTimer({})
+
+  useEffect(() => {
+    if (isFinished) {
+      simpleTimerEndSound()
+    }
+  }, [isFinished])
 
   useEffect(() => {
     if (data) {
@@ -63,6 +65,7 @@ export default function Simple() {
       setDisplayedTimers((currentTimers) => [...currentTimers, newTimer])
     } catch {}
   }
+
   const handleUpdate = (updatedTimer: SimpleTimer) => {
     setDisplayedTimers((currentTimers) =>
       currentTimers.map((timer) =>
@@ -72,6 +75,7 @@ export default function Simple() {
       ),
     )
   }
+
   const handleDelete = (deletedTimerId: number) => {
     setDisplayedTimers((currentTimers) =>
       currentTimers.filter((timer) => timer.simpleTimerId !== deletedTimerId),
@@ -80,31 +84,17 @@ export default function Simple() {
 
   const handlePresetClick = (seconds: number) => {
     setInitialTime(seconds)
-    setTimeLeft(seconds * 1000)
-    setIsActive(true)
+    start(seconds)
   }
 
   const handleToggleIconClick = () => {
-    if (initialTime > 0) {
-      setIsActive(!isActive)
+    if (initialTime <= 0) return
+    if (isActive) {
+      pause()
+    } else {
+      resume()
     }
   }
-
-  useEffect(() => {
-    if (isActive && timeLeft > 0) {
-      timeoutIdRef.current = setTimeout(() => {
-        setTimeLeft((prevTime) => prevTime - SMOOTH_INTERVAL)
-      }, SMOOTH_INTERVAL)
-    } else if (timeLeft <= 0 && isActive) {
-      timerEndSound()
-      setIsActive(false)
-    }
-    return () => {
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current)
-      }
-    }
-  }, [isActive, timeLeft])
 
   const progressBarValue =
     initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
