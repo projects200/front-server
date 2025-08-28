@@ -1,7 +1,6 @@
-import clsx from 'clsx'
-
 import ClockIcon from '@/assets/icon_clock.svg'
 import MinusIcon from '@/assets/icon_minus.svg'
+import KnobIcon from '@/assets/icon_knob.svg'
 import { formatNumberToTime } from '@/utils/timer'
 
 import styles from './stepItem.module.css'
@@ -23,15 +22,16 @@ export default function StepItem({
   onNameChange,
   onTimeClick,
   onRemove,
-}: Props) {
+  ...props
+}: Props & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={styles['step-item']}>
-      <ClockIcon className={clsx(styles['clock-icon'])} />
+    <div className={styles['step-item']} {...props}>
+      <KnobIcon className={styles['knob-icon']} data-drag-handle="true" />
+      <ClockIcon className={styles['clock-icon']} />
       <input
         type="text"
         value={step.name}
         onChange={(e) => onNameChange(e.target.value)}
-        placeholder="Step"
         className={styles['step-name-input']}
         maxLength={50}
       />
