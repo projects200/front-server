@@ -1,11 +1,7 @@
 @import '../styles/variables.css';
 body {
-  background-color: var(--color-background);
+  background-color: #edefee;
   height: auto;
-  /* 임시 배경 이미지 */
-  background-image: url('/background.svg');
-  background-size: 1000px;
-  background-attachment: fixed;
 }
 
 .responsive-container {

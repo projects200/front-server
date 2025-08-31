@@ -21,6 +21,7 @@
   padding: 20px;
   width: 85%;
   min-width: 300px;
+  overscroll-behavior: contain;
 }
 
 .picker-container {

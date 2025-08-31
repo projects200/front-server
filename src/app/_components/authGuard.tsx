@@ -4,6 +4,7 @@ import { useAuth } from 'react-oidc-context'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
+import LoadingScreen from '@/components/commons/loadingScreen'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -28,7 +29,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [auth.isLoading, auth.isAuthenticated])
 
-  if (auth.isLoading || !auth.isAuthenticated) return null
+  if (auth.isLoading || !auth.isAuthenticated) return <LoadingScreen />
 
   return <>{children}</>
 }

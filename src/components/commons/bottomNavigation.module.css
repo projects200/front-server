@@ -3,7 +3,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: var(--bottom-nav-heigth);
   width: 100%;
   background-color: #ffffff;
   display: flex;

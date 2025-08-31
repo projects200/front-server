@@ -26,7 +26,8 @@ export default function StepItem({
 }: Props & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={styles['step-item']} {...props}>
-      <KnobIcon className={styles['knob-icon']} data-drag-handle="true" />
+      <div className={styles['knob-section']} data-drag-handle="true"></div>
+      <KnobIcon className={styles['knob-icon']} />
       <ClockIcon className={styles['clock-icon']} />
       <input
         type="text"

@@ -23,5 +23,6 @@
   --color-boxshadow-200: 0 4px 8px rgba(0, 0, 0, 0.25);
 
   /* length */
-  --bottom-button-height: 95px;
+  --bottom-button-height: 130px;
+  --bottom-nav-heigth: 64px
 }

@@ -12,4 +12,7 @@
   will-change: transform, z-index;
 }
 
-
+.step-creator {
+  position: absolute;
+  width: 100%;
+}

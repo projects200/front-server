@@ -136,21 +136,23 @@ export default function StepList({
             />
           </animated.div>
         ))}
+        {steps.length < 50 && (
+          <div
+            className={styles['step-creator']}
+            style={{
+              top:
+                steps.length > 0 ? steps.length * TOTAL_ITEM_HEIGHT - GAP : 0,
+              marginTop: steps.length === 0 ? 0 : 12,
+            }}
+          >
+            <StepCreator
+              onAdd={onAddStep}
+              onTimeClick={() => onTimeClick(-1)}
+              newStepTime={newStepTime}
+            />
+          </div>
+        )}
       </div>
-
-      {steps.length < 50 && (
-        <div
-          style={{
-            marginTop: steps.length === 0 ? 0 : 12,
-          }}
-        >
-          <StepCreator
-            onAdd={onAddStep}
-            onTimeClick={() => onTimeClick(-1)}
-            newStepTime={newStepTime}
-          />
-        </div>
-      )}
     </>
   )
 }

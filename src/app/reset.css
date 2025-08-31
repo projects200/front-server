@@ -39,6 +39,11 @@ textarea:focus {
   outline: none;
   box-shadow: none;
 }
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-gray-200);
+  opacity: 1;
+}
 div {
   user-select: none;
 }

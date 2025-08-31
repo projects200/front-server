@@ -3,20 +3,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: var(--color-white-300);
+  background-color: var(--color-gray-300);
   padding: 0 10px 0 15px;
+  border: dashed 1.5px var(--color-gray-200);
   border-radius: 15px;
-  box-shadow: var(--color-boxshadow-100);
   flex-shrink: 0;
 }
 
 .clock-icon {
   width: 22px;
   height: 22px;
-  color: var(--color-black);
-}
-
-.clock-icon-create {
   color: var(--color-gray-200);
 }
 
