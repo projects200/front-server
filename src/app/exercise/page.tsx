@@ -53,18 +53,26 @@ export default function Exercise() {
   const bottomText = calculateBottomText(scoreData, selectedDate)
   return (
     <>
-      <LogoTitle />
+      <div className={styles['title-section']}>
+        <LogoTitle />
+      </div>
+
       <ScoreBoard />
-      <div className={styles['divider']}></div>
-      <ExerciseCalendar
-        ref={calendarRef}
-        onDateSelect={handleDateSelect}
-        selectedDate={selectedDate}
-      />
+
+      <div className={styles['calendar-section']}>
+        <ExerciseCalendar
+          ref={calendarRef}
+          onDateSelect={handleDateSelect}
+          selectedDate={selectedDate}
+        />
+      </div>
+
       <ExerciseList selectedDate={selectedDate} />
+
       <BottomButton onClick={() => router.push(SITE_MAP.EXERCISE_CREATE)}>
         {bottomText}
       </BottomButton>
+
       <BottomNavigation />
     </>
   )

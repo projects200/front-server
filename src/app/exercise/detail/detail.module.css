@@ -2,6 +2,13 @@
   width: 16px;
   height: 16px;
 }
+.field-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px 20px 0 20px;
+  background-color: var(--color-white-300);
+}
 .data-field {
   margin-bottom: 24px;
 }

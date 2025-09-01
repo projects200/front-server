@@ -1,7 +1,4 @@
 .carousel {
-  width: calc(100% + 40px);
-  margin-left: -20px;
-  margin-bottom: 20px;
   max-height: 250px;
 }
 .slide {

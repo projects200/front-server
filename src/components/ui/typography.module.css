@@ -1,16 +1,41 @@
-.text32 { font-size: 32px;}
-.text24 { font-size: 24px;}
-.text22 { font-size: 22px;}
-.text18 { font-size: 18px;}
-.text15 { font-size: 15px;}
-.text14 { font-size: 14px;}
-.text12 { font-size: 12px;}
-.text8 { font-size: 8px;}
+.text32 {
+  font-size: 32px;
+}
+.text24 {
+  font-size: 24px;
+}
+.text22 {
+  font-size: 22px;
+}
+.text18 {
+  font-size: 18px;
+}
+.text15 {
+  font-size: 15px;
+}
+.text14 {
+  font-size: 14px;
+}
+.text12 {
+  font-size: 12px;
+}
+.text8 {
+  font-size: 8px;
+}
 
-.regular { font-weight: 400; }
-.medium  { font-weight: 500; }
-.bold    { font-weight: 700; }
+.regular {
+  font-weight: 400;
+}
+.medium {
+  font-weight: 500;
+}
+.semi-bold {
+  font-weight: 600;
+}
+.bold {
+  font-weight: 700;
+}
 
-.text{
+.text {
   line-height: 1.5;
 }

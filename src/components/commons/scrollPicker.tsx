@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Picker from 'react-mobile-picker'
 
 import Button from '@/components/ui/button'
@@ -71,6 +71,14 @@ export default function ScrollPicker({
     onClose()
   }
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
+
   return (
     <div className={styles['modal-overlay']}>
       <div className={styles['modal']}>
@@ -81,11 +89,7 @@ export default function ScrollPicker({
                 {OPTIONS[field].map((option) => (
                   <Picker.Item key={option} value={option}>
                     {() => (
-                      <div
-                        className={
-                          styles['item']
-                        }
-                      >
+                      <div className={styles['item']}>
                         {typeof option === 'number'
                           ? String(option).padStart(2, '0')
                           : option}

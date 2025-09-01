@@ -7,7 +7,7 @@ const Layout = ({
 }>) => {
   return (
     <AuthGuard>
-      <div className="container-timer">{children}</div>
+      <div className="container">{children}</div>
     </AuthGuard>
   )
 }

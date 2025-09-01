@@ -1,17 +1,18 @@
 .container {
   width: 100%;
+  min-height: 100vh;
   padding: 0 20px;
+  background-color: var(--color-white-300);
 }
-.title{
+.title {
   padding-top: 100px;
 }
-.input-field{
+.input-field {
   margin-top: 80px;
 }
 
 @media (min-width: 768px) {
-  .title{
+  .title {
     padding-top: 150px;
   }
-
 }

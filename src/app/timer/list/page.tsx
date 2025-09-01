@@ -19,63 +19,64 @@ export default function List() {
   return (
     <div className={styles['container']}>
       <LogoTitle />
-      <Link
-        className={styles['simple-timer-container']}
-        href={SITE_MAP.TIMER_SIMPLE}
-      >
-        <Typography
-          className={styles['simple-timer-text']}
-          as="span"
-          variant="text22"
-          weight="medium"
+      <div className={styles['list-section']}>
+        <Link
+          className={styles['simple-timer-container']}
+          href={SITE_MAP.TIMER_SIMPLE}
         >
-          심플 타이머
-        </Typography>
-        <RightArrow className={styles['right-arrow-icon']} />
-      </Link>
-
-      {data &&
-        data.customTimerList.map((list) => (
-          <Link
-            key={list.customTimerId}
-            className={styles['custom-timer-container']}
-            href={`${SITE_MAP.TIMER_CUSTOM}?id=${list.customTimerId}`}
+          <Typography
+            className={styles['simple-timer-text']}
+            as="span"
+            variant="text22"
+            weight="medium"
           >
-            <Typography as="span" variant="text22" weight="medium">
-              {list.customTimerName}
-            </Typography>
-            <RightArrow
-              className={clsx(
-                styles['right-arrow-icon'],
-                styles['right-arrow-icon-black'],
-              )}
-            />
-          </Link>
-        ))}
+            심플 타이머
+          </Typography>
+          <RightArrow className={styles['right-arrow-icon']} />
+        </Link>
 
-      <Link
-        className={clsx(
-          styles['custom-timer-container'],
-          styles['creator-container'],
-        )}
-        href={SITE_MAP.TIMER_CREATE}
-      >
-        {data && data.customTimerList.length === 0 ? (
-          <>
-            {' '}
-            <Typography as="span" variant="text22" weight="medium">
-              나만의 타이머
-            </Typography>
-            <PlusIcon className={styles['plus-icon']} />
-          </>
-        ) : (
-          <>
-            {' '}
-            <PlusIcon className={styles['plus-icon-center']} />
-          </>
-        )}
-      </Link>
+        {data &&
+          data.customTimerList.map((list) => (
+            <Link
+              key={list.customTimerId}
+              className={styles['custom-timer-container']}
+              href={`${SITE_MAP.TIMER_CUSTOM}?id=${list.customTimerId}`}
+            >
+              <Typography as="span" variant="text22" weight="medium">
+                {list.customTimerName}
+              </Typography>
+              <RightArrow
+                className={clsx(
+                  styles['right-arrow-icon'],
+                  styles['right-arrow-icon-black'],
+                )}
+              />
+            </Link>
+          ))}
 
+        <Link
+          className={clsx(
+            styles['custom-timer-container'],
+            styles['creator-container'],
+          )}
+          href={SITE_MAP.TIMER_CREATE}
+        >
+          {data && data.customTimerList.length === 0 ? (
+            <>
+              {' '}
+              <Typography as="span" variant="text22" weight="medium">
+                나만의 타이머
+              </Typography>
+              <PlusIcon className={styles['plus-icon']} />
+            </>
+          ) : (
+            <>
+              {' '}
+              <PlusIcon className={styles['plus-icon-center']} />
+            </>
+          )}
+        </Link>
+      </div>
       <BottomNavigation />
     </div>
   )

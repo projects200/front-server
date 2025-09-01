@@ -5,7 +5,8 @@
   width: 100%;
   max-width: 768px;
   user-select: none;
-  padding-bottom: 20px;
+  padding: 0 20px 20px 20px;
+  background-color: var(--color-white-300);
 }
 
 .header {

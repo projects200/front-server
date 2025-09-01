@@ -1,3 +1,7 @@
+.container {
+  padding: 0 20px;
+  background-color: var(--color-white-300);
+}
 .form {
   margin-top: 46px;
   padding-bottom: 50px;

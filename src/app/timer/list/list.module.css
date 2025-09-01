@@ -4,7 +4,9 @@
   overflow: auto;
   scrollbar-width: none;
 }
-
+.list-section {
+  padding: 0 20px;
+}
 .simple-timer-container {
   position: relative;
   width: 100%;

@@ -1,6 +1,6 @@
-.divider {
-  height: 5px;
-  width: calc(100% + 40px);
-  margin-left: -20px;
-  background-color: var(--color-background);
+.title-section {
+  background-color: var(--color-white-300);
+}
+.calendar-section {
+  margin-top: 5px;
 }

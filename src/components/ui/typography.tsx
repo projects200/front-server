@@ -5,7 +5,7 @@ import styles from './typography.module.css'
 
 type TextElement = 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3'
 
-type TypographyWeight = 'regular' | 'medium' | 'bold'
+type TypographyWeight = 'regular' | 'medium' | 'semi-bold' | 'bold'
 
 type TypographyVariant =
   | 'text32'
