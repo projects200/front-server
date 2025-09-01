@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/dev-sw.js && next dev",
-    "build": "next build && node scripts/build-sw.js",
+    "build": "NEXT_PUBLIC_BUILD_VERSION=$(date +%s) next build && node scripts/build-sw.js",
     "start": "next start",
     "lint": "next lint",
     "phone": "node --env-file=.env.phone server.js"
