@@ -4,8 +4,8 @@ let simpleTimerEndAudio: HTMLAudioElement | null = null
 let customTimerEndAudio: HTMLAudioElement | null = null
 
 if (typeof window !== 'undefined') {
-  simpleTimerEndAudio = new Audio(getAssetUrl('/sound_simple_timer_end.wav'))
-  customTimerEndAudio = new Audio(getAssetUrl('/sound_custom_timer_end.wav'))
+  simpleTimerEndAudio = new Audio(getAssetUrl('/sound_simple_timer_end.mp3'))
+  customTimerEndAudio = new Audio(getAssetUrl('/sound_custom_timer_end.mp3'))
 }
 
 export const simpleTimerEndSound = () => {
