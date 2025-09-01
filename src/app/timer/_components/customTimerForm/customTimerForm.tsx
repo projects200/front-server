@@ -45,7 +45,7 @@ const customTimerSchema = z.object({
           ),
         time: z
           .number()
-          .min(1, '시간은 1초 이상이어야 합니다.')
+          .min(5, '시간은 5초 이상이어야 합니다.')
           .max(3599, '시간은 60분 미만이어야 합니다.'),
       }),
     )
@@ -89,8 +89,8 @@ const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
 
     // TimePicker에서 시간 선택 완료 시 호출되는 콜백 함수
     const handlePickerComplete = (newTotalSeconds: number) => {
-      if (newTotalSeconds < 1) {
-        onError('시간은 최소 1초 이상이어야 합니다.')
+      if (newTotalSeconds < 5) {
+        onError('시간은 5초 이상이어야 합니다.')
         return
       }
       if (editingTimeIndex === -1) {

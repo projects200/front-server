@@ -1,14 +1,12 @@
-.page-container {
+.container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  flex: 1;
 }
 
 /* 타이머 섹션 */
 .indicator-section {
   height: 280px;
-  width: calc(100% + 40px);
-  margin-left: -20px;
   background-color: var(--color-white-300);
   display: flex;
   align-items: center;
@@ -59,8 +57,6 @@
 
 /* 컨트롤 버튼 섹션 */
 .controls-section {
-  width: calc(100% + 40px);
-  margin-left: -20px;
   background-color: var(--color-white-300);
   display: flex;
   justify-content: center;
@@ -71,6 +67,12 @@
 button.control-button {
   width: 125px;
   height: 45px;
+}
+button.control-button-end {
+  background-color: var(--color-gray-200);
+}
+button.control-button-end:disabled {
+  background-color: var(--color-gray-200);
 }
 
 .loop-icon {
@@ -85,7 +87,6 @@ button.control-button {
   flex: 1;
   overflow: auto;
   scrollbar-width: none;
-  margin: 0 -20px;
   padding: 0 20px;
 }
 .step-item-wrapper {

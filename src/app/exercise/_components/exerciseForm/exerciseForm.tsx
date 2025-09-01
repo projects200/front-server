@@ -171,109 +171,111 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
     const scoreDescription = calculateScoreDescription()
 
     return (
-      <form
-        className={styles['form']}
-        onSubmit={(e) => {
-          e.preventDefault()
-          form.handleSubmit(e)
-        }}
-      >
-        <form.Field name="title">
-          {(field) => (
-            <InputField
-              className={styles['form-field']}
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-              label="제목 *"
-              id="title"
-              maxLength={255}
-              placeholder="제목을 입력해주세요."
-            />
-          )}
-        </form.Field>
+      <div className={styles['container']}>
+        <form
+          className={styles['form']}
+          onSubmit={(e) => {
+            e.preventDefault()
+            form.handleSubmit(e)
+          }}
+        >
+          <form.Field name="title">
+            {(field) => (
+              <InputField
+                className={styles['form-field']}
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                label="제목 *"
+                id="title"
+                maxLength={255}
+                placeholder="제목을 입력해주세요."
+              />
+            )}
+          </form.Field>
 
-        <form.Field name="startedAt">
-          {(startedAtField) => (
-            <form.Field name="endedAt">
-              {(endedAtField) => (
-                <div className={styles['form-field']}>
-                  <DateTimePicker
-                    label="운동 시간 *"
-                    startedAt={startedAtField.state.value}
-                    endedAt={endedAtField.state.value}
-                    onStartedAtChange={(value) =>
-                      startedAtField.handleChange(value)
-                    }
-                    onEndedAtChange={(value) =>
-                      endedAtField.handleChange(value)
-                    }
-                  />
-                  {scoreDescription && (
-                    <div className={styles['score-description']}>
-                      <WarningIcon className={styles['warning-icon']} />
-                      <Typography
-                        as="span"
-                        variant="text12"
-                        className={styles['description']}
-                      >
-                        {scoreDescription}
-                      </Typography>
-                    </div>
-                  )}
-                </div>
-              )}
-            </form.Field>
-          )}
-        </form.Field>
+          <form.Field name="startedAt">
+            {(startedAtField) => (
+              <form.Field name="endedAt">
+                {(endedAtField) => (
+                  <div className={styles['form-field']}>
+                    <DateTimePicker
+                      label="운동 시간 *"
+                      startedAt={startedAtField.state.value}
+                      endedAt={endedAtField.state.value}
+                      onStartedAtChange={(value) =>
+                        startedAtField.handleChange(value)
+                      }
+                      onEndedAtChange={(value) =>
+                        endedAtField.handleChange(value)
+                      }
+                    />
+                    {scoreDescription && (
+                      <div className={styles['score-description']}>
+                        <WarningIcon className={styles['warning-icon']} />
+                        <Typography
+                          as="span"
+                          variant="text12"
+                          className={styles['description']}
+                        >
+                          {scoreDescription}
+                        </Typography>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </form.Field>
+            )}
+          </form.Field>
 
-        <form.Field name="category">
-          {(field) => (
-            <InputField
-              className={styles['form-field']}
-              value={field.state.value ?? ''}
-              onChange={(e) => field.handleChange(e.target.value)}
-              label="운동 종류"
-              id="category"
-              maxLength={255}
-              placeholder="운동 종류를 입력해주세요."
-            />
-          )}
-        </form.Field>
+          <form.Field name="category">
+            {(field) => (
+              <InputField
+                className={styles['form-field']}
+                value={field.state.value ?? ''}
+                onChange={(e) => field.handleChange(e.target.value)}
+                label="운동 종류"
+                id="category"
+                maxLength={255}
+                placeholder="운동 종류를 입력해주세요."
+              />
+            )}
+          </form.Field>
 
-        <form.Field name="location">
-          {(field) => (
-            <InputField
-              className={styles['form-field']}
-              value={field.state.value ?? ''}
-              onChange={(e) => field.handleChange(e.target.value)}
-              label="장소"
-              id="location"
-              maxLength={255}
-              placeholder="운동장소를 입력해주세요."
-            />
-          )}
-        </form.Field>
+          <form.Field name="location">
+            {(field) => (
+              <InputField
+                className={styles['form-field']}
+                value={field.state.value ?? ''}
+                onChange={(e) => field.handleChange(e.target.value)}
+                label="장소"
+                id="location"
+                maxLength={255}
+                placeholder="운동장소를 입력해주세요."
+              />
+            )}
+          </form.Field>
 
-        <form.Field name="content">
-          {(field) => (
-            <TextareaField
-              className={styles['form-field']}
-              value={field.state.value ?? ''}
-              onChange={(e) => field.handleChange(e.target.value)}
-              label="내용"
-              id="content"
-            />
-          )}
-        </form.Field>
-        <form.Field name="images">
-          {(field) => (
-            <ImageUploader
-              files={field.state.value ?? []}
-              setFiles={(files) => field.handleChange(files)}
-            />
-          )}
-        </form.Field>
-      </form>
+          <form.Field name="content">
+            {(field) => (
+              <TextareaField
+                className={styles['form-field']}
+                value={field.state.value ?? ''}
+                onChange={(e) => field.handleChange(e.target.value)}
+                label="내용"
+                id="content"
+              />
+            )}
+          </form.Field>
+          <form.Field name="images">
+            {(field) => (
+              <ImageUploader
+                files={field.state.value ?? []}
+                setFiles={(files) => field.handleChange(files)}
+              />
+            )}
+          </form.Field>
+        </form>
+      </div>
     )
   },
 )

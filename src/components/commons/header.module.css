@@ -1,7 +1,4 @@
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
   background-color: var(--color-white-300);
   display: flex;
   align-items: center;
@@ -37,6 +34,10 @@
   transform: translateX(-50%);
 }
 .right-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   margin-left: auto;
 }
 .back-area {
@@ -46,11 +47,7 @@
 
 @media (min-width: 768px) {
   .header {
-    top: 0;
-    left: 50%;
     width: 500px;
-    transform: translateX(-50%);
-    padding: 0 20px;
     height: 85px;
   }
   .icon {

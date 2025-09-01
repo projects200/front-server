@@ -5,6 +5,7 @@
   min-height: 100vh;
   flex-direction: column;
   padding-bottom: 140px;
+  background-color: var(--color-white-300);
 }
 .title{
   padding-top: 100px;

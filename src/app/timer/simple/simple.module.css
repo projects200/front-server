@@ -1,13 +1,11 @@
-.page-container {
+.container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  flex: 1;
 }
 
 .indicator-section {
   height: 280px;
-  width: calc(100% + 40px);
-  margin-left: -20px;
   background-color: var(--color-white-300);
   display: flex;
   align-items: center;
@@ -38,6 +36,7 @@
   margin-top: 10px;
 }
 .sort-button {
+  padding: 0 20px;
   margin-left: auto;
   height: 40px;
   display: flex;
@@ -49,11 +48,12 @@
   width: 16px;
 }
 
-.timer-button-section {
+.timer-preset-section {
+  padding: 0 20px;
   display: flex;
   flex: 1;
 }
-.timer-button-grid {
+.timer-preset-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);

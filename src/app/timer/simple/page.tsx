@@ -100,7 +100,7 @@ export default function Simple() {
     initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
 
   return (
-    <div className={styles['page-container']}>
+    <div className={styles['container']}>
       <Header>심플 타이머</Header>
 
       <div className={styles['indicator-section']}>
@@ -129,8 +129,8 @@ export default function Simple() {
         <SortIcon className={styles['sort-icon']} />
       </button>
 
-      <div className={styles['timer-button-section']}>
-        <div className={styles['timer-button-grid']}>
+      <div className={styles['timer-preset-section']}>
+        <div className={styles['timer-preset-grid']}>
           {displayedTimers.map((preset) => (
             <PresetCard
               key={preset.simpleTimerId}
@@ -151,14 +151,15 @@ export default function Simple() {
             </button>
           )}
         </div>
+
+        {isTimePickerOpen && (
+          <TimePicker
+            time={0}
+            onClose={() => setIsTimePickerOpen(false)}
+            onComplete={handleComplete}
+          />
+        )}
       </div>
-      {isTimePickerOpen && (
-        <TimePicker
-          time={0}
-          onClose={() => setIsTimePickerOpen(false)}
-          onComplete={handleComplete}
-        />
-      )}
     </div>
   )
 }

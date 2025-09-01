@@ -42,40 +42,43 @@ export default function Detail() {
         기록 상세
       </Header>
       {data.images?.length ? <ImageField images={data.images} /> : <></>}
-      <InputField
-        className={styles['data-field']}
-        value={data.title}
-        label="제목"
-        id="title"
-        readonly={true}
-      />
-      <div className={styles['data-field']}>
-        <DateTimePicker
-          label="운동 시간"
-          startedAt={data.startedAt}
-          endedAt={data.endedAt}
-          readonly={true}
-        />
-      </div>
 
-      {data.category && (
+      <div className={styles['field-section']}>
         <InputField
           className={styles['data-field']}
-          value={data.category}
-          label="운동 종류"
-          id="category"
+          value={data.title}
+          label="제목"
+          id="title"
           readonly={true}
         />
-      )}
-      {data.location && (
-        <InputField
-          className={styles['data-field']}
-          value={data.location}
-          label="장소"
-          id="location"
-          readonly={true}
-        />
-      )}
+        <div className={styles['data-field']}>
+          <DateTimePicker
+            label="운동 시간"
+            startedAt={data.startedAt}
+            endedAt={data.endedAt}
+            readonly={true}
+          />
+        </div>
+
+        {data.category && (
+          <InputField
+            className={styles['data-field']}
+            value={data.category}
+            label="운동 종류"
+            id="category"
+            readonly={true}
+          />
+        )}
+        {data.location && (
+          <InputField
+            className={styles['data-field']}
+            value={data.location}
+            label="장소"
+            id="location"
+            readonly={true}
+          />
+        )}
+      </div>
 
       {data.content && (
         <TextareaField

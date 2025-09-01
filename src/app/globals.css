@@ -1,10 +1,45 @@
 @import '../styles/variables.css';
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400; /* regular */
+  font-style: normal;
+  src: url('/fonts/Pretendard-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500; /* medium */
+  font-style: normal;
+  src: url('/fonts/Pretendard-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600; /* bold */
+  font-style: normal;
+  src: url('/fonts/Pretendard-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700; /* bold */
+  font-style: normal;
+  src: url('/fonts/Pretendard-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
 body {
   background-color: #edefee;
   height: auto;
 }
 
 .responsive-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 100%;
   min-height: 100vh;
@@ -13,15 +48,10 @@ body {
 }
 
 .container {
-  padding: 0 20px;
-}
-
-/* 추후 container 또한 아래 양식처럼 바꿔서 전체적인 layout디자인을 통일 */
-.container-timer {
-  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   background-color: var(--color-background);
-  width: 100%;
-  min-height: 100vh;
 }
 
 @media (min-width: 768px) {

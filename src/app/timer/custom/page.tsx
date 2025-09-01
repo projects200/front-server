@@ -16,10 +16,7 @@ import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
 
 import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
-import {
-  customTimerBeforeSound,
-  customTimerEndSound,
-} from '../_utils/timerEndSound'
+import { customTimerEndSound } from '../_utils/timerEndSound'
 import KebabModal from './_components/kebabModal'
 import styles from './custom.module.css'
 
@@ -32,10 +29,10 @@ export default function Custom() {
   const [isLooping, setIsLooping] = useState(false)
   const stepRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  // 매초 시간이 변경될 때 실행될 로직
+  // 종료 3초전에 실행될 콜백함수
   const handleSecondChange = useCallback((secondsLeft: number) => {
-    if (secondsLeft <= 3 && secondsLeft >= 1) {
-      customTimerBeforeSound()
+    if (secondsLeft === 3) {
+      customTimerEndSound()
     }
   }, [])
 
@@ -147,7 +144,7 @@ export default function Custom() {
   if (!customTimerId || !data) return null
 
   return (
-    <div className={styles['page-container']}>
+    <div className={styles['container']}>
       <Header
         rightIcon={<KebabIcon className={styles['header-icon']} />}
         onClick={() => setIsBottomModalOpen(true)}
@@ -169,10 +166,12 @@ export default function Custom() {
 
       <div className={styles['controls-section']}>
         <Button
-          className={styles['control-button']}
+          className={clsx(
+            styles['control-button'],
+            styles['control-button-end'],
+          )}
           onClick={handleStopButton}
           disabled={!isTimerStarted}
-          variant={'secondary'}
         >
           종료
         </Button>
