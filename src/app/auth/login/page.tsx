@@ -9,7 +9,6 @@ import KakaoIcon from '@/assets/icon_kakao.svg'
 import Logo from '@/assets/logo.svg'
 import GoogleStoreIcon from '@/assets/icon_google_play.svg'
 import IOSIcon from '@/assets/icon_iOS.svg'
-import Button from '@/components/ui/button'
 
 import styles from './login.module.css'
 
