@@ -1,0 +1,25 @@
+.step-section {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-white-300);
+}
+.icon {
+  color: var(--color-gray-200);
+  height: 18px;
+  width: 18px;
+}
+.title {
+  margin-bottom: 5px;
+}
+.sub-title {
+  display: flex;
+  align-items: center;
+  color: var(--color-gray-200);
+  margin-bottom: 30px;
+}
+.img {
+  margin-left: 30px;
+  margin-bottom: 80px;
+}

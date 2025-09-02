@@ -63,17 +63,13 @@ export default function List() {
         >
           {data && data.customTimerList.length === 0 ? (
             <>
-              {' '}
               <Typography as="span" variant="text22" weight="medium">
                 나만의 타이머
               </Typography>
               <PlusIcon className={styles['plus-icon']} />
             </>
           ) : (
-            <>
-              {' '}
-              <PlusIcon className={styles['plus-icon-center']} />
-            </>
+            <PlusIcon className={styles['plus-icon-center']} />
           )}
         </Link>
       </div>

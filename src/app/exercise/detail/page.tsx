@@ -41,7 +41,9 @@ export default function Detail() {
       >
         기록 상세
       </Header>
-      {data.images?.length ? <ImageField images={data.images} /> : <></>}
+      <div className={styles['img-section']}>
+        {data.images?.length ? <ImageField images={data.images} /> : <></>}
+      </div>
 
       <div className={styles['field-section']}>
         <InputField

@@ -10,13 +10,28 @@ if (typeof window !== 'undefined') {
 
 export const simpleTimerEndSound = () => {
   if (simpleTimerEndAudio) {
-    simpleTimerEndAudio.play().catch((err) => {
-      console.log(err)
+    simpleTimerEndAudio.play().catch(() => {
+      console.log()
     })
   }
 }
-export const customTimerEndSound = () => {
+export const playCustomTimerEndSound  = () => {
   if (customTimerEndAudio) {
+    customTimerEndAudio.currentTime = 0
     customTimerEndAudio.play().catch(() => {})
+  }
+}
+
+export const pauseCustomTimerEndSound = () => {
+  if (customTimerEndAudio) {
+    customTimerEndAudio.pause()
+  }
+}
+
+export const resumeCustomTimerEndSound = () => {
+  if (customTimerEndAudio) {
+    customTimerEndAudio.play().catch(() => {
+      console.log()
+    })
   }
 }

@@ -1,8 +1,11 @@
 const SITE_MAP = {
   HOME: '/',
+
   LOGIN: '/auth/login',
   AGREEMENT: '/auth/agreement',
   SIGHUP: '/auth/sign-up',
+  PWA: '/auth/pwa',
+
   SETTINGS: '/settings',
 
   EXERCISE: '/exercise',
@@ -15,5 +18,7 @@ const SITE_MAP = {
   TIMER_CUSTOM: '/timer/custom',
   TIMER_CREATE: '/timer/create',
   TIMER_EDIT: '/timer/edit',
+
+
 } as const
 export default SITE_MAP

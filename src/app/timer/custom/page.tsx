@@ -16,7 +16,11 @@ import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
 
 import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
-import { customTimerEndSound } from '../_utils/timerEndSound'
+import {
+  playCustomTimerEndSound,
+  pauseCustomTimerEndSound,
+  resumeCustomTimerEndSound,
+} from '../_utils/timerEndSound'
 import KebabModal from './_components/kebabModal'
 import styles from './custom.module.css'
 
@@ -32,7 +36,7 @@ export default function Custom() {
   // 종료 3초전에 실행될 콜백함수
   const handleSecondChange = useCallback((secondsLeft: number) => {
     if (secondsLeft === 3) {
-      customTimerEndSound()
+      playCustomTimerEndSound()
     }
   }, [])
 
@@ -80,7 +84,6 @@ export default function Custom() {
 
   useEffect(() => {
     if (isFinished) {
-      customTimerEndSound()
       handleStepEnd()
     }
   }, [isFinished, handleStepEnd])
@@ -97,8 +100,10 @@ export default function Custom() {
     } else {
       if (isActive) {
         pause()
+        pauseCustomTimerEndSound()
       } else {
         resume()
+        resumeCustomTimerEndSound()
       }
     }
   }

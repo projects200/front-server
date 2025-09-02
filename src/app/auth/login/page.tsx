@@ -1,6 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { redirectToSocialLogin } from '@/lib/auth'
 import Typography from '@/components/ui/typography'
@@ -9,6 +10,7 @@ import KakaoIcon from '@/assets/icon_kakao.svg'
 import Logo from '@/assets/logo.svg'
 import GoogleStoreIcon from '@/assets/icon_google_play.svg'
 import IOSIcon from '@/assets/icon_iOS.svg'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './login.module.css'
 
@@ -72,10 +74,7 @@ export default function Login() {
             </Typography>
           </div>
         </button>
-        <button
-          className={styles['store-button']}
-          onClick={() => alert('pwa다운안내페이지로 이동')}
-        >
+        <Link className={styles['store-button']} href={SITE_MAP.PWA}>
           <IOSIcon className={styles['store-icon']} />
           <div className={styles['text-section']}>
             <Typography
@@ -95,7 +94,7 @@ export default function Login() {
               PWA APP
             </Typography>
           </div>
-        </button>
+        </Link>
       </div>
     </section>
   )

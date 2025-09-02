@@ -2,6 +2,9 @@
   width: 16px;
   height: 16px;
 }
+.img-section {
+  background-color: var(--color-white-300);
+}
 .field-section {
   display: flex;
   flex-direction: column;
