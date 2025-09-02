@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  height: 100%;
 }
 
 /* 타이머 섹션 */
@@ -88,6 +88,7 @@ button.control-button-end:disabled {
   overflow: auto;
   scrollbar-width: none;
   padding: 0 20px;
+  min-height: 0;
 }
 .step-item-wrapper {
   padding-bottom: 12px;
