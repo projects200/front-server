@@ -15,7 +15,7 @@ export const simpleTimerEndSound = () => {
     })
   }
 }
-export const playCustomTimerEndSound  = () => {
+export const playCustomTimerEndSound = () => {
   if (customTimerEndAudio) {
     customTimerEndAudio.currentTime = 0
     customTimerEndAudio.play().catch(() => {})
@@ -33,5 +33,12 @@ export const resumeCustomTimerEndSound = () => {
     customTimerEndAudio.play().catch(() => {
       console.log()
     })
+  }
+}
+
+export const stopCustomTimerEndSound = () => {
+  if (customTimerEndAudio) {
+    customTimerEndAudio.pause()
+    customTimerEndAudio.currentTime = 0
   }
 }

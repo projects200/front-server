@@ -20,6 +20,7 @@ import {
   playCustomTimerEndSound,
   pauseCustomTimerEndSound,
   resumeCustomTimerEndSound,
+  stopCustomTimerEndSound,
 } from '../_utils/timerEndSound'
 import KebabModal from './_components/kebabModal'
 import styles from './custom.module.css'
@@ -47,6 +48,7 @@ export default function Custom() {
 
   // 종료 버튼 핸들러
   const handleStopButton = useCallback(() => {
+    stopCustomTimerEndSound()
     setIsTimerStarted(false)
     setCurrentStepIndex(0)
     if (data && data.customTimerStepCount > 0) {
@@ -123,7 +125,7 @@ export default function Custom() {
   const handleStepClick = useCallback(
     (index: number) => {
       if (!data) return
-      console.log(1)
+      stopCustomTimerEndSound()
       setIsTimerStarted(true)
       setCurrentStepIndex(index)
       const stepTime = data.customTimerStepList[index].customTimerStepTime
