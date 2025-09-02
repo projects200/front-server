@@ -80,7 +80,9 @@ export default function Custom() {
     }
     // 타이머 완전 종료
     else {
-      handleStopButton()
+      setIsTimerStarted(false)
+      setCurrentStepIndex(0)
+      reset(data.customTimerStepList[0].customTimerStepTime)
     }
   }, [currentStepIndex, data, isLooping, start, handleStopButton])
 
@@ -105,7 +107,9 @@ export default function Custom() {
         pauseCustomTimerEndSound()
       } else {
         resume()
-        resumeCustomTimerEndSound()
+        if (timeLeft <= 3000) {
+          resumeCustomTimerEndSound()
+        }
       }
     }
   }
