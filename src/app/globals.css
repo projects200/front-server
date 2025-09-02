@@ -34,7 +34,7 @@
 
 body {
   background-color: #edefee;
-  height: auto;
+
 }
 
 .responsive-container {
@@ -42,7 +42,8 @@ body {
   flex-direction: column;
   width: 100%;
   max-width: 100%;
-  min-height: 100dvh;
+  height: 100%; 
+  overflow-y: auto; 
   margin: 0 auto;
   background-color: var(--color-white-300);
 }

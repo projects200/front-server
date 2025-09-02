@@ -10,6 +10,8 @@
 
 html,
 body {
+  overflow: hidden;
+  margin: 0;
   height: 100%;
   font-family:
     'Pretendard', system-ui, 'Helvetica Neue', 'Segoe UI',
