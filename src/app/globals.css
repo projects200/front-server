@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'Pretendard';
-  font-weight: 600; /* bold */
+  font-weight: 600; /* semi-bold */
   font-style: normal;
   src: url('/fonts/Pretendard-SemiBold.woff2') format('woff2');
   font-display: swap;
@@ -42,7 +42,7 @@ body {
   flex-direction: column;
   width: 100%;
   max-width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
   background-color: var(--color-white-300);
 }
