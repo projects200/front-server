@@ -40,10 +40,6 @@
   height: 100%;
   margin-left: auto;
 }
-.back-area {
-  height: 65px;
-  flex-shrink: 0;
-}
 
 @media (min-width: 768px) {
   .header {
@@ -56,8 +52,5 @@
   }
   .title {
     margin-left: 6px;
-  }
-  .back-area {
-    height: 85px;
   }
 }
