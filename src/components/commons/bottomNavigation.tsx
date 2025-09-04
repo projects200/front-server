@@ -31,6 +31,7 @@ export default function BottomNavigation() {
             href={link.href}
             key={link.name}
             className={clsx(styles['link'], { [styles['active']]: isActive })}
+            replace
           >
             <Icon className={styles['icon']} />
             <Typography className={styles['label']} as="span" variant="text12">

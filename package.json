@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "node scripts/dev-sw.js && next dev",
     "build": "NEXT_PUBLIC_BUILD_VERSION=$(date +%s) next build && node scripts/build-sw.js",
-    "start": "next start",
     "lint": "next lint",
-    "phone": "node --env-file=.env.phone server.js"
+    "phone": "node --env-file=.env.phone server.js",
+
+    "build:pwa": "node --env-file=.env.pwa node_modules/next/dist/bin/next build && node scripts/build-sw.js",
+    "serve:pwa": "serve out",
+    "pwa": "npm run build:pwa && npm run serve:pwa"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",

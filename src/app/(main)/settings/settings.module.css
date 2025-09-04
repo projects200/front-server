@@ -1,0 +1,11 @@
+.item-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 10px;
+  background-color: var(--color-white-300);
+}
+.icon {
+  height: 22px;
+  width: 22px;
+}
