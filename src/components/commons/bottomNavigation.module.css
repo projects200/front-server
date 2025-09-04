@@ -31,8 +31,13 @@
 .label {
   font-size: 11px;
 }
-
 .link.active {
+  font-weight: bold;
+  color: var(--color-green);
+}
+
+.label.active {
+  font-weight: bold;
   color: var(--color-green);
 }
 

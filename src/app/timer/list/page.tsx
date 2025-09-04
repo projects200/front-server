@@ -27,7 +27,7 @@ export default function List() {
           <Typography
             className={styles['simple-timer-text']}
             as="span"
-            variant="text22"
+            variant="text18"
             weight="medium"
           >
             심플 타이머
@@ -42,7 +42,7 @@ export default function List() {
               className={styles['custom-timer-container']}
               href={`${SITE_MAP.TIMER_CUSTOM}?id=${list.customTimerId}`}
             >
-              <Typography as="span" variant="text22" weight="medium">
+              <Typography as="span" variant="text18" weight="medium">
                 {list.customTimerName}
               </Typography>
               <RightArrow
@@ -63,7 +63,7 @@ export default function List() {
         >
           {data && data.customTimerList.length === 0 ? (
             <>
-              <Typography as="span" variant="text22" weight="medium">
+              <Typography as="span" variant="text18" weight="medium">
                 나만의 타이머
               </Typography>
               <PlusIcon className={styles['plus-icon']} />

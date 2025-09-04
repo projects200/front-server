@@ -33,7 +33,7 @@ export default function BottomNavigation() {
             className={clsx(styles['link'], { [styles['active']]: isActive })}
           >
             <Icon className={styles['icon']} />
-            <Typography className={styles['label']} as="span" variant="text12">
+            <Typography className={clsx(styles['label'],{ [styles['active']]: isActive })} as="span" variant="text12">
               {link.name}
             </Typography>
           </Link>
