@@ -3,6 +3,7 @@ import { fetchWrapper } from '@/utils/fetchWrapper'
 
 // 유저 생성
 export function createUser(token: string, data: SignUp): Promise<MemberInfo> {
+  console.log(data)
   return fetchWrapper<MemberInfo>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/auth/v1/sign-up`,
     {

@@ -13,6 +13,8 @@ import {
   validateGender,
 } from '@/utils/validation'
 import { usePostUser } from '@/hooks/useAuthApi'
+import { usePostFcmToken } from '@/hooks/useFcmApi'
+import { requestFcmToken } from '@/lib/firebase/config'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import DatePicker from './datePicker'
@@ -25,8 +27,11 @@ export default function ProfileForm() {
   const [gender, setGender] = useState<'M' | 'F' | 'U' | null>(null)
   const router = useRouter()
   const showToast = useToast()
-  const { trigger, isMutating } = usePostUser()
+  const { trigger: postUser, isMutating: isPostingUser } = usePostUser()
+  const { trigger: postFcmToken, isMutating: isPostingFcmToken } =
+    usePostFcmToken()
 
+  const isProcessing = isPostingUser || isPostingFcmToken
   const isValid =
     nickname.trim() !== '' && birthdate !== null && gender !== null
 
@@ -55,10 +60,16 @@ export default function ProfileForm() {
     }
 
     try {
-      await trigger({ nickname, birthdate: birthdate!, gender: gender! })
-      showToast('회원가입이 완료되었습니다.', 'info')
+      await postUser({ nickname, birthdate: birthdate!, gender: gender! })
+      const fcmToken = await requestFcmToken()
+      if (fcmToken) {
+        sessionStorage.setItem('fcm_token', fcmToken)
+        await postFcmToken(fcmToken)
+      }
+      showToast('회원가입이 완료되었습니다!', 'info')
       router.push(SITE_MAP.EXERCISE)
-    } catch {
+    } catch (err) {
+      console.error('회원가입, FCM 등록 오류:', err)
       return
     }
   }
@@ -118,7 +129,7 @@ export default function ProfileForm() {
           완료
         </BottomButton>
       </div>
-      {isMutating && <LoadingScreen />}
+      {isProcessing && <LoadingScreen />}
     </>
   )
 }

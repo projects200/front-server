@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import LoadingScreen from '@/components/commons/loadingScreen'
+import FcmTokenSyncer from '@/lib/firebase/fcmTokenSyncer'
 import { useToast } from '@/hooks/useToast'
 import { useReadRegistered } from '@/hooks/useAuthApi'
 import SITE_MAP from '@/constants/siteMap.constant'
@@ -18,6 +19,7 @@ function CallbackLogic() {
   const hasBeenHandled = useRef(false)
   const { data: registeredData, isLoading: isRegisteredLoading } =
     useReadRegistered(auth.isAuthenticated)
+  const [readyToSyncFcm, setReadyToSyncFcm] = useState(false)
 
   useEffect(() => {
     if (hasBeenHandled.current) return
@@ -51,13 +53,20 @@ function CallbackLogic() {
     hasBeenHandled.current = true
 
     if (registeredData.isRegistered) {
-      router.replace(SITE_MAP.EXERCISE)
+      setReadyToSyncFcm(true)
     } else {
       router.replace(SITE_MAP.AGREEMENT)
     }
   }, [registeredData, isRegisteredLoading])
 
-  return null
+  return (
+    <FcmTokenSyncer
+      shouldSync={readyToSyncFcm}
+      onSyncComplete={() => {
+        router.replace(SITE_MAP.EXERCISE)
+      }}
+    />
+  )
 }
 
 export default function Callback() {
