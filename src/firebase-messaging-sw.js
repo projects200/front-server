@@ -15,4 +15,14 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
-firebase.messaging()
+
+const messaging = firebase.messaging()
+
+messaging.onBackgroundMessage(function (payload) {
+  const notificationTitle = payload.data.title || '운다방'
+  const notificationOptions = {
+    body: payload.data.body,
+  }
+
+  self.registration.showNotification(notificationTitle, notificationOptions)
+})
