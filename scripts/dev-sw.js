@@ -19,6 +19,8 @@ const devSW = () => {
   fs.writeFileSync('public/firebase-messaging-sw.js', swFirebaseWithEnv)
 
   fs.copyFileSync('src/sw.js', 'public/sw.js')
+
+  fs.copyFileSync('manifest.dev.json', 'public/manifest.json')
 }
 
 devSW()
