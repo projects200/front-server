@@ -14,17 +14,5 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-
 firebase.initializeApp(firebaseConfig)
-const messaging = firebase.messaging()
-
-messaging.onBackgroundMessage(function (payload) {
-  console.log('파이어베이스에서 메세지 받음 : ', payload)
-  const notificationTitle = payload.notification.title
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: '/icons/logo192.png',
-  }
-
-  self.registration.showNotification(notificationTitle, notificationOptions)
-})
+firebase.messaging()
