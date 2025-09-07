@@ -19,9 +19,10 @@ firebase.initializeApp(firebaseConfig)
 const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage(function (payload) {
-  const notificationTitle = payload.data.title || '운다방'
+  const notificationTitle = payload.data.title || ''
   const notificationOptions = {
     body: payload.data.body,
+    icon: '/icons/logo192.png',
   }
 
   self.registration.showNotification(notificationTitle, notificationOptions)

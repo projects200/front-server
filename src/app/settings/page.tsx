@@ -36,14 +36,12 @@ export default function Settings() {
   const handleSignOut = async () => {
     const fcmToken = sessionStorage.getItem('fcm_token')
     sessionStorage.removeItem('fcm_token')
-    if (fcmToken) {
-      try {
+    try {
+      if (fcmToken) {
         await unregisterToken(fcmToken)
-      } catch {
-        console.log('FCM 토큰 등록해제 오류')
       }
-    }
-    await signOutRedirect()
+      await signOutRedirect()
+    } catch {}
   }
 
   const handleLegalDocModal = (url: string) => {

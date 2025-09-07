@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   title: process.env.NEXT_PUBLIC_TITLE,
   description: '운동매칭 & 운동기록',
+  icons: {
+    apple: '/icons/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({
@@ -28,6 +31,7 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
         <meta name="theme-color" content="#EBF1E5" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
       <body>
         <ClientProviders>
