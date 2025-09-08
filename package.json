@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/dev-sw.js && next dev",
-    "mobile": "node --env-file=.env.pwa scripts/dev-sw.js && next dev",
     "build": "NEXT_PUBLIC_BUILD_VERSION=$(date +%s) next build && node scripts/build-sw.js",
     "lint": "next lint",
 

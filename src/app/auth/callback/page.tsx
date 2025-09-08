@@ -2,14 +2,14 @@
 
 import { useQueryState } from 'nuqs'
 import { useAuth } from 'react-oidc-context'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { useToast } from '@/hooks/useToast'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-export default function Callback() {
+function CallbackLogic() {
   const auth = useAuth()
   const router = useRouter()
   const showToast = useToast()
@@ -39,5 +39,13 @@ export default function Callback() {
     }
   }, [isMounted, errorDescription, auth, router])
 
-  return <LoadingScreen />
+  return null
+}
+
+export default function Callback() {
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <CallbackLogic />
+    </Suspense>
+  )
 }
