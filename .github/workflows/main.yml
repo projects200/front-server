@@ -87,7 +87,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.AWS_CLOUDFONT_MAIN_DISTRIBUTION_ID }} \
+            --distribution-id ${{ secrets.AWS_CLOUDFRONT_MAIN_DISTRIBUTION_ID }} \
             --paths "/*"
 
       - name: Upload assets to S3 (DEV)
@@ -104,5 +104,5 @@ jobs:
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.AWS_CLOUDFONT_DEV_DISTRIBUTION_ID }} \
+            --distribution-id ${{ secrets.AWS_CLOUDFRONT_DEV_DISTRIBUTION_ID }} \
             --paths "/*"
