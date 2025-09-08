@@ -38,7 +38,7 @@ jobs:
           else
             echo "${{ secrets.DEV_ENV }}" > .env
           fi
-          
+
       - name: Prepare Manifest
         run: |
           if [ "$GITHUB_REF" = "refs/heads/main" ]; then
@@ -83,6 +83,13 @@ jobs:
           aws s3 sync ./out s3://$BUCKET \
               --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
 
+      - name: Invalidate CloudFront cache (MAIN)
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_CLOUDFONT_MAIN_DISTRIBUTION_ID }} \
+            --paths "/*"
+
       - name: Upload assets to S3 (DEV)
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
@@ -92,3 +99,10 @@ jobs:
               --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
           aws s3 sync ./out s3://$BUCKET \
               --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
+
+      - name: Invalidate CloudFront cache (DEV)
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_CLOUDFONT_DEV_DISTRIBUTION_ID }} \
+            --paths "/*"
