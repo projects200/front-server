@@ -1,3 +1,5 @@
+'use client'
+
 import LoadingSVG from '@/assets/loading_spinner.svg'
 
 import Portal from '../ui/portal'

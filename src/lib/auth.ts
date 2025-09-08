@@ -36,7 +36,11 @@ if (isBrowser) {
 }
 
 export async function signOutRedirect() {
-  await userManager.removeUser()
+  try {
+    await userManager.removeUser()
+  } catch (err) {
+    console.log(`userManager 유저 삭제 에러: ${err}`)
+  }
 
   const logoutUri = `${process.env.NEXT_PUBLIC_UNDABANG_URI}/auth/login`
   const logoutDomain = `https://ap-northeast-2${process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID}.auth.ap-northeast-2.amazoncognito.com`

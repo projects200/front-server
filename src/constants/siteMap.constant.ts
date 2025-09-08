@@ -2,6 +2,8 @@ const SITE_MAP = {
   HOME: '/',
 
   LOGIN: '/auth/login',
+  CALLBACK: '/auth/callback',
+  VERIFICATION: '/auth/verification',
   AGREEMENT: '/auth/agreement',
   SIGHUP: '/auth/sign-up',
   PWA: '/auth/pwa',

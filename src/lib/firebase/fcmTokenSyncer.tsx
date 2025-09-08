@@ -23,8 +23,9 @@ export default function FcmTokenSyncer({
         try {
           const fcmToken = await requestFcmToken()
           if (fcmToken) {
-            sessionStorage.setItem('fcm_token', fcmToken)
             await registerToken(fcmToken)
+            sessionStorage.setItem('fcm_token', fcmToken)
+            console.log('FCM 등록 완료')
           }
           setHasSynced(true)
           onSyncComplete()

@@ -1,0 +1,10 @@
+.container {
+  height: 100%;
+  background-color: var(--color-white-300);
+  padding-top: 30px;
+  padding-bottom: var(--bottom-nav-heigth);
+}
+.icon {
+  height: 22px;
+  width: 22px;
+}
