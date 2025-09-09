@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import SITE_MAP from '@/constants/siteMap.constant'
 import RecordIcon from '@/assets/icon_nav_record.svg'
 import TimerIcon from '@/assets/icon_nav_timer.svg'
-import SettingsIcon from '@/assets/icon_nav_setting.svg'
+import MypageIcon from '@/assets/icon_nav_mypage.svg'
 import Typography from '../ui/typography'
 
 import styles from './bottomNavigation.module.css'
@@ -15,7 +15,7 @@ import styles from './bottomNavigation.module.css'
 const navLinks = [
   { name: '기록', href: SITE_MAP.EXERCISE, icon: RecordIcon },
   { name: '타이머', href: SITE_MAP.TIMER_LIST, icon: TimerIcon },
-  { name: '설정', href: SITE_MAP.SETTINGS, icon: SettingsIcon },
+  { name: 'MY', href: SITE_MAP.MYPAGE, icon: MypageIcon },
 ]
 
 export default function BottomNavigation() {
@@ -31,6 +31,7 @@ export default function BottomNavigation() {
             href={link.href}
             key={link.name}
             className={clsx(styles['link'], { [styles['active']]: isActive })}
+            replace
           >
             <Icon className={styles['icon']} />
             <Typography className={clsx(styles['label'],{ [styles['active']]: isActive })} as="span" variant="text12">

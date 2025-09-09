@@ -1,0 +1,84 @@
+/* 헤더영역 */
+.header-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  height: var(--header-height);
+  background-color: var(--color-white-300);
+  padding: 0 20px;
+}
+.header-icon {
+  height: 26px;
+  width: 26px;
+}
+
+/* 프로필 영역 */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  background-color: var(--color-white-300);
+  padding: 20px 20px 40px 20px;
+}
+.nickname {
+  margin-top: 18px;
+}
+.birth {
+  margin-top: 8px;
+  color: var(--color-gray-200);
+}
+.user-info {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-top: 30px;
+}
+.info-item {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.info-label {
+  color: var(--color-gray-200);
+}
+.info-value-container {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.info-value-suffix {
+  font-size: 10px;
+  color: var(--color-gray-200);
+  font-weight: 500;
+  padding-left: 2px;
+}
+.bio {
+  margin-top: 20px;
+  margin-right: auto;
+}
+.bio-empty {
+  color: var(--color-gray-200);
+}
+
+/* 선호운동 영역 */
+.prefer-exercise-section {
+  margin-top: 5px;
+  padding: 20px;
+  background-color: var(--color-white-300);
+}
+
+/* 달력 영역 */
+.calender-section {
+  margin-top: 5px;
+  padding: 20px;
+  background-color: var(--color-white-300);
+}
+@media (min-width: 768px) {
+  .header-section {
+    height: 80px;
+  }
+}

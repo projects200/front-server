@@ -21,6 +21,7 @@ const SITE_MAP = {
   TIMER_CREATE: '/timer/create',
   TIMER_EDIT: '/timer/edit',
 
+  MYPAGE: '/mypage',
 
 } as const
 export default SITE_MAP
