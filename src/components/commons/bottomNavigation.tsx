@@ -22,24 +22,33 @@ export default function BottomNavigation() {
   const pathname = usePathname()
 
   return (
-    <nav className={styles['nav']}>
-      {navLinks.map((link) => {
-        const isActive = pathname === link.href
-        const Icon = link.icon
-        return (
-          <Link
-            href={link.href}
-            key={link.name}
-            className={clsx(styles['link'], { [styles['active']]: isActive })}
-            replace
-          >
-            <Icon className={styles['icon']} />
-            <Typography className={clsx(styles['label'],{ [styles['active']]: isActive })} as="span" variant="text12">
-              {link.name}
-            </Typography>
-          </Link>
-        )
-      })}
-    </nav>
+    <>
+      <nav className={styles['nav']}>
+        {navLinks.map((link) => {
+          const isActive = pathname === link.href
+          const Icon = link.icon
+          return (
+            <Link
+              href={link.href}
+              key={link.name}
+              className={clsx(styles['link'], { [styles['active']]: isActive })}
+              replace
+            >
+              <Icon className={styles['icon']} />
+              <Typography
+                className={clsx(styles['label'], {
+                  [styles['active']]: isActive,
+                })}
+                as="span"
+                variant="text12"
+              >
+                {link.name}
+              </Typography>
+            </Link>
+          )
+        })}
+      </nav>
+      <div className={styles['spacer']} />
+    </>
   )
 }

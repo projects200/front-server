@@ -1,6 +1,7 @@
 /* 헤더영역 */
 .header-section {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 10px;
   justify-content: flex-end;
@@ -74,7 +75,7 @@
 /* 달력 영역 */
 .calender-section {
   margin-top: 5px;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
   background-color: var(--color-white-300);
 }
 @media (min-width: 768px) {

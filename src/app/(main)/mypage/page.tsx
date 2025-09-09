@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import clsx from 'clsx'
+import { format } from 'date-fns'
 
 import { useReadUserFullProfile } from '@/hooks/useMypageApi'
 import EditIcon from '@/assets/icon_edit.svg'
@@ -9,6 +10,7 @@ import SettingsIcon from '@/assets/icon_settings.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
+import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
 import { formatGenderToKR, formatDateToKR } from '@/utils/dataFormatting'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -18,7 +20,8 @@ export default function Mypage() {
   const { data: profileData, isLoading: profileLoading } =
     useReadUserFullProfile()
   const isLoading = profileLoading
-
+  const todayString = format(new Date(), 'yyyy-MM-dd')
+  console.log(profileData)
   if (isLoading || !profileData) return null
 
   return (
@@ -122,7 +125,9 @@ export default function Mypage() {
       </section>
 
       {/* 달력 영역 */}
-      <section className={styles['calender-section']}>달력 예정</section>
+      <section className={styles['calender-section']}>
+        <ExerciseCalendar selectedDate={todayString} isReadOnly={true} />
+      </section>
 
       {/* 바텀 네비게이션 영역 */}
       <BottomNavigation />
