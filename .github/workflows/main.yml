@@ -81,7 +81,8 @@ jobs:
           aws s3 sync ./out s3://$BUCKET \
               --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
+              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS \
+              --content-type "text/html"
 
       - name: Invalidate CloudFront cache (MAIN)
         if: ${{ github.ref == 'refs/heads/main' }}
@@ -98,7 +99,8 @@ jobs:
           aws s3 sync ./out s3://$BUCKET \
               --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
+              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS \
+              --content-type "text/html"
 
       - name: Invalidate CloudFront cache (DEV)
         if: ${{ github.ref == 'refs/heads/develop' }}
