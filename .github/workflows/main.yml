@@ -79,9 +79,13 @@ jobs:
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
 
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" --exclude "*.txt" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
+              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS \
+              --content-type "text/html"
+          if [ -f ./out/robots.txt ]; then
+            aws s3 cp ./out/robots.txt s3://$BUCKET/robots.txt $SHORT_CACHE
+          fi
 
       - name: Invalidate CloudFront cache (MAIN)
         if: ${{ github.ref == 'refs/heads/main' }}
@@ -96,9 +100,13 @@ jobs:
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
 
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" --exclude "*.txt" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS
+              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS \
+              --content-type "text/html"
+          if [ -f ./out/robots.txt ]; then
+            aws s3 cp ./out/robots.txt s3://$BUCKET/robots.txt $SHORT_CACHE
+          fi
 
       - name: Invalidate CloudFront cache (DEV)
         if: ${{ github.ref == 'refs/heads/develop' }}
