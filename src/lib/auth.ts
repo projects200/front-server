@@ -2,32 +2,6 @@ import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
 
 import SITE_MAP from '@/constants/siteMap.constant'
 
-const createCookieStorage = (ttlSeconds = 300) => {
-  return {
-    getItem(key: string) {
-      const name = encodeURIComponent(key) + '='
-      const cookies = document.cookie
-        .split('; ')
-        .find((c) => c.startsWith(name))
-      if (!cookies) return null
-      const value = cookies.split('=')[1]
-      try {
-        return decodeURIComponent(value)
-      } catch {
-        return value
-      }
-    },
-    setItem(key: string, value: string) {
-      const maxAge = ttlSeconds
-      const cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; Secure; SameSite=None`
-      document.cookie = cookie
-    },
-    removeItem(key: string) {
-      document.cookie = `${encodeURIComponent(key)}=; Max-Age=0; Path=/; Secure; SameSite=None`
-    },
-  } as Storage
-}
-
 const isBrowser = typeof window !== 'undefined'
 
 const cognitoAuthConfig = {
@@ -38,8 +12,8 @@ const cognitoAuthConfig = {
   response_type: 'code',
   scope: 'openid profile email phone',
   ...(isBrowser && {
-    userStore: new WebStorageStateStore({ store: window.sessionStorage }),
-    stateStore: new WebStorageStateStore({ store: createCookieStorage(300) }),
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
+    stateStore: new WebStorageStateStore({ store: window.localStorage }),
   }),
   automaticSilentRenew: true,
 }
