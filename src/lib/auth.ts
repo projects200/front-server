@@ -52,7 +52,7 @@ export async function signOutRedirect() {
 }
 
 export async function redirectToSocialLogin(provider: 'Google' | 'kakao') {
-  await userManager.signinPopup({
+  await userManager.signinRedirect({
     extraQueryParams: {
       identity_provider: provider,
       prompt: 'select_account',
