@@ -3,4 +3,6 @@
 }
 .calendar-section {
   margin-top: 5px;
+  padding: 0 20px 20px 20px;
+  background-color: var(--color-white-300);
 }

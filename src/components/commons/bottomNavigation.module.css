@@ -40,6 +40,11 @@
   font-weight: bold;
   color: var(--color-green);
 }
+.spacer {
+  display: flex;
+  flex-shrink: 0;
+  height: var(--bottom-nav-heigth);
+}
 
 @media (min-width: 768px) {
   .nav {

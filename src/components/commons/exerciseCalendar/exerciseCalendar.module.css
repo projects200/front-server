@@ -5,7 +5,6 @@
   width: 100%;
   max-width: 768px;
   user-select: none;
-  padding: 0 20px 20px 20px;
   background-color: var(--color-white-300);
 }
 

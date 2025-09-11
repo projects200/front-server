@@ -13,12 +13,13 @@ import MonthViewWithData from './monthViewWithData'
 import styles from './exerciseCalendar.module.css'
 
 type Props = {
-  onDateSelect: (date: Date) => void
+  onDateSelect?: (date: Date) => void
   selectedDate: string
+  isReadOnly?: boolean
 }
 
 const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
-  ({ onDateSelect, selectedDate }, ref) => {
+  ({ onDateSelect, selectedDate, isReadOnly = false }, ref) => {
     const today = new Date()
     const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(today))
     const prevMonth = useMemo(() => subMonths(currentMonth, 1), [currentMonth])
@@ -123,6 +124,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               isActive={false}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
+              isReadOnly={isReadOnly}
             />
             <MonthViewWithData
               today={today}
@@ -130,6 +132,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               isActive={true}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
+              isReadOnly={isReadOnly}
             />
             <MonthViewWithData
               today={today}
@@ -137,6 +140,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               isActive={false}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
+              isReadOnly={isReadOnly}
             />
           </animated.div>
         </div>

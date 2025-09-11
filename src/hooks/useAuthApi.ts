@@ -1,4 +1,4 @@
-import { createUser, readRegistered } from '@/api/auth'
+import { createUser, readRegistered, readCkeckNickname } from '@/api/auth'
 import { SignUp, MemberInfo } from '@/types/auth'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -28,3 +28,13 @@ export const useReadRegistered = (shouldFetch?: boolean) =>
     isAccessToken: false,
     shouldFetch,
   })
+
+// 닉네임 중복 검사
+export const useReadCheckNickname = () =>
+  useApiMutation<{ available: boolean }, { nickname: string }>(
+    ['auth/checkNickname'],
+    (_, body) => readCkeckNickname(body.nickname),
+    {
+      revalidate: false,
+    },
+  )

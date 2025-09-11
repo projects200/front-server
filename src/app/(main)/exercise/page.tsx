@@ -11,9 +11,10 @@ import { useReadExerciseScore } from '@/hooks/useScoreApi'
 import { ExerciseScore } from '@/types/score'
 import BottomNavigation from '@/components/commons/bottomNavigation'
 import LogoTitle from '@/components/ui/logoTitle'
+import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
 
 import ScoreBoard from './_components/exercisePoint/scoreBoard'
-import ExerciseCalendar from './_components/exerciseCalendar/exerciseCalendar'
+
 import styles from './exercise.module.css'
 
 export default function Exercise() {

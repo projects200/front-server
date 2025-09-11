@@ -13,8 +13,9 @@ type Props = {
   today: Date
   monthToShow: Date
   isActive: boolean
-  onDateSelect: (date: Date) => void
+  onDateSelect?: (date: Date) => void
   selectedDate: string
+  isReadOnly: boolean
 }
 
 const MonthViewWithData = ({
@@ -23,6 +24,7 @@ const MonthViewWithData = ({
   isActive,
   onDateSelect,
   selectedDate,
+  isReadOnly,
 }: Props) => {
   const isFutureMonth = monthToShow.getTime() > startOfMonth(today).getTime()
   const shouldFetch = !isFutureMonth && isActive
@@ -47,7 +49,9 @@ const MonthViewWithData = ({
   }
 
   const handleDateClick = (date: Date) => {
-    onDateSelect(date)
+    if (onDateSelect) {
+      onDateSelect(date)
+    }
   }
 
   return (
@@ -59,6 +63,7 @@ const MonthViewWithData = ({
         counts={counts}
         onDateClick={handleDateClick}
         selectedDate={selectedDate}
+        isReadOnly={isReadOnly}
       />
     </div>
   )
