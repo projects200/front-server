@@ -29,8 +29,8 @@ export default function FcmTokenSyncer({
           }
           setHasSynced(true)
           onSyncComplete()
-        } catch (error) {
-          console.error('FCM 등록 오류 : ', error)
+        } catch (err) {
+          console.log('FCM 등록 오류 : ', err)
           onSyncComplete()
         }
       }

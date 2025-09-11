@@ -7,6 +7,7 @@
     "build": "NEXT_PUBLIC_BUILD_VERSION=$(date +%s) next build && node scripts/build-sw.js",
     "lint": "next lint",
 
+    "mobile": "node scripts/dev-sw.js && node --env-file=.env.pwa node_modules/next/dist/bin/next dev",
     "build:pwa": "node --env-file=.env.pwa node_modules/next/dist/bin/next build && node scripts/build-sw.js",
     "serve:pwa": "serve out",
     "pwa": "npm run build:pwa && npm run serve:pwa"
