@@ -42,6 +42,7 @@ function CallbackLogic() {
       }
 
       if (auth.error) {
+        alert('로그인 과정 문제1' + auth.error.message)
         showToast(
           '로그인 과정에 문제가 발생했습니다. 다시 시도해주세요.',
           'info',
@@ -56,6 +57,7 @@ function CallbackLogic() {
       }
 
       if (!auth.isLoading && !auth.isAuthenticated) {
+        alert('로그인 과정 문제2')
         showToast(
           '로그인 과정에 문제가 발생했습니다. 다시 시도해주세요.',
           'info',
