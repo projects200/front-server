@@ -1,4 +1,4 @@
-import { createUser, readRegistered } from '@/api/auth'
+import { createUser, readRegistered, readCkeckNickname } from '@/api/auth'
 import { SignUp, MemberInfo } from '@/types/auth'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -14,18 +14,24 @@ export const usePostUser = () =>
 
 // 유저 회원가입 여부 확인
 export const useReadRegistered = (shouldFetch?: boolean) =>
-  useApiGet<{ isRegistered: boolean }>(
-    ['auth/isRegistered'],
-    readRegistered,
+  useApiGet<{ isRegistered: boolean }>(['auth/isRegistered'], readRegistered, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateOnMount: true,
+    shouldRetryOnError: false,
+    revalidateIfStale: false,
+    dedupingInterval: 1000 * 60 * 60,
+    policy: { actions: { 400: { type: 'redirect', to: SITE_MAP.LOGIN } } },
+    isAccessToken: false,
+    shouldFetch,
+  })
+
+// 닉네임 중복 검사
+export const useReadCheckNickname = () =>
+  useApiMutation<{ available: boolean }, { nickname: string }>(
+    ['auth/checkNickname'],
+    (_, body) => readCkeckNickname(body.nickname),
     {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      shouldRetryOnError: false,
-      revalidateIfStale: false,
-      dedupingInterval: 1000 * 60 * 60,
-      policy: { actions: { 400: { type: 'redirect', to: SITE_MAP.LOGIN } } },
-      isAccessToken: false,
-      shouldFetch,
+      revalidate: false,
     },
   )

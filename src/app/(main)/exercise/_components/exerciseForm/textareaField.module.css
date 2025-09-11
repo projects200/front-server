@@ -3,7 +3,7 @@
   flex-direction: column;
 }
 
-.textarea{
+.textarea {
   margin-top: 8px;
   border: none;
   border-radius: 8px;
@@ -12,4 +12,6 @@
   background-color: var(--color-white-100);
   padding: 16px;
   resize: none;
+  overflow: auto;
+  scrollbar-width: none;
 }

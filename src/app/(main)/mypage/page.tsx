@@ -17,18 +17,16 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import styles from './mypage.module.css'
 
 export default function Mypage() {
-  const { data: profileData, isLoading: profileLoading } =
-    useReadUserFullProfile()
-  const isLoading = profileLoading
+  const { data: profileData, isLoading } = useReadUserFullProfile()
   const todayString = format(new Date(), 'yyyy-MM-dd')
-  console.log(profileData)
+
   if (isLoading || !profileData) return null
 
   return (
     <>
       {/* 헤더영역 */}
       <section className={styles['header-section']}>
-        <Link href={SITE_MAP.SETTINGS}>
+        <Link href={SITE_MAP.MYPAGE_EDIT}>
           <EditIcon className={styles['header-icon']} />
         </Link>
         <Link href={SITE_MAP.SETTINGS}>
@@ -38,16 +36,14 @@ export default function Mypage() {
 
       {/* 프로필 영역 */}
       <section className={styles['profile-section']}>
-        <button
+        <ProfileImg
+          profileThumbnailUrl={profileData.profileThumbnailUrl}
+          profileImageUrl={profileData.profileImageUrl}
+          mode="view"
           onClick={() => {
             console.log('프로필 모음 페이지로 이동')
           }}
-        >
-          <ProfileImg
-            profileThumbnailUrl={profileData.profileThumbnailUrl}
-            profileImageUrl={profileData.profileImageUrl}
-          />
-        </button>
+        />
         <Typography
           className={styles['nickname']}
           as="span"

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "node scripts/dev-sw.js && next dev",
     "build": "NEXT_PUBLIC_BUILD_VERSION=$(date +%s) next build && node scripts/build-sw.js",
+    "buildtest": "next build && node scripts/build-sw.js",
     "lint": "next lint",
 
     "build:pwa": "node --env-file=.env.pwa node_modules/next/dist/bin/next build && node scripts/build-sw.js",

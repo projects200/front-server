@@ -1,0 +1,31 @@
+.container {
+  width: 100%;
+  display: flex;
+  gap: 40px;
+}
+
+.label {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.button-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}

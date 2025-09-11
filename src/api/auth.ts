@@ -27,3 +27,13 @@ export function readRegistered(
     token,
   )
 }
+
+// 닉네임 중복 검사
+export function readCkeckNickname(
+  nickname: string,
+): Promise<{ available: boolean }> {
+  return fetchWrapper<{ available: boolean }>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/open/v1/nicknames/check?nickname=${nickname}`,
+    { method: 'GET' },
+  )
+}

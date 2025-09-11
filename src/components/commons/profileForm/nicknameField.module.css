@@ -1,0 +1,71 @@
+.container {
+  width: 100%;
+  display: flex;
+  gap: 40px;
+}
+
+.label {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.input-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.input-and-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input {
+  display: flex;
+  flex: 1;
+  border: none;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--color-black);
+  font-size: 15px;
+  min-width: 0; /* 이 줄을 추가해주세요 */
+}
+
+.check-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 70px;
+  height: 24px;
+  border: 1px solid var(--color-green);
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--color-green);
+}
+
+.check-button:disabled {
+  cursor: not-allowed;
+}
+
+.feedback-text {
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.feedback-text.success {
+  color: var(--color-green);
+}
+
+.feedback-text.error {
+  color: var(--color-red);
+}
+
+.rules-list {
+  margin: 8px 0 0 16px;
+  padding: 0;
+  list-style-type: disc;
+  color: var(--color-gray-200);
+}
