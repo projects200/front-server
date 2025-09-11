@@ -13,6 +13,7 @@ const cognitoAuthConfig = {
   scope: 'openid profile email phone',
   ...(isBrowser && {
     userStore: new WebStorageStateStore({ store: window.sessionStorage }),
+    stateStore: new WebStorageStateStore({ store: window.localStorage }),
   }),
   automaticSilentRenew: true,
 }
@@ -51,7 +52,7 @@ export async function signOutRedirect() {
 }
 
 export async function redirectToSocialLogin(provider: 'Google' | 'kakao') {
-  await userManager.signinRedirect({
+  await userManager.signinPopup({
     extraQueryParams: {
       identity_provider: provider,
       prompt: 'select_account',
