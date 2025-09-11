@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { mutate } from 'swr'
 
 import LoadingScreen from '@/components/commons/loadingScreen'
 import BottomButton from '@/components/commons/bottomButton'
@@ -28,7 +29,7 @@ export default function ProfileForm() {
   const router = useRouter()
   const showToast = useToast()
   const { trigger: postUser, isMutating: isPostingUser } = usePostUser()
-  const { trigger: postFcmToken, isMutating: isPostingFcmToken } =
+  const { trigger: registerToken, isMutating: isPostingFcmToken } =
     usePostFcmToken()
 
   const isProcessing = isPostingUser || isPostingFcmToken
@@ -58,18 +59,28 @@ export default function ProfileForm() {
       showToast(genderCheck.error!, 'info')
       return
     }
-
     try {
       await postUser({ nickname, birthdate: birthdate!, gender: gender! })
+      mutate(
+        ['auth/isRegistered'],
+        { isRegistered: true },
+        { revalidate: false },
+      )
+      showToast('회원가입이 완료되었습니다!', 'info')
+    } catch {}
+
+    try {
       const fcmToken = await requestFcmToken()
       if (fcmToken) {
+        await registerToken(fcmToken)
         sessionStorage.setItem('fcm_token', fcmToken)
-        await postFcmToken(fcmToken)
+        console.log('FCM 등록 완료')
       }
-      showToast('회원가입이 완료되었습니다!', 'info')
       router.push(SITE_MAP.EXERCISE)
+      return
     } catch (err) {
-      console.error('회원가입, FCM 등록 오류:', err)
+      console.log('FCM 등록 오류 : ', err)
+      router.push(SITE_MAP.EXERCISE)
       return
     }
   }

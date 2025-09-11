@@ -3,7 +3,6 @@ const SITE_MAP = {
 
   LOGIN: '/auth/login',
   CALLBACK: '/auth/callback',
-  VERIFICATION: '/auth/verification',
   AGREEMENT: '/auth/agreement',
   SIGHUP: '/auth/sign-up',
   PWA: '/auth/pwa',
