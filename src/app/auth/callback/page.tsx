@@ -4,7 +4,6 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from 'react-oidc-context'
 
-import { userManager } from '@/lib/auth'
 // import FcmTokenSyncer from '@/lib/firebase/fcmTokenSyncer'
 import { useReadRegistered } from '@/hooks/useAuthApi'
 import { useToast } from '@/hooks/useToast'
@@ -16,7 +15,6 @@ function CallbackLogic() {
   const searchParams = useSearchParams()
   const showToast = useToast()
   const auth = useAuth()
-  const [callbackHandled, setCallbackHandled] = useState(false)
   const [isCompletedStep1, setIsCompletedStep1] = useState(false)
   const [isCompletedStep2, setIsCompletedStep2] = useState(false)
   const [processLock, setProcessLock] = useState(false)
@@ -25,26 +23,6 @@ function CallbackLogic() {
     isLoading: isRegisteredLoading,
     error: registrationError,
   } = useReadRegistered(isCompletedStep1)
-  console.log('after redirect session keys', Object.keys(sessionStorage))
-  console.log('after redirect cookies', document.cookie)
-
-  useEffect(() => {
-    const handleCallback = async () => {
-      if (callbackHandled) return
-      if (auth.isLoading || auth.isAuthenticated) return
-
-      try {
-        if (!auth.isAuthenticated && !auth.isLoading) {
-          await userManager.signinRedirectCallback()
-        }
-      } catch (err) {
-        console.error('signinRedirectCallback error:', err)
-      }
-      setCallbackHandled(true)
-    }
-
-    handleCallback()
-  }, [auth.isAuthenticated, auth.isLoading])
 
   // 1단계: 페이지 진입 시 OIDC 콜백 처리를 실행합니다.
   useEffect(() => {

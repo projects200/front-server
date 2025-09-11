@@ -52,8 +52,6 @@ export async function signOutRedirect() {
 }
 
 export async function redirectToSocialLogin(provider: 'Google' | 'kakao') {
-  console.log('before redirect session keys', Object.keys(sessionStorage))
-  console.log('before redirect cookies', document.cookie)
   await userManager.signinRedirect({
     extraQueryParams: {
       identity_provider: provider,
