@@ -25,6 +25,8 @@ function CallbackLogic() {
     isLoading: isRegisteredLoading,
     error: registrationError,
   } = useReadRegistered(isCompletedStep1)
+  console.log('after redirect session keys', Object.keys(sessionStorage))
+  console.log('after redirect cookies', document.cookie)
 
   useEffect(() => {
     const handleCallback = async () => {
