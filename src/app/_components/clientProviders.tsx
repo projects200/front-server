@@ -11,7 +11,7 @@ import { SwrProvider } from './swrProvider'
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider userManager={userManager}>
+    <AuthProvider userManager={userManager} skipSigninCallback>
       <ToastProvider>
         <SwrProvider>{children}</SwrProvider>
         <Toast />
