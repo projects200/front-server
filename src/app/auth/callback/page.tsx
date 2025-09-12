@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from 'react-oidc-context'
 
-// import FcmTokenSyncer from '@/lib/firebase/fcmTokenSyncer'
+import FcmTokenSyncer from '@/lib/firebase/fcmTokenSyncer'
 import { useReadRegistered } from '@/hooks/useAuthApi'
 import { useToast } from '@/hooks/useToast'
 import LoadingScreen from '@/components/commons/loadingScreen'
@@ -105,16 +105,14 @@ function CallbackLogic() {
 
   // 3단계: FcmTokenSyncer 컴포넌트를 렌더링합니다.
   if (isCompletedStep2) {
-    alert('3단계 진입 완료')
-    return null
-    // return (
-    //   <FcmTokenSyncer
-    //     shouldSync={true}
-    //     onSyncComplete={() => {
-    //       router.replace(SITE_MAP.EXERCISE)
-    //     }}
-    //   />
-    // )
+    return (
+      <FcmTokenSyncer
+        shouldSync={true}
+        onSyncComplete={() => {
+          router.replace(SITE_MAP.EXERCISE)
+        }}
+      />
+    )
   }
 
   return <LoadingScreen />

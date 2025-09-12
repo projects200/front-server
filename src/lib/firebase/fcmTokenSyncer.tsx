@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
+import LoadingScreen from '@/components/commons/loadingScreen'
 import { requestFcmToken } from '@/lib/firebase/config'
 import { usePostFcmToken } from '@/hooks/useFcmApi'
 
@@ -39,5 +40,5 @@ export default function FcmTokenSyncer({
     }
   }, [shouldSync, hasSynced, isMutating, registerToken, onSyncComplete])
 
-  return null
+  return <LoadingScreen />
 }

@@ -13,7 +13,6 @@ const cognitoAuthConfig = {
   scope: 'openid profile email phone',
   ...(isBrowser && {
     userStore: new WebStorageStateStore({ store: window.sessionStorage }),
-    stateStore: new WebStorageStateStore({ store: window.localStorage }),
   }),
   automaticSilentRenew: true,
 }
