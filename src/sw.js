@@ -1,11 +1,11 @@
-importScripts(
-  'https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js',
-)
+// 오프라인 캐싱전략은 추후 개발
+// importScripts(
+//   'https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js',
+// )
 importScripts('/firebase-messaging-sw.js')
 
 self.addEventListener('install', () => {
   console.log('Service Worker: Installing...')
-  self.skipWaiting()
 })
 
 self.addEventListener('activate', (event) => {
@@ -13,9 +13,8 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim())
 })
 
-if (workbox) {
-  console.log(`Workbox is loaded`)
-  workbox.precaching.precacheAndRoute(self.__WB_MANIFEST || [])
-} else {
-  console.log(`Workbox didn't load`)
-}
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+})
