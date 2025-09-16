@@ -78,11 +78,24 @@ jobs:
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_MAIN_BUCKET_NAME }}
 
+          # 1. 롱 캐시: 서비스 워커 파일들(sw.js, firebase-messaging-sw.js)을 제외하고 업로드
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" --exclude "*.txt" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" --exclude "*.txt" --exclude "legal/*" \
+              --exclude "sw.js" --exclude "firebase-messaging-sw.js" \
+              $LONG_CACHE $S3_SYNC_OPTS
+
+          # 2. 숏 캐시: HTML 파일들
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS \
+              --exclude "*" --include "*.html" --exclude "legal/*" \
+              $SHORT_CACHE $S3_SYNC_OPTS \
               --content-type "text/html"
+
+          # 3. 숏 캐시: 서비스 워커 파일들 (새로 추가된 핵심 부분)
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "*" --include "sw.js" --include "firebase-messaging-sw.js" \
+              $SHORT_CACHE $S3_SYNC_OPTS
+
+          # 4. 숏 캐시: robots.txt
           if [ -f ./out/robots.txt ]; then
             aws s3 cp ./out/robots.txt s3://$BUCKET/robots.txt $SHORT_CACHE
           fi
@@ -99,11 +112,24 @@ jobs:
         run: |
           BUCKET=${{ secrets.AWS_S3_CLIENT_DEV_BUCKET_NAME }}
 
+          # 1. 롱 캐시: 서비스 워커 파일들(sw.js, firebase-messaging-sw.js)을 제외하고 업로드
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*.html" --exclude "*.txt" --exclude "legal/*" $LONG_CACHE $S3_SYNC_OPTS
+              --exclude "*.html" --exclude "*.txt" --exclude "legal/*" \
+              --exclude "sw.js" --exclude "firebase-messaging-sw.js" \
+              $LONG_CACHE $S3_SYNC_OPTS
+
+          # 2. 숏 캐시: HTML 파일들
           aws s3 sync ./out s3://$BUCKET \
-              --exclude "*" --include "*.html" --exclude "legal/*" $SHORT_CACHE $S3_SYNC_OPTS \
+              --exclude "*" --include "*.html" --exclude "legal/*" \
+              $SHORT_CACHE $S3_SYNC_OPTS \
               --content-type "text/html"
+
+          # 3. 숏 캐시: 서비스 워커 파일들 (새로 추가된 핵심 부분)
+          aws s3 sync ./out s3://$BUCKET \
+              --exclude "*" --include "sw.js" --include "firebase-messaging-sw.js" \
+              $SHORT_CACHE $S3_SYNC_OPTS
+
+          # 4. 숏 캐시: robots.txt
           if [ -f ./out/robots.txt ]; then
             aws s3 cp ./out/robots.txt s3://$BUCKET/robots.txt $SHORT_CACHE
           fi
