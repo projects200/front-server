@@ -3,7 +3,8 @@
 import { useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { useReadUserFullProfile } from '@/hooks/useMypageApi'
+import { useReadUserFullProfile, usePutUserProfile } from '@/hooks/useMypageApi'
+import { usePostProfilePicture } from '@/hooks/useProfileApi'
 import { useToast } from '@/hooks/useToast'
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
@@ -19,21 +20,34 @@ export default function Edit() {
   const showToast = useToast()
   const formRef = useRef<ProfileEditFormHandle>(null)
   const { data: profileData, isLoading } = useReadUserFullProfile()
+  const { trigger: putUserProfile } = usePutUserProfile()
+  const { trigger: postProfilePicture } = usePostProfilePicture()
+
+  if (isLoading || !profileData) return null
 
   const triggerFormSubmit = () => {
     formRef.current?.submit()
   }
-  const handleSubmit = async (value: ProfileEditFormValues) => {
+
+  const handleSubmit = async (values: ProfileEditFormValues) => {
     try {
-      console.log(value)
-      alert('프로필 수정 완료')
-      router.back()
+      await putUserProfile({
+        nickname: values.nickname,
+        gender: values.gender,
+        bio: values.bio,
+      })
     } catch {
       return
     }
+    if (values.profileImage) {
+      try {
+        await postProfilePicture({
+          profilePicture: values.profileImage,
+        })
+      } catch {}
+    }
+    router.back()
   }
-
-  if (isLoading || !profileData) return null
 
   return (
     <div className={styles['page-container']}>
@@ -55,7 +69,6 @@ export default function Edit() {
         onSubmit={handleSubmit}
         onError={(message) => showToast(message, 'info')}
       />
-      {profileData.bio}
     </div>
   )
 }

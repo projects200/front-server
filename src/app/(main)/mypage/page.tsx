@@ -36,14 +36,22 @@ export default function Mypage() {
 
       {/* 프로필 영역 */}
       <section className={styles['profile-section']}>
-        <ProfileImg
-          profileThumbnailUrl={profileData.profileThumbnailUrl}
-          profileImageUrl={profileData.profileImageUrl}
-          mode="view"
-          onClick={() => {
-            console.log('프로필 모음 페이지로 이동')
-          }}
-        />
+        {profileData.profileImageUrl === null ? (
+          <ProfileImg
+            profileThumbnailUrl={profileData.profileThumbnailUrl}
+            profileImageUrl={profileData.profileImageUrl}
+            mode="view"
+          />
+        ) : (
+          <Link href={SITE_MAP.MYPAGE_PICTURES}>
+            <ProfileImg
+              profileThumbnailUrl={profileData.profileThumbnailUrl}
+              profileImageUrl={profileData.profileImageUrl}
+              mode="view"
+            />
+          </Link>
+        )}
+
         <Typography
           className={styles['nickname']}
           as="span"
@@ -116,9 +124,9 @@ export default function Mypage() {
       </section>
 
       {/* 선호운동 영역 */}
-      <section className={styles['prefer-exercise-section']}>
+      {/* <section className={styles['prefer-exercise-section']}>
         선호운동 예정
-      </section>
+      </section> */}
 
       {/* 달력 영역 */}
       <section className={styles['calender-section']}>

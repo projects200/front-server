@@ -1,0 +1,29 @@
+.kebab-menu {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  z-index: 10;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--color-boxshadow-200);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.kebab-menu-item {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.remove {
+  color: var(--color-red);
+}
