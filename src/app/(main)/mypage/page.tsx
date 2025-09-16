@@ -60,7 +60,7 @@ export default function Mypage() {
         >
           {profileData.nickname}
         </Typography>
-        <Typography className={styles['birth']} as="span" variant="text12">
+        <Typography className={styles['birth']} as="span" variant="text14">
           {formatGenderToKR(profileData.gender)} |{' '}
           {formatDateToKR(profileData.birthDate)}
         </Typography>
