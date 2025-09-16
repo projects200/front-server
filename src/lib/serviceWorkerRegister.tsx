@@ -8,21 +8,13 @@ export default function ServiceWorkerRegister() {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
-          console.log('Service Worker registered successfully')
-          registration.onupdatefound = () => {
-            const installingWorker = registration.installing
-            if (installingWorker) {
-              installingWorker.onstatechange = () => {
-                console.log('New service worker state:', installingWorker.state)
-                if (installingWorker.state === 'installed') {
-                  console.log('New service worker installed.')
-                }
-              }
-            }
-          }
+          console.log(
+            'Service Worker registered with scope:',
+            registration.scope,
+          )
         })
-        .catch((err) => {
-          console.error('Service Worker registration failed:', err)
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error)
         })
     }
   }, [])
