@@ -11,7 +11,10 @@ export const useReadUserFullProfile = () =>
   useApiGet<UserFullProfile>(
     ['mypage/fullProfile'],
     (token) => readUserFullProfile(token).then(adapterUserFullProfile),
-    {},
+    {
+      revalidateOnFocus: true,
+      revalidateOnMount: true,
+    },
   )
 
 // 유저 프로필 수정

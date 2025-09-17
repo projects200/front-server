@@ -64,7 +64,11 @@ export default function Pictures() {
   const handleDownload = async () => {
     const currentImage = sortedImages[currentIndex]
     if (!currentImage) return
+
     setIsMenuOpen(false)
+
+    let link: HTMLAnchorElement | null = null
+    let url: string | null = null
 
     try {
       const response = await fetch(currentImage.profileImageUrl)
@@ -73,19 +77,26 @@ export default function Pictures() {
       }
 
       const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
+      url = window.URL.createObjectURL(blob)
+      link = document.createElement('a')
       link.href = url
       link.download = `${currentImage.profileImageName}.${currentImage.profileImageExtension}`
 
       document.body.appendChild(link)
       link.click()
-      document.body.removeChild(link)
 
-      window.URL.revokeObjectURL(url)
       showToast('이미지를 저장했습니다.', 'info')
     } catch {
       showToast('이미지 저장에 실패했습니다.', 'info')
+    } finally {
+      setTimeout(() => {
+        if (link && link.parentNode) {
+          document.body.removeChild(link)
+        }
+        if (url) {
+          window.URL.revokeObjectURL(url)
+        }
+      }, 100)
     }
   }
 
