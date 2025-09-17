@@ -9,7 +9,7 @@ export type ProfileImgInfo = ProfileImg & {
 }
 
 export type PorfileImgGroup = {
-  representativeProfileImage: ProfileImgInfo
+  representativeProfileImage: ProfileImgInfo | null
   profileImageCount: number
   profileImages: ProfileImgInfo[]
 }

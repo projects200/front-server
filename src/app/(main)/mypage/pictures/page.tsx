@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 
 import {
@@ -11,12 +11,14 @@ import {
 import LeftArrow from '@/assets/icon_left_arrow.svg'
 import Typography from '@/components/ui/typography'
 import KebabIcon from '@/assets/icon_kebab.svg'
-import ImageField from './_components/imageField'
+import { useToast } from '@/hooks/useToast'
 
+import ImageField from './_components/imageField'
 import KebabModal from './_components/kebabModal'
 import styles from './pictures.module.css'
 
 export default function Pictures() {
+  const showToast = useToast()
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -27,19 +29,32 @@ export default function Pictures() {
 
   // 사진순서 = 대표사진 + 나머지사진(대표사진 제외)
   const sortedImages = useMemo(() => {
-    if (!data) return []
+    if (!data || data.profileImages.length === 0) {
+      return []
+    }
     const repImage = data.representativeProfileImage
-    const otherImages = data.profileImages.filter(
-      (img) => img.pictureId !== repImage.pictureId,
-    )
-    return [repImage, ...otherImages]
+    const allImages = data.profileImages
+    if (repImage) {
+      return [
+        repImage,
+        ...allImages.filter((img) => img.pictureId !== repImage.pictureId),
+      ]
+    }
+    return allImages
   }, [data])
+
+  useEffect(() => {
+    if (sortedImages.length > 0 && currentIndex >= sortedImages.length) {
+      setCurrentIndex(sortedImages.length - 1)
+    }
+  }, [sortedImages, currentIndex])
 
   // 대표 프로필 사진 지정 핸들러
   const handleRepPicture = async () => {
     const currentImage = sortedImages[currentIndex]
     try {
       await putRepProfilePicture({ pictureId: currentImage.pictureId })
+      showToast('대표 사진으로 지정되었습니다.', 'info')
     } catch {}
     setCurrentIndex(0)
     setIsMenuOpen(false)
@@ -48,27 +63,29 @@ export default function Pictures() {
   // 프로필 사진 다운로드 핸들러
   const handleDownload = async () => {
     const currentImage = sortedImages[currentIndex]
+    if (!currentImage) return
     setIsMenuOpen(false)
+
     try {
       const response = await fetch(currentImage.profileImageUrl)
       if (!response.ok) {
-        throw new Error('이미지를 다운로드할 수 없습니다.')
+        throw new Error(`서버 응답 오류: ${response.status}`)
       }
+
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute(
-        'download',
-        `${currentImage.profileImageName}.${currentImage.profileImageExtension}`,
-      )
+      link.download = `${currentImage.profileImageName}.${currentImage.profileImageExtension}`
+
       document.body.appendChild(link)
       link.click()
-      link.parentNode?.removeChild(link)
+      document.body.removeChild(link)
+
       window.URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error('다운로드 실패:', error)
-      alert('사진을 다운로드하는 데 실패했습니다.')
+      showToast('이미지를 저장했습니다.', 'info')
+    } catch {
+      showToast('이미지 저장에 실패했습니다.', 'info')
     }
   }
 
@@ -79,6 +96,7 @@ export default function Pictures() {
 
     try {
       await deleteProfilePicture({ pictureId: currentImage.pictureId })
+      showToast('이미지를 삭제했습니다.', 'info')
     } catch {}
     setIsMenuOpen(false)
 
@@ -142,6 +160,7 @@ export default function Pictures() {
           </button>
           {isMenuOpen && (
             <KebabModal
+              currentIndex={currentIndex}
               ref={menuRef}
               onRepPicture={handleRepPicture}
               onDownload={handleDownload}

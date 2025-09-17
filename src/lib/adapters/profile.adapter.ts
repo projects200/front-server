@@ -21,12 +21,13 @@ export function adapterProfileImgInfo(dto: ProfileImgInfoDto): ProfileImgInfo {
   }
 }
 
-
 export function adapterProfileImgGroup(
   dto: PorfileImgGroupDto,
 ): PorfileImgGroup {
   return {
-    representativeProfileImage: adapterProfileImgInfo(dto.representativeProfileImage),
+    representativeProfileImage: dto.representativeProfileImage
+      ? adapterProfileImgInfo(dto.representativeProfileImage)
+      : null,
     profileImageCount: dto.profileImageCount,
     profileImages: dto.profileImages.map(adapterProfileImgInfo),
   }

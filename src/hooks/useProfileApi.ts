@@ -27,8 +27,8 @@ export const usePostProfilePicture = () =>
     ['profile/pictures'],
     (token, body) => createProfilePicture(token, body.profilePicture),
     {
-      onSuccess: () => {
-        mutate(['mypage/fullProfile'])
+      onSuccess: async () => {
+        await mutate(['mypage/fullProfile'])
       },
     },
   )
@@ -42,8 +42,8 @@ export const usePutRepProfilePicture = () =>
     ['profile/pictures'],
     (token, body) => updateRepProfilePicture(token, body.pictureId),
     {
-      onSuccess: () => {
-        mutate(['mypage/fullProfile'])
+      onSuccess: async () => {
+        await mutate(['mypage/fullProfile'])
       },
     },
   )
@@ -54,8 +54,13 @@ export const useDeleteProfilePicture = () =>
     ['profile/pictures'],
     (token, body) => removeProfilePicture(token, body.pictureId),
     {
-      onSuccess: () => {
-        mutate(['mypage/fullProfile'])
+      policy: {
+        messages: {
+          500: '이미지 삭제에 실패했습니다.',
+        },
+      },
+      onSuccess: async () => {
+        await mutate(['mypage/fullProfile'])
       },
     },
   )
