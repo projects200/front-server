@@ -1,5 +1,17 @@
-import { UserFullProfile, PreferExercises } from '@/types/mypage'
-import { UserFullProfileDto, PreferExercisesDto } from '@/types/dto/mypage'
+import { UserProfile, UserFullProfile, PreferExercises } from '@/types/mypage'
+import {
+  UserProfileDto,
+  UserFullProfileDto,
+  PreferExercisesDto,
+} from '@/types/dto/mypage.dto'
+
+export function adapterUserProfile(dto: UserProfileDto): UserProfile {
+  return {
+    nickname: dto.nickname,
+    gender: dto.gender,
+    bio: dto.bio,
+  }
+}
 
 export function adapterPreferExercises(
   dto: PreferExercisesDto,

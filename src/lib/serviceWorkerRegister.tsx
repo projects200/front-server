@@ -2,23 +2,25 @@
 
 import { useEffect } from 'react'
 
+declare global {
+  interface Window {
+    isSwRegistered?: boolean;
+  }
+}
+
 export default function ServiceWorkerRegister() {
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch((err) => {
-        console.error('Service Worker 등록 실패:', err)
-      })
-      console.log('Service Worker 등록 완료')
-      let refreshing = false
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
-          console.log(
-            '새로운 버전이 활성화되었습니다. 페이지를 새로고침합니다.',
-          )
-          window.location.reload()
-          refreshing = true
-        }
-      })
+    if ('serviceWorker' in navigator && !window.isSwRegistered) {
+      window.isSwRegistered = true;
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered once with scope:', registration.scope)
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error)
+          window.isSwRegistered = false;
+        })
     }
   }, [])
 

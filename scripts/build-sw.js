@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const workboxBuild = require('workbox-build')
+
 const envPath = fs.existsSync(path.resolve(process.cwd(), '.env'))
   ? path.resolve(process.cwd(), '.env')
   : path.resolve(process.cwd(), '.env.local')
@@ -17,14 +17,7 @@ const buildSW = async () => {
   )
 
   fs.writeFileSync('out/firebase-messaging-sw.js', swFirebaseWithEnv)
-
-  await workboxBuild.injectManifest({
-    swSrc: 'src/sw.js',
-    swDest: 'out/sw.js',
-    globDirectory: 'out',
-    globPatterns: ['**/*.{js,css,html,png,jpg,svg,ico,json,woff2}'],
-    globIgnores: ['sw.js', 'firebase-messaging-sw.js'],
-  })
+  fs.copyFileSync('src/sw.js', 'out/sw.js')
 }
 
 buildSW()

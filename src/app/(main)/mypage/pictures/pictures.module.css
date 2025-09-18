@@ -1,0 +1,70 @@
+.container {
+  position: relative;
+  height: 100%;
+  background-color: #000;
+}
+
+.header {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+  width: 100%;
+  height: var(--header-height);
+  top: 0;
+  left: 0;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.back-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  color: var(--color-white-300);
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: var(--color-white-300);
+}
+.step .step-suffix {
+  color: var(--color-gray-200);
+}
+
+.center-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.right-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.kebab-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-white-300);
+}
+
+.img-section {
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  .header {
+    width: 500px;
+    height: 80px;
+  }
+}

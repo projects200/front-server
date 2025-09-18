@@ -4,7 +4,7 @@ importScripts(
 importScripts('/firebase-messaging-sw.js')
 
 self.addEventListener('install', () => {
-  console.log('Service Worker: Installing...')
+  console.log('Service Worker: Installing and skipping waiting...')
   self.skipWaiting()
 })
 
@@ -14,8 +14,20 @@ self.addEventListener('activate', (event) => {
 })
 
 if (workbox) {
-  console.log(`Workbox is loaded`)
-  workbox.precaching.precacheAndRoute(self.__WB_MANIFEST || [])
+  console.log(`Workbox is loaded. Applying runtime caching.`)
+
+  const staleWhileRevalidate = new workbox.strategies.StaleWhileRevalidate({
+    cacheName: 'static-resources',
+  })
+
+  // JS, CSS, Web Font 파일에 대해 캐싱 전략을 적용합니다.
+  workbox.routing.registerRoute(
+    ({ request }) =>
+      request.destination === 'script' ||
+      request.destination === 'style' ||
+      request.destination === 'font',
+    staleWhileRevalidate,
+  )
 } else {
-  console.log(`Workbox didn't load`)
+  console.log(`Workbox didn't load.`)
 }

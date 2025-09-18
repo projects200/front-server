@@ -1,5 +1,6 @@
 const SITE_MAP = {
   HOME: '/',
+  SETTINGS: '/settings',
 
   LOGIN: '/auth/login',
   CALLBACK: '/auth/callback',
@@ -18,8 +19,8 @@ const SITE_MAP = {
   TIMER_CREATE: '/timer/create',
   TIMER_EDIT: '/timer/edit',
 
-  SETTINGS: '/settings',
   MYPAGE: '/mypage',
   MYPAGE_EDIT: '/mypage/edit',
+  MYPAGE_PICTURES: '/mypage/pictures',
 } as const
 export default SITE_MAP
