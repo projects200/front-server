@@ -1,0 +1,5 @@
+.container {
+  height: calc(100% - var(--bottom-nav-heigth));
+  width: 100%;
+  background-color: #86bead;
+}
