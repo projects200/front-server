@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
+
 import Analytics from '@/lib/firebase/analytics'
 import { ClientProviders } from './_components/clientProviders'
 import './reset.css'
@@ -34,6 +35,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
       <body>
+
         <ClientProviders>
           <NuqsAdapter>
             <div className="responsive-container">{children}</div>

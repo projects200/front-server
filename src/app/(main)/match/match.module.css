@@ -17,6 +17,7 @@
   border-bottom-right-radius: 15px;
   box-shadow: var(--color-boxshadow-100);
   padding: 0 20px;
+  z-index: 2;
 }
 
 .places-button {
