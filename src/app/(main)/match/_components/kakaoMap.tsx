@@ -2,8 +2,6 @@
 
 import { Map, MapMarker } from 'react-kakao-maps-sdk'
 
-import useKakaoLoader from '@/lib/kakaoMap/useKakaoLoader'
-
 import styles from './kakaoMap.module.css'
 
 const tempCenter = {
@@ -16,10 +14,6 @@ const tempMarker = {
 }
 
 export default function KakaoMap() {
-  const [loading] = useKakaoLoader()
-
-  if (loading) return null
-
   return (
     <div className={styles['container']}>
       <Map center={tempCenter} className={styles['map-container']}>
