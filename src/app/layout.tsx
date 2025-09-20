@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import Script from 'next/script'
 
 import Analytics from '@/lib/firebase/analytics'
 import { ClientProviders } from './_components/clientProviders'
@@ -22,7 +21,6 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const isDevelopment = process.env.NEXT_PUBLIC_ENV === 'dev'
-  const kakaoAppKey = process.env.NEXT_PUBLIC_KAKAO_APP_KEY
 
   return (
     <html lang="ko">
@@ -36,10 +34,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
       <body>
-        <Script
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoAppKey}&libraries=services,clusterer&autoload=false`}
-          strategy="beforeInteractive"
-        />
         <ClientProviders>
           <NuqsAdapter>
             <div className="responsive-container">{children}</div>

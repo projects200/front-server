@@ -1,6 +1,6 @@
 'use client'
 
-import { Map, MapMarker } from 'react-kakao-maps-sdk'
+import { Map, MapMarker, useKakaoLoader } from 'react-kakao-maps-sdk'
 
 import styles from './kakaoMap.module.css'
 
@@ -14,6 +14,13 @@ const tempMarker = {
 }
 
 export default function KakaoMap() {
+  const [loading, error] = useKakaoLoader({
+    appkey: process.env.NEXT_PUBLIC_KAKAO_APP_KEY!,
+    libraries: ['clusterer', 'drawing', 'services'],
+  })
+
+  if(loading || error) return null
+
   return (
     <div className={styles['container']}>
       <Map center={tempCenter} className={styles['map-container']}>
