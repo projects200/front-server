@@ -5,7 +5,10 @@ export default function useKakaoLoader() {
     appkey: process.env.NEXT_PUBLIC_KAKAO_APP_KEY!,
     libraries: ['clusterer', 'drawing', 'services'],
   })
-  if (!loading && error) {
-    console.log(error)
+
+  if (error) {
+    console.log('카카오 맵 로더 에러 : ', error)
   }
+
+  return [loading]
 }

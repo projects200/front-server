@@ -16,7 +16,9 @@ const tempMarker = {
 }
 
 export default function KakaoMap() {
-  useKakaoLoader()
+  const [loading] = useKakaoLoader()
+
+  if (loading) return null
 
   return (
     <div className={styles['container']}>
