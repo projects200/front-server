@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { usePatchSimpleTimer, useDeleteSimpleTimer } from '@/hooks/useTimerApi'
+import { usePatchSimpleTimer, useDeleteSimpleTimer } from '@/hooks/api/useTimerApi'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { formatNumberToTime } from '@/utils/timer'
 import Typography from '@/components/ui/typography'

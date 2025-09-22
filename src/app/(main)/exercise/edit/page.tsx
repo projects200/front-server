@@ -13,7 +13,7 @@ import {
   usePatchExercise,
   useDeleteExercisePictures,
   usePostExercisePictures,
-} from '@/hooks/useExerciseApi'
+} from '@/hooks/api/useExerciseApi'
 import { ExerciseRecordReq } from '@/types/exercise'
 import { isValidExerciseId } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'

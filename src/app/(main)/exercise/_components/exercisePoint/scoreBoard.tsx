@@ -11,8 +11,8 @@ import CountUp from 'react-countup'
 
 import LegalDocModal from '@/components/commons/legalDocModal'
 import InfoIcon from '@/assets/icon_info_slim.svg'
-import { useReadExerciseRange } from '@/hooks/useExerciseApi'
-import { useReadMemberScore } from '@/hooks/useMemberApi'
+import { useReadExerciseRange } from '@/hooks/api/useExerciseApi'
+import { useReadMemberScore } from '@/hooks/api/useMemberApi'
 import { getScoreAttributes } from '@/utils/score'
 import Typography from '@/components/ui/typography'
 

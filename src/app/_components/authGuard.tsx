@@ -4,7 +4,7 @@ import { useAuth } from 'react-oidc-context'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-import { useReadRegistered } from '@/hooks/useAuthApi'
+import { useReadRegistered } from '@/hooks/api/useAuthApi'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import SITE_MAP from '@/constants/siteMap.constant'
 

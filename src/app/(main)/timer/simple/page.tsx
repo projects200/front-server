@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
-import { usePostSimpleTimer, useReadSimpleTimerList } from '@/hooks/useTimerApi'
+import { usePostSimpleTimer, useReadSimpleTimerList } from '@/hooks/api/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 import PlusIcon from '@/assets/icon_plus.svg'

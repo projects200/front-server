@@ -3,7 +3,7 @@
 import useSWR from 'swr'
 import { format, isSameMonth, startOfMonth, endOfMonth } from 'date-fns'
 
-import { useReadExerciseRange } from '@/hooks/useExerciseApi'
+import { useReadExerciseRange } from '@/hooks/api/useExerciseApi'
 import { ExerciseRange } from '@/types/exercise'
 
 import MonthView from './monthView'

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { requestFcmToken } from '@/lib/firebase/config'
-import { usePostFcmToken } from '@/hooks/useFcmApi'
+import { usePostFcmToken } from '@/hooks/api/useFcmApi'
 
 type FcmTokenSyncerProps = {
   shouldSync: boolean

@@ -11,7 +11,7 @@ import {
   useReadCustomTimerDetail,
   usePutCustomTimer,
   usePatchCustomTimer,
-} from '@/hooks/useTimerApi'
+} from '@/hooks/api/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import CustomTimerForm, {

@@ -6,7 +6,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 import { useToast } from '@/hooks/useToast'
-import { useDeleteExercise } from '@/hooks/useExerciseApi'
+import { useDeleteExercise } from '@/hooks/api/useExerciseApi'
 import BottomModal from '@/components/commons/bottomModal'
 import CenterModal from '@/components/commons/centerModal'
 import EditIcon from '@/assets/icon_edit.svg'

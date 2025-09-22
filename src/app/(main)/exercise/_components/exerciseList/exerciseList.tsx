@@ -1,6 +1,6 @@
 'use client'
 
-import { useReadExerciseList } from '@/hooks/useExerciseApi'
+import { useReadExerciseList } from '@/hooks/api/useExerciseApi'
 import Typography from '@/components/ui/typography'
 
 import ExerciseCard from './exerciseCard'

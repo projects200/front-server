@@ -12,7 +12,7 @@ import EditIcon from '@/assets/icon_edit.svg'
 import TrashIcon from '@/assets/icon_trash.svg'
 import Typography from '@/components/ui/typography'
 import SITE_MAP from '@/constants/siteMap.constant'
-import { useDeleteCustomTimer } from '@/hooks/useTimerApi'
+import { useDeleteCustomTimer } from '@/hooks/api/useTimerApi'
 
 import styles from './kebabmodal.module.css'
 

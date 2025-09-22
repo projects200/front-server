@@ -12,7 +12,7 @@ import LoopOnIcon from '@/assets/icon_loop_on.svg'
 import LoopOffIcon from '@/assets/icon_loop_off.svg'
 import Button from '@/components/ui/button'
 import Typography from '@/components/ui/typography'
-import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
+import { useReadCustomTimerDetail } from '@/hooks/api/useTimerApi'
 
 import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'

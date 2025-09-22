@@ -13,8 +13,8 @@ import {
   validateBirthdate,
   validateGender,
 } from '@/utils/validation'
-import { usePostUser } from '@/hooks/useAuthApi'
-import { usePostFcmToken } from '@/hooks/useFcmApi'
+import { usePostUser } from '@/hooks/api/useAuthApi'
+import { usePostFcmToken } from '@/hooks/api/useFcmApi'
 import { requestFcmToken } from '@/lib/firebase/config'
 import SITE_MAP from '@/constants/siteMap.constant'
 

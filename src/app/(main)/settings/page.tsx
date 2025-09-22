@@ -13,7 +13,7 @@ import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
 import InfoIcon from '@/assets/icon_info.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'
-import { useDeleteFcmToken } from '@/hooks/useFcmApi'
+import { useDeleteFcmToken } from '@/hooks/api/useFcmApi'
 
 import MenuItem from './_components/menuItem'
 import styles from './settings.module.css'

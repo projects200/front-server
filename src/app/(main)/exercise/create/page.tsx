@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/useToast'
 import {
   usePostExercise,
   usePostExercisePictures,
-} from '@/hooks/useExerciseApi'
+} from '@/hooks/api/useExerciseApi'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { ExerciseRecordReq } from '@/types/exercise'
 import Celebration from './_components/celebration'

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import { format } from 'date-fns'
 
-import { useReadUserFullProfile } from '@/hooks/useMypageApi'
+import { useReadUserFullProfile } from '@/hooks/api/useMypageApi'
 import EditIcon from '@/assets/icon_edit.svg'
 import SettingsIcon from '@/assets/icon_settings.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'

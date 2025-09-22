@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import clsx from 'clsx'
 
-import { useReadCheckNickname } from '@/hooks/useAuthApi'
+import { useReadCheckNickname } from '@/hooks/api/useAuthApi'
 import { useToast } from '@/hooks/useToast'
 import Typography from '@/components/ui/typography'
 

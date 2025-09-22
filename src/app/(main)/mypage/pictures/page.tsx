@@ -7,7 +7,7 @@ import {
   useReadProfilePictureGroup,
   usePutRepProfilePicture,
   useDeleteProfilePicture,
-} from '@/hooks/useProfileApi'
+} from '@/hooks/api/useProfileApi'
 import LeftArrow from '@/assets/icon_left_arrow.svg'
 import Typography from '@/components/ui/typography'
 import KebabIcon from '@/assets/icon_kebab.svg'

@@ -10,7 +10,7 @@ import {
   ExercisePicture,
   ExerciseRecordReq,
 } from '@/types/exercise'
-import { useReadExerciseScore } from '@/hooks/useScoreApi'
+import { useReadExerciseScore } from '@/hooks/api/useScoreApi'
 import WarningIcon from '@/assets/icon_warning.svg'
 import Typography from '@/components/ui/typography'
 

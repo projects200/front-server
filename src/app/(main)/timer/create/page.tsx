@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
 import { useToast } from '@/hooks/useToast'
-import { usePostCustomTimer } from '@/hooks/useTimerApi'
+import { usePostCustomTimer } from '@/hooks/api/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import CustomTimerForm, {

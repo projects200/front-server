@@ -8,7 +8,7 @@ import LogoTitle from '@/components/ui/logoTitle'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import PlusIcon from '@/assets/icon_plus.svg'
 import Typography from '@/components/ui/typography'
-import { useReadCustomTimerList } from '@/hooks/useTimerApi'
+import { useReadCustomTimerList } from '@/hooks/api/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './list.module.css'

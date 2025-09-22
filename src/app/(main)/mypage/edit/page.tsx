@@ -3,8 +3,8 @@
 import { useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { useReadUserFullProfile, usePutUserProfile } from '@/hooks/useMypageApi'
-import { usePostProfilePicture } from '@/hooks/useProfileApi'
+import { useReadUserFullProfile, usePutUserProfile } from '@/hooks/api/useMypageApi'
+import { usePostProfilePicture } from '@/hooks/api/useProfileApi'
 import { useToast } from '@/hooks/useToast'
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
