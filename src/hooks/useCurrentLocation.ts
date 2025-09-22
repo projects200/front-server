@@ -9,7 +9,7 @@ type UseCurrentLocationReturn = {
   location: Location | null
   loading: boolean
   error: GeolocationPositionError | null
-  getLocation: () => void
+  getLocation: () => Promise<Location>
 }
 
 export default function useCurrentLocation(): UseCurrentLocationReturn {
@@ -17,28 +17,33 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<GeolocationPositionError | null>(null)
 
-  const handleSuccess = (position: GeolocationPosition) => {
-    const { latitude, longitude } = position.coords
-    setLocation({ latitude, longitude })
-    setLoading(false)
-  }
-
-  const handleError = (err: GeolocationPositionError) => {
-    setError(err)
-    setLoading(false)
-  }
-
-  const getLocation = useCallback(() => {
+  const getLocation = useCallback((): Promise<Location> => {
     setLoading(true)
     setError(null)
 
-    if (!navigator.geolocation) {
-      setLoading(false)
-      console.log('현재브라우저는 GeoLocation이 지원되지 않습니다.')
-      return
-    }
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        setLoading(false)
+        console.log('현재브라우저는 GeoLocation이 지원되지 않습니다.')
+        reject(new Error('Geolocation not supported'))
+        return
+      }
 
-    navigator.geolocation.getCurrentPosition(handleSuccess, handleError)
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords
+
+          setLocation({ latitude, longitude }) 
+          setLoading(false)
+          resolve({ latitude, longitude })
+        },
+        (err) => {
+          setError(err) 
+          setLoading(false)
+          reject(err)
+        },
+      )
+    })
   }, [])
 
   return { location, loading, error, getLocation }

@@ -23,13 +23,12 @@ export default function KakaoMap() {
   const {
     location,
     loading: locationLoading,
-    error: locationError,
     getLocation,
   } = useCurrentLocation()
 
   useEffect(() => {
-    getLocation()
-  }, [])
+    getLocation().catch(() => {})
+  }, [getLocation])
 
   useEffect(() => {
     if (location) {
@@ -41,13 +40,17 @@ export default function KakaoMap() {
   }, [location])
 
   // 에러가 있고, 그 코드가 1번(PERMISSION_DENIED)이라면 사용자에게 안내
-  useEffect(() => {
-    if (locationError && locationError.code === 1) {
-      alert(
-        '위치 권한이 차단되었습니다. 브라우저의 사이트 설정에서 위치 권한을 허용해주세요.',
-      )
+  const handleCurrentLocationClick = async () => {
+    try {
+      await getLocation()
+    } catch (error) {
+      if (error instanceof GeolocationPositionError && error.code === 1) {
+        alert(
+          '위치 권한이 차단되었습니다. 브라우저의 사이트 설정에서 위치 권한을 허용해주세요.',
+        )
+      }
     }
-  }, [locationError])
+  }
 
   if (kakaoMapLoading || locationLoading || kakaoMapError)
     return <LoadingScreen />
@@ -59,7 +62,7 @@ export default function KakaoMap() {
       </Map>
       <button
         className={styles['current-location-button']}
-        onClick={getLocation}
+        onClick={handleCurrentLocationClick}
       >
         <CurrentLocationIcon className={styles['current-location-icon']} />
       </button>
