@@ -8,12 +8,14 @@ type Location = {
 type UseCurrentLocationReturn = {
   location: Location | null
   loading: boolean
+  error: GeolocationPositionError | null
   getLocation: () => void
 }
 
 export default function useCurrentLocation(): UseCurrentLocationReturn {
   const [location, setLocation] = useState<Location | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<GeolocationPositionError | null>(null)
 
   const handleSuccess = (position: GeolocationPosition) => {
     const { latitude, longitude } = position.coords
@@ -21,12 +23,14 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
     setLoading(false)
   }
 
-  const handleError = () => {
+  const handleError = (err: GeolocationPositionError) => {
+    setError(err)
     setLoading(false)
   }
 
   const getLocation = useCallback(() => {
     setLoading(true)
+    setError(null)
 
     if (!navigator.geolocation) {
       setLoading(false)
@@ -37,5 +41,5 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
     navigator.geolocation.getCurrentPosition(handleSuccess, handleError)
   }, [])
 
-  return { location, loading, getLocation }
+  return { location, loading, error, getLocation }
 }

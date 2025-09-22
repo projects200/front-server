@@ -22,7 +22,8 @@ export default function KakaoMap() {
   })
   const {
     location,
-    loading: getLocationLoading,
+    loading: locationLoading,
+    error: locationError,
     getLocation,
   } = useCurrentLocation()
 
@@ -39,7 +40,16 @@ export default function KakaoMap() {
     }
   }, [location])
 
-  if (kakaoMapLoading || getLocationLoading || kakaoMapError)
+  // 에러가 있고, 그 코드가 1번(PERMISSION_DENIED)이라면 사용자에게 안내
+  useEffect(() => {
+    if (locationError && locationError.code === 1) {
+      alert(
+        '위치 권한이 차단되었습니다. 브라우저의 사이트 설정에서 위치 권한을 허용해주세요.',
+      )
+    }
+  }, [locationError])
+
+  if (kakaoMapLoading || locationLoading || kakaoMapError)
     return <LoadingScreen />
 
   return (
