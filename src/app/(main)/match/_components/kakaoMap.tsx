@@ -9,6 +9,8 @@ import LoadingScreen from '@/components/commons/loadingScreen'
 
 import styles from './kakaoMap.module.css'
 
+import { TEMP_DATA } from '../tempData'
+
 const SEOUL_CITY_HALL = {
   lat: 37.5667,
   lng: 126.9785,
@@ -57,8 +59,24 @@ export default function KakaoMap() {
 
   return (
     <div className={styles['container']}>
-      <Map center={mapCenter} className={styles['map-container']}>
-        <MapMarker position={mapCenter}></MapMarker>
+      <Map
+        center={mapCenter}
+        level={4}
+        draggable={true}
+        className={styles['map-container']}
+      >
+        {/* 내위치
+        <MapMarker position={mapCenter} /> */}
+        {TEMP_DATA.map((data) => (
+          <MapMarker
+            key={`${data.exerciseLocationName}-${data.latitude},${data.longitude}`}
+            position={{ lat: data.latitude, lng: data.longitude }}
+            image={{
+              src: '/assets/map_marker.svg',
+              size: { width: 40, height: 40 },
+            }}
+          />
+        ))}
       </Map>
       <button
         className={styles['current-location-button']}
