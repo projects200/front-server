@@ -2,15 +2,18 @@
 
 import { useState } from 'react'
 
-import { usePatchSimpleTimer, useDeleteSimpleTimer } from '@/hooks/api/useTimerApi'
+import {
+  usePatchSimpleTimer,
+  useDeleteSimpleTimer,
+} from '@/hooks/api/useTimerApi'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { formatNumberToTime } from '@/utils/timer'
 import Typography from '@/components/ui/typography'
 import { SimpleTimer } from '@/types/timer'
 import { useToast } from '@/hooks/useToast'
+import KebabModal from '@/components/commons/kebabModal'
 
 import TimePicker from '../../_components/timePicker'
-import KebabModal from './kebabModal'
 import styles from './presetCard.module.css'
 
 type Props = {

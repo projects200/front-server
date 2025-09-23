@@ -14,7 +14,9 @@ const SITE_MAP = {
   EXERCISE_EDIT: '/exercise/edit',
 
   MATCH: '/match',
-  MATCH_PLACES: '/match/places',
+  MATCH_PLACE_LIST: '/match/place-list',
+  MATCH_PLACE_REGISTER_SEARCH: '/match/place-register-search',
+  MATCH_PLACE_REGISTER_DETAIL: '/match/places-register-detail',
 
   TIMER_LIST: '/timer/list',
   TIMER_SIMPLE: '/timer/simple',

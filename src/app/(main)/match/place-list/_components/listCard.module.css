@@ -1,0 +1,48 @@
+.list-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  height: 100px;
+}
+
+.marker-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.list-item-text {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.address {
+  color: var(--color-gray-100);
+}
+
+.kebab-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.kebab-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.kebab-icon {
+  height: 16px;
+  width: 16px;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-gray-300);
+}

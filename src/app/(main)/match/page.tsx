@@ -13,7 +13,10 @@ export default function Match() {
   return (
     <div className={styles['container']}>
       <div className={styles['header']}>
-        <Link href={SITE_MAP.MATCH_PLACES} className={styles['places-button']}>
+        <Link
+          href={SITE_MAP.MATCH_PLACE_LIST}
+          className={styles['places-button']}
+        >
           <Typography as="span" variant="text15" weight="bold">
             운동장소 목록
           </Typography>
