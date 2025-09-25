@@ -88,7 +88,10 @@ export default function Create() {
 
   return (
     <>
-      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
+      <Header
+        rightIcon={<CompleteButton>완료</CompleteButton>}
+        onClick={triggerFormSubmit}
+      >
         운동 기록하기
       </Header>
       <ExerciseForm

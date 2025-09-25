@@ -13,6 +13,7 @@ type Props = {
   className?: string
   rightIcon?: React.ReactNode
   onClick?: () => void
+  onBack?: () => void
 }
 
 const Header = ({
@@ -20,13 +21,22 @@ const Header = ({
   className = 'center-title',
   rightIcon,
   onClick,
+  onBack,
 }: Props) => {
   const router = useRouter()
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack()
+    } else {
+      router.back()
+    }
+  }
 
   return (
     <header className={styles['header']}>
       <div className={styles['left']}>
-        <button className={styles['back-button']} onClick={() => router.back()}>
+        <button className={styles['back-button']} onClick={handleBack}>
           <LeftArrow className={styles['back-icon']} />
         </button>
       </div>

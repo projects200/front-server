@@ -59,20 +59,13 @@ export default function KakaoMap() {
 
   return (
     <div className={styles['container']}>
-      <Map
-        center={mapCenter}
-        level={4}
-        draggable={true}
-        className={styles['map-container']}
-      >
-        {/* 내위치
-        <MapMarker position={mapCenter} /> */}
+      <Map center={mapCenter} level={3} className={styles['map-container']}>
         {TEMP_DATA.map((data) => (
           <MapMarker
             key={`${data.exerciseLocationName}-${data.latitude},${data.longitude}`}
             position={{ lat: data.latitude, lng: data.longitude }}
             image={{
-              src: '/assets/map_marker.svg',
+              src: '/assets/map_marker_red.svg',
               size: { width: 40, height: 40 },
             }}
           />

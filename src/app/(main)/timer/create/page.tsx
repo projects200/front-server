@@ -17,9 +17,8 @@ import CustomTimerForm, {
 export default function Create() {
   const { trigger: createCustomTimer } = usePostCustomTimer()
   const showToast = useToast()
-    const router = useRouter()
+  const router = useRouter()
   const formRef = useRef<CustomTimerFormHandle>(null)
-
 
   const triggerFormSubmit = () => {
     formRef.current?.submit()
@@ -43,7 +42,10 @@ export default function Create() {
   }
   return (
     <>
-      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
+      <Header
+        rightIcon={<CompleteButton>완료</CompleteButton>}
+        onClick={triggerFormSubmit}
+      >
         타이머 생성
       </Header>
 

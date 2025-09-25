@@ -1,7 +1,14 @@
+import { ReactNode } from 'react'
+
 import Typography from '@/components/ui/typography'
+
 import styles from './completeButton.module.css'
 
-const CompleteButton = () => {
+type Props = {
+  children: ReactNode
+}
+
+const CompleteButton = ({ children }: Props) => {
   return (
     <div className={styles['complete-button']}>
       <Typography
@@ -10,7 +17,7 @@ const CompleteButton = () => {
         weight="bold"
         className={styles['complete-button-text']}
       >
-        완료
+        {children}
       </Typography>
     </div>
   )

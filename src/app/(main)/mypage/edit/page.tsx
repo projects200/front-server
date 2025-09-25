@@ -3,7 +3,10 @@
 import { useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { useReadUserFullProfile, usePutUserProfile } from '@/hooks/api/useMypageApi'
+import {
+  useReadUserFullProfile,
+  usePutUserProfile,
+} from '@/hooks/api/useMypageApi'
 import { usePostProfilePicture } from '@/hooks/api/useProfileApi'
 import { useToast } from '@/hooks/useToast'
 import Header from '@/components/commons/header'
@@ -51,7 +54,10 @@ export default function Edit() {
 
   return (
     <div className={styles['page-container']}>
-      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
+      <Header
+        rightIcon={<CompleteButton>완료</CompleteButton>}
+        onClick={triggerFormSubmit}
+      >
         프로필 수정
       </Header>
 
