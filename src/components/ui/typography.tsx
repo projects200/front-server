@@ -8,14 +8,14 @@ type TextElement = 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3'
 type TypographyWeight = 'regular' | 'medium' | 'semi-bold' | 'bold'
 
 type TypographyVariant =
-  | 'text32'
-  | 'text24'
-  | 'text22'
-  | 'text18'
-  | 'text15'
-  | 'text14'
-  | 'text12'
-  | 'text8'
+  | 'header'
+  | 'title-large'
+  | 'title-medium'
+  | 'title-small'
+  | 'content-large'
+  | 'content-medium'
+  | 'content-small'
+  | 'content-tiny'
 
 type TypographyProps<T extends TextElement = 'span'> = {
   as?: T

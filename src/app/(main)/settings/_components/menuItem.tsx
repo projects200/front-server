@@ -21,12 +21,16 @@ const MenuItem: React.FC<MenuItemProps> = ({
     <button className={styles['menu-item']} onClick={onClick}>
       <div className={styles['left']}>
         {icon}
-        <Typography as="span" variant="text15">
+        <Typography as="span" variant="content-large">
           {label}
         </Typography>
       </div>
       {rightText && (
-        <Typography className={styles['right-text']} as="span" variant="text12">
+        <Typography
+          className={styles['right-text']}
+          as="span"
+          variant="content-small"
+        >
           {rightText}
         </Typography>
       )}

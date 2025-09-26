@@ -17,7 +17,11 @@ export default function ExerciseList({ selectedDate }: Props) {
     <div className={styles['container']}>
       {exerciseList.length === 0 ? (
         <div className={styles['empty-container']}>
-          <Typography as="span" variant="text15" className={styles['text']}>
+          <Typography
+            as="span"
+            variant="content-large"
+            className={styles['text']}
+          >
             이 날짜에 등록된 기록이 없습니다.
           </Typography>
         </div>

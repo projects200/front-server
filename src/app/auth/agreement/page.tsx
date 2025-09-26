@@ -36,12 +36,12 @@ export default function Agreement() {
       <Typography
         className={styles['title']}
         as="h1"
-        variant="text24"
+        variant="title-large"
         weight="bold"
       >
         환영합니다!
       </Typography>
-      <Typography as="h1" variant="text24" weight="bold">
+      <Typography as="h1" variant="title-large" weight="bold">
         아래의 약관에 동의해주세요
       </Typography>
       <div className={styles['agreement-item-list']}>

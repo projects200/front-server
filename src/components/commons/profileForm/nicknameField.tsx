@@ -75,7 +75,7 @@ export default function NicknameField({
   return (
     <div className={styles['container']}>
       <label htmlFor="nickname" className={styles['label']}>
-        <Typography as="span" variant="text15" weight="bold">
+        <Typography as="span" variant="content-large" weight="bold">
           닉네임
         </Typography>
       </label>
@@ -95,7 +95,7 @@ export default function NicknameField({
             disabled={isMutating || isCheckSuccessful}
             className={styles['check-button']}
           >
-            <Typography as="span" variant="text14">
+            <Typography as="span" variant="content-medium">
               중복 확인
             </Typography>
           </button>
@@ -107,12 +107,12 @@ export default function NicknameField({
         )}
         <ul className={styles['rules-list']}>
           <li>
-            <Typography as="span" variant="text14">
+            <Typography as="span" variant="content-medium">
               영어, 한글, 숫자 포함 30자 이내
             </Typography>
           </li>
           <li>
-            <Typography as="span" variant="text14">
+            <Typography as="span" variant="content-medium">
               태그, 이모지 및 특수 문자 불가능
             </Typography>
           </li>

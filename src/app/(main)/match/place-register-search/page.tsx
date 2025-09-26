@@ -201,11 +201,11 @@ export default function PlaceRegisterSearch() {
               className={styles['result-item']}
               onClick={() => handleSelectPlace(place)}
             >
-              <Typography as="div" variant="text18" weight="medium">
+              <Typography as="div" variant="title-small" weight="medium">
                 {place.place_name}
               </Typography>
               <Typography
-                variant="text14"
+                variant="content-medium"
                 className={styles['result-address']}
                 as="div"
               >
@@ -230,19 +230,19 @@ export default function PlaceRegisterSearch() {
           <div className={styles['bottom-section']}>
             {addressInfo.name ? (
               <div className={styles['address-section']}>
-                <Typography as="span" variant="text18" weight="medium">
+                <Typography as="span" variant="title-small" weight="medium">
                   {addressInfo.name}
                 </Typography>
                 <Typography
                   className={styles['address-sub-text']}
                   as="span"
-                  variant="text15"
+                  variant="content-large"
                 >
                   {addressInfo.address}
                 </Typography>
               </div>
             ) : (
-              <Typography as="span" variant="text18" weight="medium">
+              <Typography as="span" variant="title-small" weight="medium">
                 {addressInfo.address}
               </Typography>
             )}

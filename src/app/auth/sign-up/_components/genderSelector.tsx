@@ -27,7 +27,7 @@ const GenderSelector = ({ value, onChange }: GenderSelectorProps) => {
           className={styles['option']}
           onClick={() => onChange(option.value)}
         >
-          <Typography as="span" variant="text15">
+          <Typography as="span" variant="content-large">
             {option.label}
           </Typography>
           <CheckStatusIcon

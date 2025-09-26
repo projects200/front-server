@@ -87,7 +87,7 @@ export default function PresetCard({
         className={styles['timer-button']}
         onClick={() => onPresetClick(preset.time)}
       >
-        <Typography as="span" variant="text22" weight="bold">
+        <Typography as="span" variant="title-medium" weight="bold">
           {formatNumberToTime(preset.time)}
         </Typography>
       </button>

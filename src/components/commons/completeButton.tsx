@@ -13,7 +13,7 @@ const CompleteButton = ({ children }: Props) => {
     <div className={styles['complete-button']}>
       <Typography
         as="span"
-        variant="text15"
+        variant="content-large"
         weight="bold"
         className={styles['complete-button-text']}
       >

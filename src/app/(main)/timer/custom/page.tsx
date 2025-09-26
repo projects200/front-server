@@ -220,11 +220,11 @@ export default function Custom() {
             >
               <div className={styles['step-info']}>
                 <ClockIcon className={styles['clock-icon']} />
-                <Typography as="span" variant="text15" weight="bold">
+                <Typography as="span" variant="content-large" weight="bold">
                   {step.customTimerStepName}
                 </Typography>
               </div>
-              <Typography as="span" variant="text18" weight="bold">
+              <Typography as="span" variant="title-small" weight="bold">
                 {formatNumberToTime(step.customTimerStepTime)}
               </Typography>
             </button>

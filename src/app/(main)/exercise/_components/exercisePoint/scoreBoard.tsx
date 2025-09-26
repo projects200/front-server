@@ -57,7 +57,7 @@ const ScoreBoard = () => {
             <Typography
               className={styles['count']}
               as="span"
-              variant="text15"
+              variant="content-large"
               weight="bold"
             >
               <CountUp end={monthRecordCount} duration={1.5} suffix="회" />
@@ -65,7 +65,7 @@ const ScoreBoard = () => {
             <Typography
               className={styles['count-name']}
               as="span"
-              variant="text14"
+              variant="content-medium"
             >
               이번달 운동 횟수
             </Typography>
@@ -78,7 +78,7 @@ const ScoreBoard = () => {
             <Typography
               className={styles['count']}
               as="span"
-              variant="text15"
+              variant="content-large"
               weight="bold"
             >
               <CountUp end={score} duration={1.5} suffix="점" />
@@ -87,7 +87,7 @@ const ScoreBoard = () => {
               <Typography
                 className={styles['count-name']}
                 as="span"
-                variant="text14"
+                variant="content-medium"
               >
                 운동 점수
               </Typography>

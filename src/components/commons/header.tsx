@@ -43,7 +43,7 @@ const Header = ({
       <Typography
         className={styles[className]}
         as="h1"
-        variant="text15"
+        variant="content-large"
         weight="bold"
       >
         {children}

@@ -17,7 +17,7 @@ export default function Match() {
           href={SITE_MAP.MATCH_PLACE_LIST}
           className={styles['places-button']}
         >
-          <Typography as="span" variant="text15" weight="bold">
+          <Typography as="span" variant="content-large" weight="bold">
             운동장소 목록
           </Typography>
           <RightArrow />

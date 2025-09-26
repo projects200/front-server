@@ -214,7 +214,7 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
                         <WarningIcon className={styles['warning-icon']} />
                         <Typography
                           as="span"
-                          variant="text12"
+                          variant="content-small"
                           className={styles['description']}
                         >
                           {scoreDescription}

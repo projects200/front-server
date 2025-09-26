@@ -83,7 +83,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
           <button onClick={handlePrev} className={styles['nav-button']}>
             <LeftArrow />
           </button>
-          <Typography as="span" variant="text15" weight="bold">
+          <Typography as="span" variant="content-large" weight="bold">
             {format(currentMonth, 'yyyy년 M월', { locale: ko })}
           </Typography>
           <button
@@ -98,7 +98,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
         <div className={styles['weekdays']}>
           {['일', '월', '화', '수', '목', '금', '토'].map((weekday) => (
             <div key={weekday} className={styles['weekday']}>
-              <Typography as="span" variant="text14" weight="bold">
+              <Typography as="span" variant="content-medium" weight="bold">
                 {weekday}
               </Typography>
             </div>

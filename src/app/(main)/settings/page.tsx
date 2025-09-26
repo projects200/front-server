@@ -96,7 +96,7 @@ export default function Settings() {
         }}
         onConfirm={() => handleSignOut()}
       >
-        <Typography as="span" variant="text15" weight="bold">
+        <Typography as="span" variant="content-large" weight="bold">
           로그아웃 하시겠습니까?
         </Typography>
       </CenterModal>

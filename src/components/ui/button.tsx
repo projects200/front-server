@@ -31,7 +31,7 @@ const Button = ({
       disabled={disabled}
       {...props}
     >
-      <Typography variant="text15" as="span" weight="bold">
+      <Typography variant="content-large" as="span" weight="bold">
         {children}
       </Typography>
     </button>

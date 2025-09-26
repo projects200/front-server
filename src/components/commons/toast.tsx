@@ -13,9 +13,17 @@ export const Toast = () => {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={clsx(styles['toast'], styles[toast.type ?? 'info'], toast.isVisible === false ? styles['fade-out'] : styles['fade-in'])}
+          className={clsx(
+            styles['toast'],
+            styles[toast.type ?? 'info'],
+            toast.isVisible === false ? styles['fade-out'] : styles['fade-in'],
+          )}
         >
-          <Typography className={styles['text']} as="span" variant="text12">
+          <Typography
+            className={styles['text']}
+            as="span"
+            variant="content-small"
+          >
             {toast.message}
           </Typography>
         </div>

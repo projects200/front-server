@@ -55,10 +55,14 @@ export default function ListCard({ placeData }: Props) {
       <div className={styles['list-item']}>
         <LocationMarkerIcon className={styles['marker-icon']} />
         <div className={styles['list-item-text']}>
-          <Typography as="span" variant="text15" weight="bold">
+          <Typography as="span" variant="content-large" weight="bold">
             {placeData.name}
           </Typography>
-          <Typography as="span" variant="text12" className={styles['address']}>
+          <Typography
+            as="span"
+            variant="content-small"
+            className={styles['address']}
+          >
             {placeData.name}
           </Typography>
         </div>

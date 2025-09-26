@@ -1,25 +1,25 @@
-.text32 {
+.header {
   font-size: 32px;
 }
-.text24 {
+.title-large {
   font-size: 24px;
 }
-.text22 {
+.title-medium {
   font-size: 22px;
 }
-.text18 {
+.title-small {
   font-size: 18px;
 }
-.text15 {
+.content-large {
   font-size: 15px;
 }
-.text14 {
+.content-medium {
   font-size: 14px;
 }
-.text12 {
+.content-small {
   font-size: 12px;
 }
-.text8 {
+.content-tiny {
   font-size: 8px;
 }
 

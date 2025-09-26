@@ -47,7 +47,7 @@ export default function KebabModal({ isOpen, onClose, customTimerId }: Props) {
             href={`${SITE_MAP.TIMER_EDIT}?id=${customTimerId}`}
           >
             <EditIcon className={styles['modal-icon']} />
-            <Typography as="span" variant="text15">
+            <Typography as="span" variant="content-large">
               수정하기
             </Typography>
           </Link>
@@ -59,7 +59,11 @@ export default function KebabModal({ isOpen, onClose, customTimerId }: Props) {
             }}
           >
             <TrashIcon className={styles['modal-icon']} />
-            <Typography className={styles['remove']} as="span" variant="text15">
+            <Typography
+              className={styles['remove']}
+              as="span"
+              variant="content-large"
+            >
               삭제하기
             </Typography>
           </button>
@@ -70,7 +74,7 @@ export default function KebabModal({ isOpen, onClose, customTimerId }: Props) {
         onClose={() => setIsOpenCenter(false)}
         onConfirm={handleRemove}
       >
-        <Typography as="span" variant="text15" weight="bold">
+        <Typography as="span" variant="content-large" weight="bold">
           타이머를 삭제하시겠습니까?
         </Typography>
       </CenterModal>

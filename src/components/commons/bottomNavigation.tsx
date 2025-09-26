@@ -42,7 +42,7 @@ export default function BottomNavigation() {
                   [styles['active']]: isActive,
                 })}
                 as="span"
-                variant="text12"
+                variant="content-small"
               >
                 {link.name}
               </Typography>

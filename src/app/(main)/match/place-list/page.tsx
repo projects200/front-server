@@ -26,7 +26,7 @@ export default function PlaceList() {
           <Typography
             className={styles['search-placeholder']}
             as="span"
-            variant="text14"
+            variant="content-medium"
           >
             운동하는 장소 검색
           </Typography>
@@ -42,7 +42,7 @@ export default function PlaceList() {
           <div className={styles['empty-section']}>
             <Typography
               as="span"
-              variant="text15"
+              variant="content-large"
               className={styles['empty-text']}
             >
               등록된 운동 장소가 없습니다

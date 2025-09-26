@@ -55,23 +55,27 @@ export default function Mypage() {
         <Typography
           className={styles['nickname']}
           as="span"
-          variant="text22"
+          variant="title-medium"
           weight="bold"
         >
           {profileData.nickname}
         </Typography>
-        <Typography className={styles['birth']} as="span" variant="text14">
+        <Typography
+          className={styles['birth']}
+          as="span"
+          variant="content-medium"
+        >
           {formatGenderToKR(profileData.gender)} |{' '}
           {formatDateToKR(profileData.birthDate)}
         </Typography>
         <div className={styles['user-info']}>
           <div className={styles['info-item']}>
-            <Typography as="span" variant="text22" weight="bold">
+            <Typography as="span" variant="title-medium" weight="bold">
               {profileData.exerciseCountInLast30Days}
             </Typography>
             <Typography
               as="span"
-              variant="text12"
+              variant="content-small"
               className={styles['info-label']}
             >
               최근 30일 운동 횟수
@@ -80,7 +84,7 @@ export default function Mypage() {
           <div className={styles['info-item']}>
             <Typography
               as="span"
-              variant="text22"
+              variant="title-medium"
               weight="bold"
               className={styles['info-value-container']}
             >
@@ -89,19 +93,19 @@ export default function Mypage() {
             </Typography>
             <Typography
               as="span"
-              variant="text12"
+              variant="content-small"
               className={styles['info-label']}
             >
               올해 운동 일수
             </Typography>
           </div>
           <div className={styles['info-item']}>
-            <Typography as="span" variant="text22" weight="bold">
+            <Typography as="span" variant="title-medium" weight="bold">
               {profileData.exerciseScore}
             </Typography>
             <Typography
               as="span"
-              variant="text12"
+              variant="content-small"
               className={styles['info-label']}
             >
               운동 점수
@@ -109,13 +113,17 @@ export default function Mypage() {
           </div>
         </div>
         {profileData.bio ? (
-          <Typography as="span" variant="text15" className={styles['bio']}>
+          <Typography
+            as="span"
+            variant="content-large"
+            className={styles['bio']}
+          >
             {profileData.bio}
           </Typography>
         ) : (
           <Typography
             as="span"
-            variant="text15"
+            variant="content-large"
             className={clsx(styles['bio'], styles['bio-empty'])}
           >
             {'자기소개를 입력해서 자신에 대해 알려주세요!'}
