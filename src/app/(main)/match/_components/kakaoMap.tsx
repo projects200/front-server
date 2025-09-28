@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Map, MapMarker, useKakaoLoader } from 'react-kakao-maps-sdk'
+import { Map, MapMarker } from 'react-kakao-maps-sdk'
 
 import useCurrentLocation from '@/hooks/useCurrentLocation'
 import CurrentLocationIcon from '@/assets/icon_current_location.svg'
@@ -18,10 +18,6 @@ const SEOUL_CITY_HALL = {
 
 export default function KakaoMap() {
   const [mapCenter, setMapCenter] = useState(SEOUL_CITY_HALL)
-  const [kakaoMapLoading, kakaoMapError] = useKakaoLoader({
-    appkey: process.env.NEXT_PUBLIC_KAKAO_APP_KEY!,
-    libraries: ['clusterer', 'drawing', 'services'],
-  })
   const {
     location,
     loading: locationLoading,
@@ -54,8 +50,7 @@ export default function KakaoMap() {
     }
   }
 
-  if (kakaoMapLoading || locationLoading || kakaoMapError)
-    return <LoadingScreen />
+  if ( locationLoading) return <LoadingScreen />
 
   return (
     <div className={styles['container']}>

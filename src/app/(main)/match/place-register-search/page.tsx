@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Map, useKakaoLoader } from 'react-kakao-maps-sdk'
+import { Map } from 'react-kakao-maps-sdk'
+import { useRouter } from 'next/navigation'
 
 import { useToast } from '@/hooks/useToast'
 import useCurrentLocation from '@/hooks/useCurrentLocation'
@@ -10,6 +11,7 @@ import CompleteButton from '@/components/commons/completeButton'
 import SearchIcon from '@/assets/icon_search.svg'
 import CenterMarker from '@/assets/map_marker_black_noframe.svg'
 import Typography from '@/components/ui/typography'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './placeRegisterSearch.module.css'
 
@@ -55,16 +57,13 @@ export default function PlaceRegisterSearch() {
     [],
   )
   const [isResultListVisible, setIsResultListVisible] = useState(false)
-  const [kakaoMapLoading, kakaoMapError] = useKakaoLoader({
-    appkey: process.env.NEXT_PUBLIC_KAKAO_APP_KEY!,
-    libraries: ['clusterer', 'drawing', 'services'],
-  })
   const {
     location,
     loading: locationLoading,
     getLocation,
   } = useCurrentLocation()
   const showToast = useToast()
+  const router = useRouter()
 
   // 좌표 이동시 도로명 주소 변경
   const updateAddressFromCoords = useCallback((coords: LatLng) => {
@@ -94,7 +93,7 @@ export default function PlaceRegisterSearch() {
       showToast('검색어를 입력해주세요.', 'info')
       return
     }
-    if (kakaoMapLoading || !window.kakao) return
+    if (!window.kakao) return
 
     const ps = new window.kakao.maps.services.Places()
     ps.keywordSearch(searchValue, (data, status) => {
@@ -121,11 +120,11 @@ export default function PlaceRegisterSearch() {
       name: place.place_name,
       address: place.road_address_name || place.address_name,
     })
-    setMapLevel(1)
+    setMapLevel(2)
     setIsResultListVisible(false)
   }
 
-  // --- 함수: 검색 목록에서 뒤로가기 ---
+  // 검색 목록이 표시되어있을때 뒤로가기
   const handleBackFromSearch = () => {
     setIsResultListVisible(false)
   }
@@ -148,6 +147,7 @@ export default function PlaceRegisterSearch() {
     updateAddressFromCoords(newCoords)
   }
 
+  // 화면을 확대, 축소해도 중앙의 위치는 바뀌지 않도록 고정
   const handleZoomChanged = (map: kakao.maps.Map) => {
     setMapLevel(map.getLevel())
     const currentCenter = new window.kakao.maps.LatLng(
@@ -155,6 +155,23 @@ export default function PlaceRegisterSearch() {
       mapCenter.lng,
     )
     map.setCenter(currentCenter)
+  }
+
+  // 등록버튼 핸들러
+  const handleRegister = () => {
+    if (
+      !addressInfo.address ||
+      addressInfo.address === '주소를 찾을 수 없습니다.'
+    ) {
+      showToast('정확한 장소를 선택해주세요.', 'info')
+      return
+    }
+    const params = new URLSearchParams()
+    params.append('lat', parseFloat(mapCenter.lat.toFixed(10)).toString())
+    params.append('lng', parseFloat(mapCenter.lng.toFixed(10)).toString())
+    params.append('name', addressInfo.name)
+    params.append('address', addressInfo.address)
+    router.push(`${SITE_MAP.MATCH_PLACE_REGISTER_DETAIL}?${params.toString()}`)
   }
 
   // 페이지 진입시 현재 위치를 가져옴
@@ -170,7 +187,7 @@ export default function PlaceRegisterSearch() {
     }
   }, [location])
 
-  if (kakaoMapLoading || locationLoading || kakaoMapError) return null
+  if (locationLoading) return null
 
   return (
     <div className={styles['container']}>
@@ -246,7 +263,7 @@ export default function PlaceRegisterSearch() {
                 {addressInfo.address}
               </Typography>
             )}
-            <button onClick={() => {}}>
+            <button onClick={handleRegister}>
               <CompleteButton>등록</CompleteButton>
             </button>
           </div>

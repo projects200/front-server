@@ -1,18 +1,29 @@
 'use client'
 
 import Link from 'next/link'
+import { MouseEvent } from 'react'
 
 import SearchIcon from '@/assets/icon_search.svg'
 import Typography from '@/components/ui/typography'
 import Header from '@/components/commons/header'
+import { useReadExerciseLocationList } from '@/hooks/api/useExerciseLocationApi'
 import SITE_MAP from '@/constants/siteMap.constant'
+import { useToast } from '@/hooks/useToast'
 
 import ListCard from './_components/listCard'
 import styles from './placeList.module.css'
 
-import { TEMP_DATA } from './tempData'
-
 export default function PlaceList() {
+  const { data: locationList } = useReadExerciseLocationList()
+  const showToast = useToast()
+
+  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (locationList && locationList.length >= 10) {
+      e.preventDefault()
+      showToast('운동장소는 최대 10개까지 등록 가능합니다.', 'info')
+    }
+  }
+
   return (
     <div className={styles['container']}>
       <Header>운동장소</Header>
@@ -21,6 +32,7 @@ export default function PlaceList() {
         <Link
           href={SITE_MAP.MATCH_PLACE_REGISTER_SEARCH}
           className={styles['link-search']}
+          onClick={handleLinkClick}
         >
           <SearchIcon className={styles['search-icon']} />
           <Typography
@@ -34,8 +46,8 @@ export default function PlaceList() {
       </div>
 
       <div className={styles['list-section']}>
-        {TEMP_DATA.length ? (
-          TEMP_DATA.map((data) => (
+        {locationList && locationList.length ? (
+          locationList.map((data) => (
             <ListCard key={`list-item-${data.id}`} placeData={data} />
           ))
         ) : (
