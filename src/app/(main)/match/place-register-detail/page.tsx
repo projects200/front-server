@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQueryState, parseAsFloat, parseAsString } from 'nuqs'
 import * as z from 'zod'
@@ -72,12 +71,6 @@ export default function PlaceRegisterDetail() {
       } catch {}
     },
   })
-
-  useEffect(() => {
-    if (initialName) {
-      form.setFieldValue('placeName', initialName)
-    }
-  }, [initialName, form])
 
   if (isExist) return null
 
