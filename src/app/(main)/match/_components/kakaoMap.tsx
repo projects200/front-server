@@ -1,28 +1,52 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Map, MapMarker } from 'react-kakao-maps-sdk'
+import { useRouter } from 'next/navigation'
 
 import useCurrentLocation from '@/hooks/useCurrentLocation'
 import CurrentLocationIcon from '@/assets/icon_current_location.svg'
 import LoadingScreen from '@/components/commons/loadingScreen'
+import { useReadMemberExerciseLocation } from '@/hooks/api/useMemberApi'
+import { MemberProfile, MemberLocationFlattened } from '@/types/member'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './kakaoMap.module.css'
-
-import { TEMP_DATA } from '../tempData'
 
 const SEOUL_CITY_HALL = {
   lat: 37.5667,
   lng: 126.9785,
 }
 
+export function flattenMemberLocations(
+  members: MemberProfile[],
+): MemberLocationFlattened[] {
+  return members.flatMap((member) =>
+    member.locationList.map((location) => ({
+      memberId: member.memberId,
+      profileThumbnailUrl: member.profileThumbnailUrl,
+      profileImageUrl: member.profileImageUrl,
+      nickname: member.nickname,
+      gender: member.gender,
+      birthDate: member.birthDate,
+      location: location,
+    })),
+  )
+}
+
 export default function KakaoMap() {
+  const router = useRouter()
+  const { data: membersData } = useReadMemberExerciseLocation()
   const [mapCenter, setMapCenter] = useState(SEOUL_CITY_HALL)
   const {
     location,
     loading: locationLoading,
     getLocation,
   } = useCurrentLocation()
+  const markers = useMemo(() => {
+    if (!membersData) return []
+    return flattenMemberLocations(membersData)
+  }, [membersData])
 
   useEffect(() => {
     getLocation().catch(() => {})
@@ -50,18 +74,25 @@ export default function KakaoMap() {
     }
   }
 
-  if ( locationLoading) return <LoadingScreen />
+  if (locationLoading) return <LoadingScreen />
 
   return (
     <div className={styles['container']}>
       <Map center={mapCenter} level={3} className={styles['map-container']}>
-        {TEMP_DATA.map((data) => (
+        {markers.map((data, index) => (
           <MapMarker
-            key={`${data.exerciseLocationName}-${data.latitude},${data.longitude}`}
-            position={{ lat: data.latitude, lng: data.longitude }}
+            key={`${data.location.exerciseLocationName}-${index}`}
+            position={{
+              lat: data.location.latitude,
+              lng: data.location.longitude,
+            }}
             image={{
               src: '/assets/map_marker_red.svg',
               size: { width: 40, height: 40 },
+            }}
+            clickable={true}
+            onClick={() => {
+              router.push(`${SITE_MAP.MATCH_PROFILE}?memberId=${data.memberId}`)
             }}
           />
         ))}
