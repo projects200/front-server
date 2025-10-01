@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 
 import { useReadUserFullProfile } from '@/hooks/api/useMypageApi'
+import { useReadChatroomUrl } from '@/hooks/api/useOpenChatApi'
 import EditIcon from '@/assets/icon_edit.svg'
 import SettingsIcon from '@/assets/icon_settings.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'
@@ -16,10 +17,12 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import styles from './mypage.module.css'
 
 export default function Mypage() {
-  const { data: profileData, isLoading } = useReadUserFullProfile()
   const todayString = format(new Date(), 'yyyy-MM-dd')
+  const { data: chatroomUrl, isLoading: chatroomLoading } = useReadChatroomUrl()
+  const { data: profileData, isLoading: profileLoading } =
+    useReadUserFullProfile()
 
-  if (isLoading || !profileData) return null
+  if (profileLoading || chatroomLoading || !profileData) return null
 
   return (
     <>
@@ -116,6 +119,50 @@ export default function Mypage() {
             {profileData.bio || '자기소개를 입력해서 자신에 대해 알려주세요!'}
           </Typography>
         </div>
+      </section>
+
+      {/* 오픈 채팅 링크 영역 */}
+      <section className={styles['open-chat-section']}>
+        <Typography as="p" variant="content-large" weight="bold">
+          오픈 채팅 링크
+        </Typography>
+        <Typography
+          className={styles['open-chat-sub-text']}
+          as="p"
+          variant="content-small"
+        >
+          채팅 기능이 개발 중입니다. 카카오 오픈 채팅을 사용해주세요!
+        </Typography>
+        {chatroomUrl ? (
+          <>
+            {/* div or button 논의 필요 */}
+            <div className={styles['open-chat-button']}>
+              <Typography as="p" variant="content-medium">
+                {chatroomUrl.chatroomUrl}
+              </Typography>
+            </div>
+            <Link
+              className={styles['open-chat-edit']}
+              href={SITE_MAP.MYPAGE_OPEN_CHAT_EDIT}
+            >
+              <EditIcon className={styles['open-chat-edit-icon']} />
+            </Link>
+          </>
+        ) : (
+          <Link
+            className={styles['open-chat-link']}
+            href={SITE_MAP.MYPAGE_OPEN_CHAT_CREATE}
+          >
+            <Typography
+              className={styles['open-chat-link-text']}
+              as="p"
+              variant="content-large"
+              weight="bold"
+            >
+              카카오 오픈 채팅 URL을 추가해 주세요 +
+            </Typography>
+          </Link>
+        )}
       </section>
 
       {/* 선호운동 영역 */}

@@ -5,6 +5,7 @@ import { format } from 'date-fns'
 
 import Header from '@/components/commons/header'
 import { useReadOtherUserFullProfile } from '@/hooks/api/useMypageApi'
+import { useReadMemberChatroomUrl } from '@/hooks/api/useOpenChatApi'
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
@@ -14,12 +15,13 @@ import styles from './profile.module.css'
 
 export default function Profile() {
   const [memberId] = useQueryState('memberId')
-  const { data: profileData, isLoading } = useReadOtherUserFullProfile(
-    memberId!,
-  )
+  const { data: chatroomUrl, isLoading: chatroomLoading } =
+    useReadMemberChatroomUrl(memberId!)
+  const { data: profileData, isLoading: profileLoading } =
+    useReadOtherUserFullProfile(memberId!)
   const todayString = format(new Date(), 'yyyy-MM-dd')
 
-  if (isLoading || !profileData) return null
+  if (profileLoading || chatroomLoading || !profileData) return null
 
   return (
     <>
@@ -98,6 +100,30 @@ export default function Profile() {
             {profileData.bio}
           </Typography>
         </div>
+      </section>
+
+      {/* 오픈 채팅 링크 영역 */}
+      <section className={styles['open-chat-section']}>
+        <Typography as="p" variant="content-large" weight="bold">
+          오픈 채팅 링크
+        </Typography>
+        <Typography
+          className={styles['open-chat-sub-text']}
+          as="p"
+          variant="content-small"
+        >
+          채팅 기능이 개발 중입니다. 카카오 오픈 채팅을 사용해주세요!
+        </Typography>
+        <a
+          className={styles['open-chat-button']}
+          href={chatroomUrl?.chatroomUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Typography as="p" variant="content-medium">
+            {chatroomUrl?.chatroomUrl}
+          </Typography>
+        </a>
       </section>
 
       {/* 선호운동 영역 */}
