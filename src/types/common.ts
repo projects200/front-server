@@ -18,6 +18,6 @@ export class ApiError extends Error {
 }
 
 export type ErrorPolicy = {
-  messages?: Record<number, string>
-  actions?: Record<number, 'back' | { type: 'redirect'; to: string }>
+  messages?: Record<number, string | null>
+  actions?: Record<number, 'back' | { type: 'redirect'; to: string } | null>
 }

@@ -28,5 +28,6 @@ const SITE_MAP = {
   MYPAGE: '/mypage',
   MYPAGE_EDIT: '/mypage/edit',
   MYPAGE_PICTURES: '/mypage/pictures',
+  MYPAGE_OPEN_CHAT: '/mypage/open-chat'
 } as const
 export default SITE_MAP
