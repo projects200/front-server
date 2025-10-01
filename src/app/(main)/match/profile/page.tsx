@@ -15,8 +15,6 @@ import styles from './profile.module.css'
 
 export default function Profile() {
   const [memberId] = useQueryState('memberId')
-  // chatroomUrl이 필수로 존재한다는 비즈니스 로직이 필요함(체크 필요)
-
   const { data: chatroomUrl, isLoading: chatroomLoading } =
     useReadMemberChatroomUrl(memberId!)
   const { data: profileData, isLoading: profileLoading } =
@@ -116,11 +114,16 @@ export default function Profile() {
         >
           채팅 기능이 개발 중입니다. 카카오 오픈 채팅을 사용해주세요!
         </Typography>
-        <button className={styles['open-chat-button']}>
+        <a
+          className={styles['open-chat-button']}
+          href={chatroomUrl?.chatroomUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Typography as="p" variant="content-medium">
             {chatroomUrl?.chatroomUrl}
           </Typography>
-        </button>
+        </a>
       </section>
 
       {/* 선호운동 영역 */}

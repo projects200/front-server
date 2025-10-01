@@ -4,10 +4,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 
 import { useReadUserFullProfile } from '@/hooks/api/useMypageApi'
-import {
-  useReadChatroomUrl,
-  useReadMemberChatroomUrl,
-} from '@/hooks/api/useOpenChatApi'
+import { useReadChatroomUrl } from '@/hooks/api/useOpenChatApi'
 import EditIcon from '@/assets/icon_edit.svg'
 import SettingsIcon from '@/assets/icon_settings.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'
@@ -25,15 +22,7 @@ export default function Mypage() {
   const { data: profileData, isLoading: profileLoading } =
     useReadUserFullProfile()
 
-  const { data: testData, isLoading: testLoading } = useReadMemberChatroomUrl(
-    '84386d2c-9041-7054-8c8c-a5d5a4eff628',
-  )
-
-  // if (profileLoading || chatroomLoading || !profileData) return null
-  if (profileLoading || chatroomLoading || !profileData || testLoading)
-    return null
-
-  console.log(testData)
+  if (profileLoading || chatroomLoading || !profileData) return null
 
   return (
     <>
@@ -146,14 +135,15 @@ export default function Mypage() {
         </Typography>
         {chatroomUrl ? (
           <>
-            <button className={styles['open-chat-button']}>
+            {/* div or button 논의 필요 */}
+            <div className={styles['open-chat-button']}>
               <Typography as="p" variant="content-medium">
                 {chatroomUrl.chatroomUrl}
               </Typography>
-            </button>
+            </div>
             <Link
               className={styles['open-chat-edit']}
-              href={SITE_MAP.MYPAGE_OPEN_CHAT}
+              href={SITE_MAP.MYPAGE_OPEN_CHAT_EDIT}
             >
               <EditIcon className={styles['open-chat-edit-icon']} />
             </Link>
@@ -161,7 +151,7 @@ export default function Mypage() {
         ) : (
           <Link
             className={styles['open-chat-link']}
-            href={SITE_MAP.MYPAGE_OPEN_CHAT}
+            href={SITE_MAP.MYPAGE_OPEN_CHAT_CREATE}
           >
             <Typography
               className={styles['open-chat-link-text']}

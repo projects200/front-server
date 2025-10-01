@@ -2,16 +2,17 @@ import {
   createChatroomUrl,
   readChatroomUrl,
   readMemberChatroomUrl,
+  updateChatroomUrl,
 } from '@/api/openChat'
 import { adapterChatroomUrl } from '@/lib/adapters/openChat.adapter'
-import { ChatroomUrl } from '@/types/openChat'
+import { ChatroomUrl, ChatroomId, Chatroom } from '@/types/openChat'
 
 import useApiGet from './useApiGet'
 import useApiMutation from './useApiMutation'
 
 // 오픈 채팅 URL 생성
 export const usePostChatroomUrl = () =>
-  useApiMutation<{ openChatroomId: number }, ChatroomUrl>(
+  useApiMutation<ChatroomId, ChatroomUrl>(
     ['openChat/url'],
     (token, body) => createChatroomUrl(token, body),
     {
@@ -42,5 +43,15 @@ export const useReadMemberChatroomUrl = (memberId: string) =>
         messages: { 404: null },
         actions: { 404: null },
       },
+    },
+  )
+
+// 오픈 채팅 URL 수정
+export const usePatchChatroomUrl = () =>
+  useApiMutation<ChatroomId, Chatroom>(
+    ['openChat/url'],
+    (token, body) => updateChatroomUrl(token, body),
+    {
+      revalidate: true,
     },
   )

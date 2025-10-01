@@ -14,6 +14,7 @@ const SITE_MAP = {
   EXERCISE_EDIT: '/exercise/edit',
 
   MATCH: '/match',
+  MATCH_OPEN_CHAT_CREATE: '/match/open-chat-create',
   MATCH_PLACE_LIST: '/match/place-list',
   MATCH_PLACE_REGISTER_SEARCH: '/match/place-register-search',
   MATCH_PLACE_REGISTER_DETAIL: '/match/place-register-detail',
@@ -28,6 +29,7 @@ const SITE_MAP = {
   MYPAGE: '/mypage',
   MYPAGE_EDIT: '/mypage/edit',
   MYPAGE_PICTURES: '/mypage/pictures',
-  MYPAGE_OPEN_CHAT: '/mypage/open-chat'
+  MYPAGE_OPEN_CHAT_CREATE: '/mypage/open-chat-create',
+  MYPAGE_OPEN_CHAT_EDIT: '/mypage/open-chat-edit',
 } as const
 export default SITE_MAP
