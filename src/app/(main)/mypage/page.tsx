@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import clsx from 'clsx'
 import { format } from 'date-fns'
 
 import { useReadUserFullProfile } from '@/hooks/api/useMypageApi'
@@ -112,23 +111,11 @@ export default function Mypage() {
             </Typography>
           </div>
         </div>
-        {profileData.bio ? (
-          <Typography
-            as="span"
-            variant="content-large"
-            className={styles['bio']}
-          >
-            {profileData.bio}
+        <div className={styles['bio']}>
+          <Typography as="span" variant="content-medium">
+            {profileData.bio || '자기소개를 입력해서 자신에 대해 알려주세요!'}
           </Typography>
-        ) : (
-          <Typography
-            as="span"
-            variant="content-large"
-            className={clsx(styles['bio'], styles['bio-empty'])}
-          >
-            {'자기소개를 입력해서 자신에 대해 알려주세요!'}
-          </Typography>
-        )}
+        </div>
       </section>
 
       {/* 선호운동 영역 */}

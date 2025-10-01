@@ -17,6 +17,7 @@ const SITE_MAP = {
   MATCH_PLACE_LIST: '/match/place-list',
   MATCH_PLACE_REGISTER_SEARCH: '/match/place-register-search',
   MATCH_PLACE_REGISTER_DETAIL: '/match/place-register-detail',
+  MATCH_PROFILE: 'match/profile',
 
   TIMER_LIST: '/timer/list',
   TIMER_SIMPLE: '/timer/simple',
