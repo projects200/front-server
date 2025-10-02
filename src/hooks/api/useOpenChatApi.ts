@@ -4,7 +4,10 @@ import {
   readMemberChatroomUrl,
   updateChatroomUrl,
 } from '@/api/openChat'
-import { adapterChatroomUrl } from '@/lib/adapters/openChat.adapter'
+import {
+  adapterChatroomUrl,
+  adapterChatroom,
+} from '@/lib/adapters/openChat.adapter'
 import { ChatroomUrl, ChatroomId, Chatroom } from '@/types/openChat'
 
 import useApiGet from './useApiGet'
@@ -22,9 +25,9 @@ export const usePostChatroomUrl = () =>
 
 // 나의 오픈 채팅 URL 조회
 export const useReadChatroomUrl = () =>
-  useApiGet<ChatroomUrl>(
+  useApiGet<Chatroom>(
     ['openChat/url'],
-    (token) => readChatroomUrl(token).then(adapterChatroomUrl),
+    (token) => readChatroomUrl(token).then(adapterChatroom),
     {
       policy: {
         messages: { 404: null },

@@ -8,9 +8,11 @@ import Description from '@/assets/temp_create_chat-url-description.svg'
 import Header from '@/components/commons/header'
 import BottomButton from '@/components/commons/bottomButton'
 import { useToast } from '@/hooks/useToast'
-// import { usePatchChatroomUrl } from '@/hooks/api/useOpenChatApi'
+import {
+  usePatchChatroomUrl,
+  useReadChatroomUrl,
+} from '@/hooks/api/useOpenChatApi'
 import Typography from '@/components/ui/typography'
-import SITE_MAP from '@/constants/siteMap.constant'
 
 import OpenChatForm, {
   OpenChatUrlFormHandle,
@@ -19,7 +21,8 @@ import OpenChatForm, {
 import styles from './openChatEdit.module.css'
 
 export default function OpenChatEdit() {
-  // const { trigger: patchChatroomUrl } = usePatchChatroomUrl()
+  const { data: chatroomData, isLoading } = useReadChatroomUrl()
+  const { trigger: patchChatroomUrl } = usePatchChatroomUrl()
   const showToast = useToast()
   const router = useRouter()
   const formRef = useRef<OpenChatUrlFormHandle>(null)
@@ -29,17 +32,22 @@ export default function OpenChatEdit() {
   }
 
   const handleSubmit = async (value: OpenChatUrl) => {
-    alert(value)
-    // try {
-    //   await patchChatroomUrl({
-    //     chatroomId: openChatroomId,
-    //     chatroomUrl: value.openChatUrl,
-    //   })
-    //   showToast('카카오 오픈 채팅 링크가 수정되었습니다.')
-    router.replace(SITE_MAP.MYPAGE)
-    // } catch {}
+    if (!chatroomData) {
+      showToast('카카오 오픈 채팅 링크Id를 받아오지 못했습니다.')
+      router.back()
+      return
+    }
+    try {
+      await patchChatroomUrl({
+        chatroomId: chatroomData.chatroomId,
+        chatroomUrl: value.openChatUrl,
+      })
+      showToast('카카오 오픈 채팅 링크가 수정되었습니다.')
+      router.back()
+    } catch {}
   }
 
+  if (isLoading || !chatroomData) return null
   return (
     <div className={styles['container']}>
       <Header>카카오 오픈 채팅</Header>
@@ -47,7 +55,7 @@ export default function OpenChatEdit() {
       <section className={styles['form-section']}>
         <OpenChatForm
           ref={formRef}
-          defaultValues={{ openChatUrl: '' }}
+          defaultValues={{ openChatUrl: chatroomData.chatroomUrl }}
           onSubmit={handleSubmit}
           onError={(message) => showToast(message, 'info')}
         />
