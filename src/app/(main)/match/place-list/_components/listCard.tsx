@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 import Typography from '@/components/ui/typography'
 import LocationMarkerIcon from '@/assets/icon_location_marker.svg'
@@ -8,6 +9,7 @@ import KebabIcon from '@/assets/icon_kebab.svg'
 import KebabModal from '@/components/commons/kebabModal'
 import { useDeleteExerciseLocation } from '@/hooks/api/useExerciseLocationApi'
 import { ExerciseLocationId, ExerciseLocation } from '@/types/exerciseLocation'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './listCard.module.css'
 
@@ -16,6 +18,7 @@ type Props = {
 }
 
 export default function ListCard({ placeData }: Props) {
+  const router = useRouter()
   const { trigger: deleteExerciseLocation } = useDeleteExerciseLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -25,8 +28,13 @@ export default function ListCard({ placeData }: Props) {
   }
 
   const handleOnEdit = () => {
-    // 수정 로직
-    alert('수정 로직 개발중')
+    const params = new URLSearchParams()
+    params.append('id', placeData.id.toString())
+    params.append('lat', parseFloat(placeData.latitude.toFixed(10)).toString())
+    params.append('lng', parseFloat(placeData.longitude.toFixed(10)).toString())
+    params.append('name', placeData.name)
+    params.append('address', placeData.address)
+    router.push(`${SITE_MAP.MATCH_PLACE_REGISTER_EDIT}?${params.toString()}`)
   }
 
   const handleOnDelete = async () => {

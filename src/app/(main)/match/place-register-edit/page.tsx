@@ -1,7 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useQueryState, parseAsFloat, parseAsString } from 'nuqs'
+import {
+  useQueryState,
+  parseAsFloat,
+  parseAsString,
+  parseAsInteger,
+} from 'nuqs'
 import * as z from 'zod'
 import { useForm } from '@tanstack/react-form'
 
@@ -10,10 +15,10 @@ import InfoIcon from '@/assets/icon_warning.svg'
 import Header from '@/components/commons/header'
 import Typography from '@/components/ui/typography'
 import BottomButton from '@/components/commons/bottomButton'
-import { usePostExerciseLocation } from '@/hooks/api/useExerciseLocationApi'
+import { usePatchExerciseLocation } from '@/hooks/api/useExerciseLocationApi'
 import { useToast } from '@/hooks/useToast'
 
-import styles from './placeRegisterDetail.module.css'
+import styles from './placeRegisterEdit.module.css'
 
 const placeRegisterSchema = z.object({
   placeName: z
@@ -27,14 +32,16 @@ const placeRegisterSchema = z.object({
 })
 
 export default function PlaceRegisterDetail() {
-  const { trigger: createExerciseLocation } = usePostExerciseLocation()
+  const { trigger: updateExerciseLocation } = usePatchExerciseLocation()
   const router = useRouter()
   const showToast = useToast()
+  const [id] = useQueryState('id', parseAsInteger)
   const [lat] = useQueryState('lat', parseAsFloat)
   const [lng] = useQueryState('lng', parseAsFloat)
   const [initialName] = useQueryState('name', parseAsString)
   const [address] = useQueryState('address', parseAsString)
-  const isExist = address === null || lat === null || lng === null
+  const isExist =
+    id === null || address === null || lat === null || lng === null
 
   const form = useForm({
     defaultValues: {
@@ -59,17 +66,12 @@ export default function PlaceRegisterDetail() {
         return
       }
       try {
-        await createExerciseLocation({
+        await updateExerciseLocation({
+          id: id!,
           name: value.placeName,
-          address: address,
-          latitude: lat,
-          longitude: lng,
         })
-        showToast('운동장소가 등록되었습니다.', 'info')
+        showToast('운동장소가 수정되었습니다.', 'info')
         router.back()
-        setTimeout(() => {
-          router.back()
-        }, 0)
       } catch {}
     },
   })

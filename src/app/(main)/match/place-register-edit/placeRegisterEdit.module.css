@@ -1,0 +1,79 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-white-300);
+}
+
+.contents {
+  padding: 0 20px;
+}
+
+.place-display {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.marker-icon {
+  height: 30px;
+  width: 30px;
+}
+
+.place-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+/* 장소명 */
+.place-input-section {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.label-sub-text {
+  margin-top: 4px;
+  color: var(--color-gray-200);
+}
+.place-input {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+  padding-left: 12px;
+  border: solid 1px var(--color-gray-200);
+  border-radius: 8px;
+  font-size: 14px;
+  height: 50px;
+  width: 100%;
+}
+
+/* 안내 문구 */
+.info-section {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-gray-200);
+}
+
+.info-title {
+  display: flex;
+  align-items: center;
+  color: var(--color-gray-100);
+  gap: 6px;
+}
+.info-margin {
+  margin: 12px 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.button-wrapper {
+  padding: 12px 20px 24px 20px;
+  background-color: var(--color-white-300);
+}

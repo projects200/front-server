@@ -86,6 +86,44 @@ export default function PlaceRegisterSearch() {
     }
     geocoder.coord2Address(coords.lng, coords.lat, callback)
   }, [])
+// const updateAddressFromCoords = useCallback((coords: LatLng) => {
+//   if (!window.kakao) return
+//   const ps = new window.kakao.maps.services.Places()
+//   const geocoder = new window.kakao.maps.services.Geocoder()
+
+//   // 1. 좌표로 주소 변환
+//   geocoder.coord2Address(coords.lng, coords.lat, (result, status) => {
+//     if (status === window.kakao.maps.services.Status.OK && result[0]) {
+//       const addressData = result[0]
+//       const baseAddress =
+//         addressData.road_address?.address_name || addressData.address.address_name
+
+//       // 2. 주변 장소 검색 (반경 100m 내)
+//       ps.keywordSearch('', (data, status2) => {
+//         if (status2 === window.kakao.maps.services.Status.OK && data[0]) {
+//           // 가장 가까운 장소 선택 (첫 번째 결과)
+//           const nearestPlace = data[0] as KakaoSearchResultItem
+//           setAddressInfo({
+//             name: nearestPlace.place_name,
+//             address: nearestPlace.road_address_name || nearestPlace.address_name || baseAddress,
+//           })
+//         } else {
+//           // 주변 장소 없으면 주소만 표시
+//           setAddressInfo({
+//             name: '',
+//             address: baseAddress,
+//           })
+//         }
+//       }, {
+//         location: new window.kakao.maps.LatLng(coords.lat, coords.lng),
+//         radius: 100, // 반경 100m
+//         sort: window.kakao.maps.services.SortBy.DISTANCE, // 가까운 순으로 정렬
+//       })
+//     } else {
+//       setAddressInfo({ name: '', address: '주소를 찾을 수 없습니다.' })
+//     }
+//   })
+// }, [])
 
   // 키워드 검색 실행
   const handleSearch = () => {

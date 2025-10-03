@@ -1,7 +1,12 @@
-import { ExerciseLocationId, ExerciseLocation } from '@/types/exerciseLocation'
+import {
+  ExerciseLocationId,
+  ExerciseLocation,
+  ExerciseLocationName,
+} from '@/types/exerciseLocation'
 import {
   ExerciseLocationIdDto,
   ExerciseLocationDto,
+  ExerciseLocationNameDto,
 } from '@/types/dto/exerciseLocation.dto'
 
 export function adapterExerciseLocationFormToDto(
@@ -12,6 +17,13 @@ export function adapterExerciseLocationFormToDto(
     address: form.address,
     latitude: form.latitude,
     longitude: form.longitude,
+  }
+}
+export function adapterExerciseLocationNameToDto(
+  data: ExerciseLocationName,
+): ExerciseLocationNameDto {
+  return {
+    exerciseLocationName: data.name,
   }
 }
 

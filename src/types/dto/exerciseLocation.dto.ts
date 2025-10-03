@@ -8,3 +8,7 @@ export type ExerciseLocationDto = {
   latitude: number
   longitude: number
 }
+
+export type ExerciseLocationNameDto = {
+  exerciseLocationName: string
+}

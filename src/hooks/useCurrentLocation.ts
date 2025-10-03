@@ -33,15 +33,16 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
         (position) => {
           const { latitude, longitude } = position.coords
 
-          setLocation({ latitude, longitude }) 
+          setLocation({ latitude, longitude })
           setLoading(false)
           resolve({ latitude, longitude })
         },
         (err) => {
-          setError(err) 
+          setError(err)
           setLoading(false)
           reject(err)
         },
+        { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
       )
     })
   }, [])
