@@ -22,7 +22,7 @@ export default function GenderField({ value, onChange }: Props) {
   return (
     <div className={styles['container']}>
       <label className={styles['label']}>
-        <Typography as="span" variant="text15" weight="bold">
+        <Typography as="span" variant="content-large" weight="bold">
           성별
         </Typography>
       </label>
@@ -34,7 +34,7 @@ export default function GenderField({ value, onChange }: Props) {
             className={styles['option']}
             onClick={() => onChange(option.value)}
           >
-            <Typography as="span" variant="text15">
+            <Typography as="span" variant="content-large">
               {option.label}
             </Typography>
             <CheckStatusIcon

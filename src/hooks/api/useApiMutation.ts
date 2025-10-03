@@ -1,7 +1,9 @@
 import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation'
 import { Key } from 'swr'
 import { useAuth } from 'react-oidc-context'
+
 import { ApiError, ErrorPolicy } from '@/types/common'
+
 import { useApiErrorHandler } from './useApiErrorHandler'
 
 type MutationResult<Data, Body> = {

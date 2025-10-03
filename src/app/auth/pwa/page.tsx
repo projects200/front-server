@@ -19,13 +19,17 @@ export default function Pwa() {
         <Typography
           className={styles['title']}
           as="span"
-          variant="text22"
+          variant="title-medium"
           weight="bold"
         >
           Step 1
         </Typography>
 
-        <Typography className={styles['sub-title']} as="span" variant="text15">
+        <Typography
+          className={styles['sub-title']}
+          as="span"
+          variant="content-large"
+        >
           하단 중앙의 <IOSDownload className={styles['icon']} /> 아이콘을
           눌러주세요
         </Typography>
@@ -33,24 +37,32 @@ export default function Pwa() {
         <Typography
           className={styles['title']}
           as="span"
-          variant="text22"
+          variant="title-medium"
           weight="bold"
         >
           Step 2
         </Typography>
-        <Typography className={styles['sub-title']} as="span" variant="text15">
+        <Typography
+          className={styles['sub-title']}
+          as="span"
+          variant="content-large"
+        >
           홈 화면에 추가 버튼을 눌러주세요
         </Typography>
         <Image className={styles['img']} src={Step2Img} alt="PWA 설치 단계 2" />
         <Typography
           className={styles['title']}
           as="span"
-          variant="text22"
+          variant="title-medium"
           weight="bold"
         >
           Step 3
         </Typography>
-        <Typography className={styles['sub-title']} as="span" variant="text15">
+        <Typography
+          className={styles['sub-title']}
+          as="span"
+          variant="content-large"
+        >
           앱 이름을 설정하고 추가 버튼을 눌러주세요
         </Typography>
         <Image className={styles['img']} src={Step3Img} alt="PWA 설치 단계 3" />

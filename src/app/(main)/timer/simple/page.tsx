@@ -4,7 +4,10 @@ import { useState, useEffect } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
-import { usePostSimpleTimer, useReadSimpleTimerList } from '@/hooks/useTimerApi'
+import {
+  usePostSimpleTimer,
+  useReadSimpleTimerList,
+} from '@/hooks/api/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 import PlusIcon from '@/assets/icon_plus.svg'
@@ -123,7 +126,7 @@ export default function Simple() {
       </div>
 
       <button className={styles['sort-button']} onClick={handleSortToggle}>
-        <Typography as="span" variant="text15" weight="bold">
+        <Typography as="span" variant="content-large" weight="bold">
           정렬
         </Typography>
         <SortIcon className={styles['sort-icon']} />

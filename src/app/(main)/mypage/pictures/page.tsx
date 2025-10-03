@@ -7,7 +7,7 @@ import {
   useReadProfilePictureGroup,
   usePutRepProfilePicture,
   useDeleteProfilePicture,
-} from '@/hooks/useProfileApi'
+} from '@/hooks/api/useProfileApi'
 import LeftArrow from '@/assets/icon_left_arrow.svg'
 import Typography from '@/components/ui/typography'
 import KebabIcon from '@/assets/icon_kebab.svg'
@@ -60,54 +60,54 @@ export default function Pictures() {
     setIsMenuOpen(false)
   }
 
-// 프로필 사진 다운로드 핸들러
-const handleDownload = async () => {
-  const currentImage = sortedImages[currentIndex];
-  if (!currentImage) return;
+  // 프로필 사진 다운로드 핸들러
+  const handleDownload = async () => {
+    const currentImage = sortedImages[currentIndex]
+    if (!currentImage) return
 
-  setIsMenuOpen(false);
+    setIsMenuOpen(false)
 
-  let link: HTMLAnchorElement | null = null;
-  let url: string | null = null;
+    let link: HTMLAnchorElement | null = null
+    let url: string | null = null
 
-  try {
-    const response = await fetch(currentImage.profileImageUrl);
-    if (!response.ok) {
-      throw new Error(`서버 응답 오류: ${response.status}`);
+    try {
+      const response = await fetch(currentImage.profileImageUrl)
+      if (!response.ok) {
+        throw new Error(`서버 응답 오류: ${response.status}`)
+      }
+
+      const blob = await response.blob()
+      url = window.URL.createObjectURL(blob)
+
+      const fileName = `${currentImage.profileImageName || 'profile'}.${currentImage.profileImageExtension || 'jpg'}`
+
+      link = document.createElement('a')
+      link.href = url
+
+      // 모바일 사파리 대응: download 속성은 시도하되, 없더라도 새 탭에서 열리게 fallback
+      link.setAttribute('download', fileName)
+      link.setAttribute('target', '_blank')
+      link.setAttribute('rel', 'noopener noreferrer')
+
+      document.body.appendChild(link)
+      link.click()
+
+      showToast('이미지를 저장했습니다.', 'info')
+    } catch (error) {
+      console.error(error)
+      showToast('이미지 저장에 실패했습니다.', 'info')
+    } finally {
+      // 다음 프레임에서 제거하여 click() 이벤트 누락 방지
+      requestAnimationFrame(() => {
+        if (link && link.parentNode) {
+          document.body.removeChild(link)
+        }
+        if (url) {
+          window.URL.revokeObjectURL(url)
+        }
+      })
     }
-
-    const blob = await response.blob();
-    url = window.URL.createObjectURL(blob);
-
-    const fileName = `${currentImage.profileImageName || "profile"}.${currentImage.profileImageExtension || "jpg"}`;
-
-    link = document.createElement("a");
-    link.href = url;
-
-    // 모바일 사파리 대응: download 속성은 시도하되, 없더라도 새 탭에서 열리게 fallback
-    link.setAttribute("download", fileName);
-    link.setAttribute("target", "_blank");
-    link.setAttribute("rel", "noopener noreferrer");
-
-    document.body.appendChild(link);
-    link.click();
-
-    showToast("이미지를 저장했습니다.", "info");
-  } catch (error) {
-    console.error(error);
-    showToast("이미지 저장에 실패했습니다.", "info");
-  } finally {
-    // 다음 프레임에서 제거하여 click() 이벤트 누락 방지
-    requestAnimationFrame(() => {
-      if (link && link.parentNode) {
-        document.body.removeChild(link);
-      }
-      if (url) {
-        window.URL.revokeObjectURL(url);
-      }
-    });
   }
-};
 
   // 프로필 사진 삭제 핸들러
   const handleDelete = async () => {
@@ -156,20 +156,20 @@ const handleDownload = async () => {
           </button>
         </div>
         <div className={styles['step']}>
-          <Typography as="span" variant="text15">
+          <Typography as="span" variant="content-large">
             {currentIndex + 1}
           </Typography>
           <Typography
             className={styles['step-suffix']}
             as="span"
-            variant="text15"
+            variant="content-large"
           >
             /
           </Typography>
           <Typography
             className={styles['step-suffix']}
             as="span"
-            variant="text15"
+            variant="content-large"
           >
             {sortedImages.length}
           </Typography>

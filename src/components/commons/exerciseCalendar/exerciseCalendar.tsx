@@ -16,10 +16,14 @@ type Props = {
   onDateSelect?: (date: Date) => void
   selectedDate: string
   isReadOnly?: boolean
+  isOthers?: boolean
 }
 
 const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
-  ({ onDateSelect, selectedDate, isReadOnly = false }, ref) => {
+  (
+    { onDateSelect, selectedDate, isReadOnly = false, isOthers = false },
+    ref,
+  ) => {
     const today = new Date()
     const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(today))
     const prevMonth = useMemo(() => subMonths(currentMonth, 1), [currentMonth])
@@ -83,7 +87,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
           <button onClick={handlePrev} className={styles['nav-button']}>
             <LeftArrow />
           </button>
-          <Typography as="span" variant="text15" weight="bold">
+          <Typography as="span" variant="content-large" weight="bold">
             {format(currentMonth, 'yyyy년 M월', { locale: ko })}
           </Typography>
           <button
@@ -98,7 +102,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
         <div className={styles['weekdays']}>
           {['일', '월', '화', '수', '목', '금', '토'].map((weekday) => (
             <div key={weekday} className={styles['weekday']}>
-              <Typography as="span" variant="text14" weight="bold">
+              <Typography as="span" variant="content-medium" weight="bold">
                 {weekday}
               </Typography>
             </div>
@@ -125,6 +129,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
+              isOthers={isOthers}
             />
             <MonthViewWithData
               today={today}
@@ -133,6 +138,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
+              isOthers={isOthers}
             />
             <MonthViewWithData
               today={today}
@@ -141,6 +147,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
+              isOthers={isOthers}
             />
           </animated.div>
         </div>

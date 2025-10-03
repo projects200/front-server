@@ -1,0 +1,58 @@
+.container {
+  position: relative;
+  height: calc(100% - var(--bottom-nav-heigth));
+  width: 100%;
+  background-color: var(--color-background);
+}
+
+.map-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.current-location-button {
+  position: absolute;
+  bottom: 26px;
+  right: 26px;
+  width: 44px;
+  height: 44px;
+  background-color: var(--color-white-300);
+  box-shadow: var(--color-boxshadow-100);
+  border-radius: 8px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.current-location-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.modal-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mascot {
+  margin: 20px 0;
+  width: 100px;
+  height: 100px;
+}
+
+.modal-sub-text {
+  margin-top: 18px;
+  color: var(--color-gray-100);
+}
+
+.modal-button {
+  margin-top: 44px;
+  height: 40px;
+  width: 90%;
+  background-color: var(--color-green);
+  color: var(--color-white-300);
+  border-radius: 8px;
+}

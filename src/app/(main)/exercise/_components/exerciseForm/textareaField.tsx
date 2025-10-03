@@ -26,7 +26,7 @@ const TextareaField = ({
   return (
     <div className={clsx(className, styles['container'])}>
       <label htmlFor={id}>
-        <Typography as="span" variant="text15" weight="medium">
+        <Typography as="span" variant="content-large" weight="medium">
           {label}
         </Typography>
       </label>

@@ -13,7 +13,7 @@ import {
   usePatchExercise,
   useDeleteExercisePictures,
   usePostExercisePictures,
-} from '@/hooks/useExerciseApi'
+} from '@/hooks/api/useExerciseApi'
 import { ExerciseRecordReq } from '@/types/exercise'
 import { isValidExerciseId } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
@@ -116,7 +116,10 @@ export default function Edit() {
 
   return (
     <>
-      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
+      <Header
+        rightIcon={<CompleteButton>완료</CompleteButton>}
+        onClick={triggerFormSubmit}
+      >
         운동 기록 수정
       </Header>
       <ExerciseForm

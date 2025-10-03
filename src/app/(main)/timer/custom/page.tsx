@@ -12,7 +12,7 @@ import LoopOnIcon from '@/assets/icon_loop_on.svg'
 import LoopOffIcon from '@/assets/icon_loop_off.svg'
 import Button from '@/components/ui/button'
 import Typography from '@/components/ui/typography'
-import { useReadCustomTimerDetail } from '@/hooks/useTimerApi'
+import { useReadCustomTimerDetail } from '@/hooks/api/useTimerApi'
 
 import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
@@ -220,11 +220,11 @@ export default function Custom() {
             >
               <div className={styles['step-info']}>
                 <ClockIcon className={styles['clock-icon']} />
-                <Typography as="span" variant="text15" weight="bold">
+                <Typography as="span" variant="content-large" weight="bold">
                   {step.customTimerStepName}
                 </Typography>
               </div>
-              <Typography as="span" variant="text18" weight="bold">
+              <Typography as="span" variant="title-small" weight="bold">
                 {formatNumberToTime(step.customTimerStepTime)}
               </Typography>
             </button>

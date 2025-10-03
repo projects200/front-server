@@ -10,7 +10,7 @@ import {
   ExercisePicture,
   ExerciseRecordReq,
 } from '@/types/exercise'
-import { useReadExerciseScore } from '@/hooks/useScoreApi'
+import { useReadExerciseScore } from '@/hooks/api/useScoreApi'
 import WarningIcon from '@/assets/icon_warning.svg'
 import Typography from '@/components/ui/typography'
 
@@ -214,7 +214,7 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
                         <WarningIcon className={styles['warning-icon']} />
                         <Typography
                           as="span"
-                          variant="text12"
+                          variant="content-small"
                           className={styles['description']}
                         >
                           {scoreDescription}

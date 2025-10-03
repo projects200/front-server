@@ -91,7 +91,7 @@ const MonthView = memo(function MonthView({
                   onDateClick(day)
                 }}
               >
-                <Typography as="span" variant="text14">
+                <Typography as="span" variant="content-medium">
                   {format(day, 'd')}
                 </Typography>
                 {count > 0 && <StampIcon className={stampIconClassName} />}

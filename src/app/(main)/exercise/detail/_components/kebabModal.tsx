@@ -6,7 +6,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 import { useToast } from '@/hooks/useToast'
-import { useDeleteExercise } from '@/hooks/useExerciseApi'
+import { useDeleteExercise } from '@/hooks/api/useExerciseApi'
 import BottomModal from '@/components/commons/bottomModal'
 import CenterModal from '@/components/commons/centerModal'
 import EditIcon from '@/assets/icon_edit.svg'
@@ -65,7 +65,7 @@ export default function KebabModal({
             href={`${SITE_MAP.EXERCISE_EDIT}?id=${exerciseId}`}
           >
             <EditIcon className={styles['modal-icon']} />
-            <Typography as="span" variant="text15">
+            <Typography as="span" variant="content-large">
               수정하기
             </Typography>
           </Link>
@@ -77,7 +77,11 @@ export default function KebabModal({
             }}
           >
             <TrashIcon className={styles['modal-icon']} />
-            <Typography className={styles['remove']} as="span" variant="text15">
+            <Typography
+              className={styles['remove']}
+              as="span"
+              variant="content-large"
+            >
               삭제하기
             </Typography>
           </button>
@@ -88,7 +92,7 @@ export default function KebabModal({
         onClose={() => setIsOpenCenter(false)}
         onConfirm={handleRemove}
       >
-        <Typography as="span" variant="text15" weight="bold">
+        <Typography as="span" variant="content-large" weight="bold">
           운동 기록을 삭제하시겠습니까?
         </Typography>
       </CenterModal>

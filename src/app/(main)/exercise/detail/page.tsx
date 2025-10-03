@@ -7,7 +7,7 @@ import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { useToast } from '@/hooks/useToast'
 import { isValidExerciseId } from '@/utils/validation'
-import { useReadExercise } from '@/hooks/useExerciseApi'
+import { useReadExercise } from '@/hooks/api/useExerciseApi'
 
 import ImageField from './_components/imageField'
 import InputField from '../_components/exerciseForm/inputField'

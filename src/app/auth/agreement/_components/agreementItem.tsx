@@ -21,7 +21,11 @@ const AgreementItem = ({
   return (
     <div className={styles['item']}>
       <button onClick={onClickLabel}>
-        <Typography className={styles['label']} as="span" variant="text14">
+        <Typography
+          className={styles['label']}
+          as="span"
+          variant="content-medium"
+        >
           {label} &gt;
         </Typography>
       </button>

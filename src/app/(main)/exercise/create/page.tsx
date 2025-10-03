@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/useToast'
 import {
   usePostExercise,
   usePostExercisePictures,
-} from '@/hooks/useExerciseApi'
+} from '@/hooks/api/useExerciseApi'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { ExerciseRecordReq } from '@/types/exercise'
 import Celebration from './_components/celebration'
@@ -88,7 +88,10 @@ export default function Create() {
 
   return (
     <>
-      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
+      <Header
+        rightIcon={<CompleteButton>완료</CompleteButton>}
+        onClick={triggerFormSubmit}
+      >
         운동 기록하기
       </Header>
       <ExerciseForm

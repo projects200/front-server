@@ -21,7 +21,7 @@ export default function Login() {
       <Typography
         className={styles['title']}
         as="div"
-        variant="text32"
+        variant="header"
         weight="bold"
       >
         운 다 방
@@ -31,7 +31,11 @@ export default function Login() {
         onClick={() => redirectToSocialLogin('kakao')}
       >
         <KakaoIcon className={styles['icon']} width={24} height={24} />
-        <Typography className={styles['text']} variant="text18" weight="medium">
+        <Typography
+          className={styles['text']}
+          variant="title-small"
+          weight="medium"
+        >
           카카오 로그인
         </Typography>
       </button>
@@ -40,7 +44,11 @@ export default function Login() {
         onClick={() => redirectToSocialLogin('Google')}
       >
         <GoogleIcon className={styles['icon']} width={24} height={24} />
-        <Typography className={styles['text']} variant="text18" weight="medium">
+        <Typography
+          className={styles['text']}
+          variant="title-small"
+          weight="medium"
+        >
           구글 로그인
         </Typography>
       </button>
@@ -59,7 +67,7 @@ export default function Login() {
             <Typography
               className={styles['button-sub-title']}
               as="span"
-              variant="text8"
+              variant="content-tiny"
               weight="bold"
             >
               GET IT ON
@@ -67,7 +75,7 @@ export default function Login() {
             <Typography
               className={styles['button-title']}
               as="span"
-              variant="text14"
+              variant="content-medium"
               weight="bold"
             >
               Google Play
@@ -80,7 +88,7 @@ export default function Login() {
             <Typography
               className={styles['button-sub-title']}
               as="span"
-              variant="text8"
+              variant="content-tiny"
               weight="bold"
             >
               Download on the
@@ -88,7 +96,7 @@ export default function Login() {
             <Typography
               className={styles['button-title']}
               as="span"
-              variant="text14"
+              variant="content-medium"
               weight="bold"
             >
               PWA APP

@@ -17,13 +17,17 @@ const KebabModal = forwardRef<HTMLDivElement, Props>(
       <div ref={ref} className={styles['kebab-menu']}>
         <button className={styles['kebab-menu-item']} onClick={onEdit}>
           <EditIcon className={styles['icon']} />
-          <Typography as="span" variant="text15">
+          <Typography as="span" variant="content-large">
             수정
           </Typography>
         </button>
         <button className={styles['kebab-menu-item']} onClick={onDelete}>
           <TrashIcon className={styles['icon']} />
-          <Typography as="span" variant="text15" className={styles['remove']}>
+          <Typography
+            as="span"
+            variant="content-large"
+            className={styles['remove']}
+          >
             삭제
           </Typography>
         </button>

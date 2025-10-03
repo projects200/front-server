@@ -2,6 +2,7 @@ import useSWR, { SWRConfiguration, Key } from 'swr'
 import { useAuth } from 'react-oidc-context'
 
 import { ApiError, ErrorPolicy } from '@/types/common'
+
 import { useApiErrorHandler } from './useApiErrorHandler'
 
 export interface UseApiGetOptions<Data>

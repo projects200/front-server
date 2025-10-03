@@ -21,13 +21,18 @@ const ImageUploader = ({ className, files, setFiles }: Props) => {
       const fileArray = Array.from(e.target.files)
 
       const filteredFiles = fileArray.filter((file) => {
-        const isValidType = ['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)
+        const isValidType = ['image/jpeg', 'image/jpg', 'image/png'].includes(
+          file.type,
+        )
         const isValidSize = file.size <= 10 * 1024 * 1024 // 10MB
         return isValidType && isValidSize
       })
 
       if (filteredFiles.length !== fileArray.length) {
-        showToast('jpg, jpeg, png 파일만 가능하며, 용량은 10MB 이하만 업로드할 수 있습니다.', 'info')
+        showToast(
+          'jpg, jpeg, png 파일만 가능하며, 용량은 10MB 이하만 업로드할 수 있습니다.',
+          'info',
+        )
       }
 
       if (files.length + filteredFiles.length > 5) {
@@ -46,9 +51,15 @@ const ImageUploader = ({ className, files, setFiles }: Props) => {
   return (
     <div className={clsx(className, styles['container'])}>
       <label className={styles['upload-box']}>
-        <input type="file" accept="image/*" onChange={handleChange} hidden multiple />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleChange}
+          hidden
+          multiple
+        />
         <CameraIcon className={styles['camera-icon']} />
-        <Typography as="span" variant="text12">
+        <Typography as="span" variant="content-small">
           사진 추가하기
         </Typography>
       </label>
@@ -58,7 +69,11 @@ const ImageUploader = ({ className, files, setFiles }: Props) => {
         return (
           <div key={`new-${index}`} className={styles['preview-box']}>
             <img src={src} alt="preview" className={styles['preview']} />
-            <button type="button" className={styles['button']} onClick={() => handleRemove(index)}>
+            <button
+              type="button"
+              className={styles['button']}
+              onClick={() => handleRemove(index)}
+            >
               <XButtonIcon className={styles['x-button']} />
             </button>
           </div>

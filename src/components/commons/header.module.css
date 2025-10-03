@@ -35,6 +35,10 @@
   left: 50%;
   transform: translateX(-50%);
 }
+.fill-space-title {
+  flex: 1;
+  margin: 0 12px;
+}
 .right-icon {
   display: flex;
   align-items: center;

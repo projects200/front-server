@@ -105,7 +105,7 @@ export default function DateTimePicker({
   return (
     <div className={styles['container']}>
       <label>
-        <Typography as="span" variant="text15" weight="medium">
+        <Typography as="span" variant="content-large" weight="medium">
           {label}
         </Typography>
       </label>
@@ -121,11 +121,11 @@ export default function DateTimePicker({
         >
           {!startedAt && <ClockIcon className={styles['icon']} />}
           {startedAt ? (
-            <Typography as="span" variant="text14">
+            <Typography as="span" variant="content-medium">
               {formatDisplay(formatStartDate)}
             </Typography>
           ) : (
-            <Typography as="span" variant="text14">
+            <Typography as="span" variant="content-medium">
               시작 시간
             </Typography>
           )}
@@ -142,11 +142,11 @@ export default function DateTimePicker({
         >
           {!endedAt && <ClockIcon className={styles['icon']} />}
           {endedAt ? (
-            <Typography as="span" variant="text14">
+            <Typography as="span" variant="content-medium">
               {formatDisplay(formatEndDate)}
             </Typography>
           ) : (
-            <Typography as="span" variant="text14">
+            <Typography as="span" variant="content-medium">
               끝 시간
             </Typography>
           )}

@@ -7,7 +7,6 @@
     "build": "NEXT_PUBLIC_BUILD_VERSION=$(date +%s) next build && node scripts/build-sw.js",
     "buildtest": "next build && node scripts/build-sw.js",
     "lint": "next lint",
-
     "mobile": "node scripts/dev-sw.js && node --env-file=.env.pwa node_modules/next/dist/bin/next dev",
     "build:pwa": "node --env-file=.env.pwa node_modules/next/dist/bin/next build && node scripts/build-sw.js",
     "serve:pwa": "serve out",
@@ -31,6 +30,7 @@
     "react-circular-progressbar": "^2.2.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
+    "react-kakao-maps-sdk": "^1.2.0",
     "react-mobile-datepicker": "^4.0.2",
     "react-mobile-picker": "^1.1.2",
     "react-oidc-context": "^3.3.0",

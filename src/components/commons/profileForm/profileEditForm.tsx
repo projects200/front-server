@@ -162,7 +162,7 @@ const ProfileEditForm = forwardRef<ProfileEditFormHandle, Props>(
           {(field) => (
             <div className={styles['bio-section']}>
               <label className={styles['label']}>
-                <Typography as="span" variant="text15" weight="bold">
+                <Typography as="span" variant="content-large" weight="bold">
                   자기소개
                 </Typography>
               </label>

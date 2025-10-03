@@ -8,7 +8,7 @@ import LogoTitle from '@/components/ui/logoTitle'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import PlusIcon from '@/assets/icon_plus.svg'
 import Typography from '@/components/ui/typography'
-import { useReadCustomTimerList } from '@/hooks/useTimerApi'
+import { useReadCustomTimerList } from '@/hooks/api/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './list.module.css'
@@ -27,7 +27,7 @@ export default function List() {
           <Typography
             className={styles['simple-timer-text']}
             as="span"
-            variant="text18"
+            variant="title-small"
             weight="medium"
           >
             심플 타이머
@@ -42,7 +42,7 @@ export default function List() {
               className={styles['custom-timer-container']}
               href={`${SITE_MAP.TIMER_CUSTOM}?id=${list.customTimerId}`}
             >
-              <Typography as="span" variant="text18" weight="medium">
+              <Typography as="span" variant="title-small" weight="medium">
                 {list.customTimerName}
               </Typography>
               <RightArrow
@@ -63,7 +63,7 @@ export default function List() {
         >
           {data && data.customTimerList.length === 0 ? (
             <>
-              <Typography as="span" variant="text18" weight="medium">
+              <Typography as="span" variant="title-small" weight="medium">
                 나만의 타이머
               </Typography>
               <PlusIcon className={styles['plus-icon']} />

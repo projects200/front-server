@@ -33,13 +33,17 @@ export default function ExerciseCard(props: ExerciseList) {
       <div className={styles['text_container']}>
         <Typography
           as="span"
-          variant="text18"
+          variant="title-small"
           weight="bold"
           className={styles['title']}
         >
           {props.title}
         </Typography>
-        <Typography as="span" variant="text15" className={styles['time']}>
+        <Typography
+          as="span"
+          variant="content-large"
+          className={styles['time']}
+        >
           {formatedTime}
         </Typography>
       </div>

@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import Script from 'next/script'
 
 import Analytics from '@/lib/firebase/analytics'
+
 import { ClientProviders } from './_components/clientProviders'
 import './reset.css'
 import './globals.css'
@@ -41,6 +43,10 @@ export default function RootLayout({
           </NuqsAdapter>
         </ClientProviders>
         <Analytics />
+        <Script
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_APP_KEY}&libraries=services,clusterer&autoload=false`}
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   )

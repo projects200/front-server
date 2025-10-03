@@ -17,18 +17,22 @@ const KebabModal = forwardRef<HTMLDivElement, Props>(
       <div ref={ref} className={styles['kebab-menu']}>
         {currentIndex !== 0 && (
           <button className={styles['kebab-menu-item']} onClick={onRepPicture}>
-            <Typography as="span" variant="text15">
+            <Typography as="span" variant="content-large">
               대표 사진으로 지정
             </Typography>
           </button>
         )}
         <button className={styles['kebab-menu-item']} onClick={onDownload}>
-          <Typography as="span" variant="text15">
+          <Typography as="span" variant="content-large">
             저장하기
           </Typography>
         </button>
         <button className={styles['kebab-menu-item']} onClick={onDelete}>
-          <Typography as="span" variant="text15" className={styles['remove']}>
+          <Typography
+            as="span"
+            variant="content-large"
+            className={styles['remove']}
+          >
             삭제
           </Typography>
         </button>

@@ -11,6 +11,7 @@
   align-items: center;
   border-top: 1px solid var(--color-gray-300);
   z-index: 1000;
+  padding: 0 10px;
 }
 
 .link {
@@ -50,5 +51,6 @@
   .nav {
     width: 500px;
     margin: auto;
+    padding: 0 20px;
   }
 }

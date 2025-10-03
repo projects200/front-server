@@ -13,8 +13,8 @@ import {
   validateBirthdate,
   validateGender,
 } from '@/utils/validation'
-import { usePostUser } from '@/hooks/useAuthApi'
-import { usePostFcmToken } from '@/hooks/useFcmApi'
+import { usePostUser } from '@/hooks/api/useAuthApi'
+import { usePostFcmToken } from '@/hooks/api/useFcmApi'
 import { requestFcmToken } from '@/lib/firebase/config'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -90,7 +90,7 @@ export default function ProfileForm() {
       <div className={styles['form-wrapper']}>
         <div className={styles['field']}>
           <label className={styles['label']}>
-            <Typography as="span" variant="text15" weight="bold">
+            <Typography as="span" variant="content-large" weight="bold">
               닉네임
             </Typography>
           </label>
@@ -104,12 +104,12 @@ export default function ProfileForm() {
             />
             <ul className={styles['helper-text']}>
               <li>
-                <Typography as="span" variant="text12">
+                <Typography as="span" variant="content-small">
                   &#8226; &nbsp;영어, 한글, 숫자 포함 30자 이내
                 </Typography>
               </li>
               <li>
-                <Typography as="span" variant="text12">
+                <Typography as="span" variant="content-small">
                   &#8226; &nbsp;태그, 이모지 및 특수 문자 불가능
                 </Typography>
               </li>
@@ -118,7 +118,7 @@ export default function ProfileForm() {
         </div>
         <div className={styles['field']}>
           <label className={styles['label']}>
-            <Typography as="span" variant="text15" weight="bold">
+            <Typography as="span" variant="content-large" weight="bold">
               생년월일
             </Typography>
           </label>
@@ -126,7 +126,7 @@ export default function ProfileForm() {
         </div>
         <div className={styles['field']}>
           <label className={styles['label']}>
-            <Typography as="span" variant="text15" weight="bold">
+            <Typography as="span" variant="content-large" weight="bold">
               성별
             </Typography>
           </label>

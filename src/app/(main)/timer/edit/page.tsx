@@ -11,7 +11,7 @@ import {
   useReadCustomTimerDetail,
   usePutCustomTimer,
   usePatchCustomTimer,
-} from '@/hooks/useTimerApi'
+} from '@/hooks/api/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
 import CustomTimerForm, {
@@ -91,7 +91,10 @@ export default function Edit() {
   }
   return (
     <div className={styles['page-container']}>
-      <Header rightIcon={<CompleteButton />} onClick={triggerFormSubmit}>
+      <Header
+        rightIcon={<CompleteButton>완료</CompleteButton>}
+        onClick={triggerFormSubmit}
+      >
         타이머 수정
       </Header>
 
