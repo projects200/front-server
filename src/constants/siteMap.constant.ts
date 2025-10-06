@@ -1,6 +1,8 @@
 const SITE_MAP = {
   HOME: '/',
+
   SETTINGS: '/settings',
+  SETTINGS_ALERT: '/settings/alert',
 
   LOGIN: '/auth/login',
   CALLBACK: '/auth/callback',
