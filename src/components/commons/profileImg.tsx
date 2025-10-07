@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import clsx from 'clsx'
 
 import DefaultProfile from '@/assets/default_profile.svg'
 import PlusIcon from '@/assets/icon_img_plus.svg'
@@ -8,6 +9,7 @@ import PlusIcon from '@/assets/icon_img_plus.svg'
 import styles from './profileImg.module.css'
 
 type Props = {
+  className?: string
   profileThumbnailUrl: string | null
   profileImageUrl: string | null
   mode: 'view' | 'edit'
@@ -15,6 +17,7 @@ type Props = {
 }
 
 export default function ProfileImg({
+  className,
   profileThumbnailUrl,
   profileImageUrl,
   mode,
@@ -48,7 +51,7 @@ export default function ProfileImg({
   return (
     <button
       type="button"
-      className={styles['profile-container']}
+      className={clsx(className, styles['profile-container'])}
       onClick={onClick}
     >
       <ProfileImageComponent />

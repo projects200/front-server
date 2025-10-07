@@ -23,6 +23,9 @@ const SITE_MAP = {
   MATCH_PLACE_REGISTER_EDIT: '/match/place-register-edit',
   MATCH_PROFILE: 'match/profile',
 
+  CHAT: '/chat',
+  CHAT_ROOM: '/chat/room',
+
   TIMER_LIST: '/timer/list',
   TIMER_SIMPLE: '/timer/simple',
   TIMER_CUSTOM: '/timer/custom',
