@@ -41,7 +41,7 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
           setLoading(false)
           reject(err)
         },
-        { enableHighAccuracy: false, timeout: 15000, maximumAge: Infinity },
+        { enableHighAccuracy: false, timeout: 30000, maximumAge: Infinity },
       )
     })
   }, [])
