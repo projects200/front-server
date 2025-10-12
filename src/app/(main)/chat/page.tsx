@@ -20,7 +20,7 @@ export default function Chat() {
       {TEMP_DATA.length > 0 ? (
         TEMP_DATA.map((data, index) => (
           <Link
-            href={`${SITE_MAP.CHAT_ROOM}`}
+            href={`${SITE_MAP.CHAT_ROOM}?chatRoomId=${data.chatroomId}&nickName=${data.otherMemberNickname}`}
             key={`${data.otherMemberNickname}-${index}`}
             className={styles['list-container']}
           >

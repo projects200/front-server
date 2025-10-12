@@ -1,0 +1,40 @@
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  background-color: var(--color-white-300);
+  padding: 10px 10px 10px 20px;
+  gap: 10px;
+}
+
+.textarea-wrapper {
+  flex: 1;
+  display: grid;
+}
+
+.textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  overflow-y: auto;
+  scrollbar-width: none;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.send-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  align-self: flex-end;
+  color: var(--color-green);
+}
+.send-button:disabled {
+  color: var(--color-gray-200);
+}
+
+.send-icon {
+  width: 24px;
+  height: 24px;
+}
