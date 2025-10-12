@@ -30,7 +30,7 @@ export default function RootLayout({
         {isDevelopment && <meta name="robots" content="noindex, nofollow" />}
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover"
+          content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"
         />
         <meta name="theme-color" content="#EBF1E5" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />

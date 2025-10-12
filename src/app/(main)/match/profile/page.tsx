@@ -1,6 +1,7 @@
 'use client'
 
 import { useQueryState } from 'nuqs'
+import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
 import Header from '@/components/commons/header'
@@ -10,11 +11,15 @@ import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
 import { formatGenderToKR, formatDateToKR } from '@/utils/dataFormatting'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './profile.module.css'
 
 export default function Profile() {
+  const router = useRouter()
   const [memberId] = useQueryState('memberId')
+  const [lat] = useQueryState('lat')
+  const [lng] = useQueryState('lng')
   const { data: chatroomUrl, isLoading: chatroomLoading } =
     useReadMemberChatroomUrl(memberId!)
   const { data: profileData, isLoading: profileLoading } =
@@ -25,7 +30,13 @@ export default function Profile() {
 
   return (
     <>
-      <Header>{''}</Header>
+      <Header
+        onBack={() => {
+          router.replace(`${SITE_MAP.MATCH}?lat=${lat}&lng=${lng}`)
+        }}
+      >
+        {''}
+      </Header>
 
       {/* 프로필 영역 */}
       <section className={styles['profile-section']}>

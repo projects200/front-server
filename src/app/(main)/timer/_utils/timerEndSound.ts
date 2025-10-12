@@ -10,9 +10,7 @@ if (typeof window !== 'undefined') {
 
 export const simpleTimerEndSound = () => {
   if (simpleTimerEndAudio) {
-    simpleTimerEndAudio.play().catch(() => {
-      console.log()
-    })
+    simpleTimerEndAudio.play().catch(() => {})
   }
 }
 export const playCustomTimerEndSound = () => {
@@ -30,9 +28,7 @@ export const pauseCustomTimerEndSound = () => {
 
 export const resumeCustomTimerEndSound = () => {
   if (customTimerEndAudio) {
-    customTimerEndAudio.play().catch(() => {
-      console.log()
-    })
+    customTimerEndAudio.play().catch(() => {})
   }
 }
 
