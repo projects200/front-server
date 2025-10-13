@@ -92,6 +92,16 @@ export default function ChatRoom() {
   }, [chatRoomId])
 
   useEffect(() => {
+    const container = messageContainerRef.current
+    if (container) {
+      container.addEventListener('scroll', handleScroll, { passive: true })
+      return () => {
+        container.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     messageEndRef.current?.scrollIntoView()
   }, [messages])
 
@@ -122,11 +132,7 @@ export default function ChatRoom() {
       {/* 채팅 내역 영역 */}
       <div className={styles['chat-area-wrapper']}>
         <FloatingDate date={visibleDate} isVisible={isDateVisible} />
-        <div
-          className={styles['message-container']}
-          ref={messageContainerRef}
-          onScroll={handleScroll}
-        >
+        <div className={styles['message-container']} ref={messageContainerRef}>
           {messages.map((chat, index) => {
             const prevChat = index > 0 ? messages[index - 1] : null
             const nextChat =
