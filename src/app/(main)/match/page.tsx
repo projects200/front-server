@@ -1,45 +1,35 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
-import Header from '@/components/commons/header'
-import MascotCharacter from '@/assets/mascot_character.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'
 import SITE_MAP from '@/constants/siteMap.constant'
 import Typography from '@/components/ui/typography'
 import RightArrow from '@/assets/icon_right_arrow.svg'
-import { useReadChatroomUrl } from '@/hooks/api/useOpenChatApi'
 
 import KakaoMap from './_components/kakaoMap'
 import styles from './match.module.css'
 import Link from 'next/link'
 
 export default function Match() {
-  const router = useRouter()
-  const { data: chatroomData, isLoading } = useReadChatroomUrl()
-
-  if (isLoading) return null
-
   return (
     <div className={styles['container']}>
-      {chatroomData ? (
-        <div className={styles['map-container']}>
-          <div className={styles['header']}>
-            <Link
-              href={SITE_MAP.MATCH_PLACE_LIST}
-              className={styles['places-button']}
-            >
-              <Typography as="span" variant="content-large" weight="bold">
-                운동장소 목록
-              </Typography>
-              <RightArrow />
-            </Link>
-          </div>
-          <KakaoMap />
-          <BottomNavigation />
+      <div className={styles['map-container']}>
+        <div className={styles['header']}>
+          <Link
+            href={SITE_MAP.MATCH_PLACE_LIST}
+            className={styles['places-button']}
+          >
+            <Typography as="span" variant="content-large" weight="bold">
+              운동장소 목록
+            </Typography>
+            <RightArrow />
+          </Link>
         </div>
-      ) : (
-        <div className={styles['guide-container']}>
+        <KakaoMap />
+        <BottomNavigation />
+      </div>
+
+      {/* 매칭 최초 진입시 안내 페이지(재사용 가능성이 있어 주석처리) */}
+      {/* <div className={styles['guide-container']}>
           <Header onBack={() => router.replace(SITE_MAP.EXERCISE)}>
             운동 메이트 찾기
           </Header>
@@ -128,8 +118,7 @@ export default function Match() {
               </Typography>
             </button>
           </div>
-        </div>
-      )}
+        </div> */}
     </div>
   )
 }
