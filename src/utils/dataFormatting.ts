@@ -17,10 +17,9 @@ export function formatDateToKR(date: string) {
   return `${year}년 ${Number(month)}월 ${Number(day)}일`
 }
 
-// ISO 형식의 날짜 문자열을 오전 hh:mm 형식으로 변환
+// YYYY-MM-DDTHH:mm:ss 형식의 날짜를 오전or오후 HH:mm 형식으로 변환
 export function formatChatTime(dateString: string): string {
   const date = new Date(dateString)
-
   let hours = date.getHours()
   const minutes = date.getMinutes()
   const ampm = hours >= 12 ? '오후' : '오전'
@@ -31,4 +30,20 @@ export function formatChatTime(dateString: string): string {
   const formattedMinutes = String(minutes).padStart(2, '0')
 
   return `${ampm} ${hours}:${formattedMinutes}`
+}
+
+// YYYY-MM-DDTHH:mm:ss 형식의 날짜를 'YYYY년 M월 D일' 형식으로 변환
+export function formatFullDateToKR(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+
+  return `${year}년 ${month}월 ${day}일`
+}
+
+export function isSameMinute(date1: string, date2: string): boolean {
+  const d1 = new Date(date1)
+  const d2 = new Date(date2)
+  return d1.getHours() === d2.getHours() && d1.getMinutes() === d2.getMinutes()
 }
