@@ -1,8 +1,8 @@
-export type ChatRoomId = {
+export type ChatRoomIdDto = {
   chatRoomId: number
 }
 
-export type ChatRoom = ChatRoomId & {
+export type ChatRoomDto = ChatRoomIdDto & {
   otherMemberNickname: string
   otherMemberProfileImageUrl: string
   otherMemberThumbnailImageUrl: string
@@ -11,11 +11,11 @@ export type ChatRoom = ChatRoomId & {
   unreadCount: number
 }
 
-export type ChatId = {
+export type ChatIdDto = {
   chatId: number
 }
 
-export type ChatContent = ChatId & {
+export type ChatContentDto = ChatIdDto & {
   senderId: string
   senderNickname: string
   senderProfileUrl: string
@@ -26,13 +26,13 @@ export type ChatContent = ChatId & {
   mine: boolean
 }
 
-export type ChatList = {
-  content: ChatContent[]
+export type ChatListDto = {
+  content: ChatContentDto[]
   hasNext: boolean
   opponentActive: boolean
 }
 
-export type NewChat = {
-  newChats: ChatContent[]
+export type NewChatDto = {
+  newChats: ChatContentDto[]
   opponentActive: boolean
 }

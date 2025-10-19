@@ -61,9 +61,15 @@
 /* 달력 영역 */
 .calender-section {
   margin-top: 5px;
-  padding: 0 20px 20px 20px;
+  padding: 0 20px 100px 20px;
   background-color: var(--color-white-300);
 }
+
+/* 바텀 버튼 */
+.bottom-button {
+  margin-top: 55px;
+}
+
 @media (min-width: 768px) {
   .header-section {
     height: 80px;

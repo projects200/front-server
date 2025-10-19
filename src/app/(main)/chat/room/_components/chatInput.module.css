@@ -12,6 +12,7 @@
 }
 
 .textarea {
+  background-color: var(--color-white-300);
   width: 100%;
   border: none;
   resize: none;

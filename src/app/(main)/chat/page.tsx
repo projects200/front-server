@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 
+import { useReadChatRoomList } from '@/hooks/api/useChatApi'
 import { formatChatTime } from '@/utils/dataFormatting'
 import LogoTitle from '@/components/ui/logoTitle'
 import ProfileImg from '@/components/commons/profileImg'
@@ -11,16 +12,19 @@ import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './chat.module.css'
 
-import { TEMP_DATA } from './tempData'
-
 export default function Chat() {
+  const { data: chatRoomList, isLoading: chatRoomListLoading } =
+    useReadChatRoomList()
+
+  if (chatRoomListLoading || !chatRoomList) return null
+
   return (
     <div className={styles['container']}>
       <LogoTitle />
-      {TEMP_DATA.length > 0 ? (
-        TEMP_DATA.map((data, index) => (
+      {chatRoomList.length > 0 ? (
+        chatRoomList.map((data, index) => (
           <Link
-            href={`${SITE_MAP.CHAT_ROOM}?chatRoomId=${data.chatroomId}&nickName=${data.otherMemberNickname}`}
+            href={`${SITE_MAP.CHAT_ROOM}?chatRoomId=${data.chatRoomId}&nickName=${data.otherMemberNickname}`}
             key={`${data.otherMemberNickname}-${index}`}
             className={styles['list-container']}
           >
@@ -40,7 +44,7 @@ export default function Chat() {
                   as="p"
                   variant="content-small"
                 >
-                  {formatChatTime(data.lastChatSendedAt)}
+                  {formatChatTime(data.lastChatReceivedAt)}
                 </Typography>
               </div>
               <div className={styles['text-bottom-section']}>
@@ -63,7 +67,11 @@ export default function Chat() {
           </Link>
         ))
       ) : (
-        <div>(임시)채팅방이 없습니다.</div>
+        <div className={styles['empty']}>
+          <Typography as="p" variant="content-large">
+            아직 채팅방이 없어요
+          </Typography>
+        </div>
       )}
       <BottomNavigation />
     </div>
