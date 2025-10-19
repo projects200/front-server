@@ -1,25 +1,20 @@
+import { memo } from 'react'
 import clsx from 'clsx'
 
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
-import { Message } from '@/types/chat'
+import { ChatContent } from '@/types/chat'
 import { formatChatTime } from '@/utils/dataFormatting'
 
 import styles from './message.module.css'
 
-
-
 type Props = {
-  chat: Message
+  chat: ChatContent
   isContinuous: boolean
   shouldShowTime: boolean
 }
 
-export default function OtherMessage({
-  chat,
-  isContinuous,
-  shouldShowTime,
-}: Props) {
+function OtherMessage({ chat, isContinuous, shouldShowTime }: Props) {
   return (
     <div
       className={clsx(
@@ -59,3 +54,5 @@ export default function OtherMessage({
     </div>
   )
 }
+
+export default memo(OtherMessage)

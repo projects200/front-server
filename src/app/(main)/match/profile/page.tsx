@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
 import Header from '@/components/commons/header'
+import BottomButton from '@/components/commons/bottomButton'
 import { useReadOtherUserFullProfile } from '@/hooks/api/useMypageApi'
+import { usePostChatRoom } from '@/hooks/api/useChatApi'
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
@@ -19,9 +21,22 @@ export default function Profile() {
   const [memberId] = useQueryState('memberId')
   const [lat] = useQueryState('lat')
   const [lng] = useQueryState('lng')
+  const { trigger: createChatRoom } = usePostChatRoom()
   const { data: profileData, isLoading: profileLoading } =
     useReadOtherUserFullProfile(memberId!)
   const todayString = format(new Date(), 'yyyy-MM-dd')
+
+  const handleBottomButton = async () => {
+    if (!memberId || !profileData) return
+    try {
+      const res = await createChatRoom({
+        receiverId: memberId,
+      })
+      router.push(
+        `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}`,
+      )
+    } catch {}
+  }
 
   if (profileLoading || !profileData) return null
 
@@ -123,6 +138,14 @@ export default function Profile() {
           isOthers={true}
         />
       </section>
+
+      {/* 바텀 버튼 */}
+      <BottomButton
+        className={styles['bottom-button']}
+        onClick={handleBottomButton}
+      >
+        1:1 채팅하기
+      </BottomButton>
     </>
   )
 }
