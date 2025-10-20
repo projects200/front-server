@@ -4,32 +4,6 @@
   height: 100%;
   width: 100%;
 }
-.search-section {
-  display: block;
-  width: 100%;
-  background-color: var(--color-white-300);
-  padding: 8px 20px 30px 20px;
-}
-
-.link-search {
-  display: flex;
-  align-items: center;
-  background-color: var(--color-white-100);
-  border-radius: 8px;
-  height: 40px;
-  width: 100%;
-}
-
-.search-icon {
-  width: 20px;
-  height: 20px;
-  margin-left: 12px;
-}
-
-.search-placeholder {
-  margin-left: 12px;
-  color: var(--color-gray-200);
-}
 
 .list-section {
   display: flex;

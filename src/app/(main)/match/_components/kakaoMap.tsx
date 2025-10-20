@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Map, MapMarker } from 'react-kakao-maps-sdk'
 import { useRouter } from 'next/navigation'
+import { useQueryState, parseAsFloat } from 'nuqs'
 
 import Modal from '@/components/ui/modal'
 import useCurrentLocation from '@/hooks/useCurrentLocation'
@@ -41,11 +42,14 @@ export function flattenMemberLocations(
 
 export default function KakaoMap() {
   const router = useRouter()
+  const [lat] = useQueryState('lat', parseAsFloat)
+  const [lng] = useQueryState('lng', parseAsFloat)
   const { data: myData, isLoading: isMyDataLoading } =
     useReadExerciseLocationList()
   const { data: membersData } = useReadMemberExerciseLocation()
   const [mapCenter, setMapCenter] = useState(SEOUL_CITY_HALL)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
   const {
     location,
     loading: locationLoading,
@@ -69,8 +73,12 @@ export default function KakaoMap() {
   }, [membersData])
 
   useEffect(() => {
-    getLocation().catch(() => {})
-  }, [getLocation])
+    if (lat !== null && lng !== null) {
+      setMapCenter({ lat, lng })
+    } else {
+      getLocation().catch(() => {})
+    }
+  }, [lat, lng, getLocation])
 
   useEffect(() => {
     if (location) {
@@ -111,7 +119,9 @@ export default function KakaoMap() {
             }}
             clickable={true}
             onClick={() => {
-              router.push(`${SITE_MAP.MATCH_PROFILE}?memberId=${data.memberId}`)
+              router.replace(
+                `${SITE_MAP.MATCH_PROFILE}?memberId=${data.memberId}&lat=${data.location.latitude}&lng=${data.location.longitude}`,
+              )
             }}
           />
         ))}

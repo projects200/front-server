@@ -9,6 +9,7 @@ import MatchIcon from '@/assets/icon_nav_match.svg'
 import RecordIcon from '@/assets/icon_nav_record.svg'
 import TimerIcon from '@/assets/icon_nav_timer.svg'
 import MypageIcon from '@/assets/icon_nav_mypage.svg'
+import ChatIcon from '@/assets/icon_nav_chat.svg'
 import Typography from '../ui/typography'
 
 import styles from './bottomNavigation.module.css'
@@ -16,6 +17,7 @@ import styles from './bottomNavigation.module.css'
 const navLinks = [
   { name: '기록', href: SITE_MAP.EXERCISE, icon: RecordIcon },
   { name: '매칭', href: SITE_MAP.MATCH, icon: MatchIcon },
+  { name: '채팅', href: SITE_MAP.CHAT, icon: ChatIcon },
   { name: '타이머', href: SITE_MAP.TIMER_LIST, icon: TimerIcon },
   { name: 'MY', href: SITE_MAP.MYPAGE, icon: MypageIcon },
 ]

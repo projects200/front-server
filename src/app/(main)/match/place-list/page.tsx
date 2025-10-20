@@ -1,11 +1,11 @@
 'use client'
 
-import Link from 'next/link'
-import { MouseEvent } from 'react'
+import { useRouter } from 'next/navigation'
 
-import SearchIcon from '@/assets/icon_search.svg'
 import Typography from '@/components/ui/typography'
 import Header from '@/components/commons/header'
+import CompleteButton from '@/components/commons/completeButton'
+
 import { useReadExerciseLocationList } from '@/hooks/api/useExerciseLocationApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 import { useToast } from '@/hooks/useToast'
@@ -16,34 +16,24 @@ import styles from './placeList.module.css'
 export default function PlaceList() {
   const { data: locationList } = useReadExerciseLocationList()
   const showToast = useToast()
+  const router = useRouter()
 
-  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleLinkClick = () => {
     if (locationList && locationList.length >= 10) {
-      e.preventDefault()
       showToast('운동장소는 최대 10개까지 등록 가능합니다.', 'info')
+      return
     }
+    router.push(SITE_MAP.MATCH_PLACE_REGISTER_SEARCH)
   }
 
   return (
     <div className={styles['container']}>
-      <Header>운동장소</Header>
-
-      <div className={styles['search-section']}>
-        <Link
-          href={SITE_MAP.MATCH_PLACE_REGISTER_SEARCH}
-          className={styles['link-search']}
-          onClick={handleLinkClick}
-        >
-          <SearchIcon className={styles['search-icon']} />
-          <Typography
-            className={styles['search-placeholder']}
-            as="span"
-            variant="content-medium"
-          >
-            운동하는 장소 검색
-          </Typography>
-        </Link>
-      </div>
+      <Header
+        onClick={handleLinkClick}
+        rightIcon={<CompleteButton>추가</CompleteButton>}
+      >
+        운동장소
+      </Header>
 
       <div className={styles['list-section']}>
         {locationList && locationList.length ? (

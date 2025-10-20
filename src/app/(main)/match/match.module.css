@@ -33,7 +33,7 @@
 }
 
 /* 채팅 링크 유도 섹션 */
-.guide-container {
+/* .guide-container {
   height: 100%;
   width: 100%;
   background-color: var(--color-white-300);
@@ -110,4 +110,4 @@
   background-color: var(--color-green);
   color: var(--color-white-300);
   border-radius: 15px;
-}
+} */

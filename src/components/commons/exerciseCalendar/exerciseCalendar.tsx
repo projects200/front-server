@@ -29,10 +29,13 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
     const prevMonth = useMemo(() => subMonths(currentMonth, 1), [currentMonth])
     const nextMonth = useMemo(() => addMonths(currentMonth, 1), [currentMonth])
     const containerRef = useRef<HTMLDivElement>(null)
+    const isAnimatingRef = useRef(false)
     const [{ x }, api] = useSpring(() => ({ x: 0 }))
 
     const bind = useDrag(
       ({ down, movement: [mx] }) => {
+        if (isAnimatingRef.current && !down) return
+
         if (down) {
           api.start({ x: mx, immediate: true })
           return
@@ -57,11 +60,14 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
         const direction = mx > 0 ? 1 : -1
         const targetX = direction * containerWidth
 
+        isAnimatingRef.current = true
+
         api.start({
           x: targetX,
           config: { tension: 250, friction: 30 },
           onRest: () => {
             setCurrentMonth(newMonth)
+            isAnimatingRef.current = false
           },
         })
       },

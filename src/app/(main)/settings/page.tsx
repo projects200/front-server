@@ -12,6 +12,7 @@ import LogoutIcon from '@/assets/icon_logout.svg'
 import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
 import InfoIcon from '@/assets/icon_info.svg'
+import AlertIcon from '@/assets/icon_alert.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'
 import { useDeleteFcmToken } from '@/hooks/api/useFcmApi'
 
@@ -80,6 +81,12 @@ export default function Settings() {
           icon={<DocumentIcon className={styles['icon']} />}
           label="개인정보 처리방침"
           onClick={() => handleLegalDocModal(LEGAL_DOC_URLS.PRIVACY)}
+        />
+        <MenuItem
+          icon={<AlertIcon className={styles['icon']} />}
+          label="알림설정"
+          // onClick={() => router.push(SITE_MAP.SETTINGS_ALERT)}
+          onClick={() => alert('알림기능 준비중 입니다.')}
         />
         <MenuItem
           icon={<InfoIcon className={styles['icon']} />}

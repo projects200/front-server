@@ -1,31 +1,54 @@
 'use client'
 
 import { useQueryState } from 'nuqs'
+import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
 import Header from '@/components/commons/header'
+import BottomButton from '@/components/commons/bottomButton'
 import { useReadOtherUserFullProfile } from '@/hooks/api/useMypageApi'
-import { useReadMemberChatroomUrl } from '@/hooks/api/useOpenChatApi'
+import { usePostChatRoom } from '@/hooks/api/useChatApi'
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
 import { formatGenderToKR, formatDateToKR } from '@/utils/dataFormatting'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './profile.module.css'
 
 export default function Profile() {
+  const router = useRouter()
   const [memberId] = useQueryState('memberId')
-  const { data: chatroomUrl, isLoading: chatroomLoading } =
-    useReadMemberChatroomUrl(memberId!)
+  const [lat] = useQueryState('lat')
+  const [lng] = useQueryState('lng')
+  const { trigger: createChatRoom } = usePostChatRoom()
   const { data: profileData, isLoading: profileLoading } =
     useReadOtherUserFullProfile(memberId!)
   const todayString = format(new Date(), 'yyyy-MM-dd')
 
-  if (profileLoading || chatroomLoading || !profileData) return null
+  const handleBottomButton = async () => {
+    if (!memberId || !profileData) return
+    try {
+      const res = await createChatRoom({
+        receiverId: memberId,
+      })
+      router.push(
+        `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}`,
+      )
+    } catch {}
+  }
+
+  if (profileLoading || !profileData) return null
 
   return (
     <>
-      <Header>{''}</Header>
+      <Header
+        onBack={() => {
+          router.replace(`${SITE_MAP.MATCH}?lat=${lat}&lng=${lng}`)
+        }}
+      >
+        {''}
+      </Header>
 
       {/* 프로필 영역 */}
       <section className={styles['profile-section']}>
@@ -102,30 +125,6 @@ export default function Profile() {
         </div>
       </section>
 
-      {/* 오픈 채팅 링크 영역 */}
-      <section className={styles['open-chat-section']}>
-        <Typography as="p" variant="content-large" weight="bold">
-          오픈 채팅 링크
-        </Typography>
-        <Typography
-          className={styles['open-chat-sub-text']}
-          as="p"
-          variant="content-small"
-        >
-          채팅 기능이 개발 중입니다. 카카오 오픈 채팅을 사용해주세요!
-        </Typography>
-        <a
-          className={styles['open-chat-button']}
-          href={chatroomUrl?.chatroomUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Typography as="p" variant="content-medium">
-            {chatroomUrl?.chatroomUrl}
-          </Typography>
-        </a>
-      </section>
-
       {/* 선호운동 영역 */}
       {/* <section className={styles['prefer-exercise-section']}>
         선호운동 예정
@@ -139,6 +138,14 @@ export default function Profile() {
           isOthers={true}
         />
       </section>
+
+      {/* 바텀 버튼 */}
+      <BottomButton
+        className={styles['bottom-button']}
+        onClick={handleBottomButton}
+      >
+        1:1 채팅하기
+      </BottomButton>
     </>
   )
 }

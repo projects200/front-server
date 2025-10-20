@@ -24,7 +24,6 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
         setLoading(false)
-        console.log('현재브라우저는 GeoLocation이 지원되지 않습니다.')
         reject(new Error('Geolocation not supported'))
         return
       }
@@ -42,7 +41,7 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
           setLoading(false)
           reject(err)
         },
-        { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
+        { enableHighAccuracy: false, timeout: 30000, maximumAge: Infinity },
       )
     })
   }, [])

@@ -1,6 +1,8 @@
 const SITE_MAP = {
   HOME: '/',
+
   SETTINGS: '/settings',
+  SETTINGS_ALERT: '/settings/alert',
 
   LOGIN: '/auth/login',
   CALLBACK: '/auth/callback',
@@ -20,6 +22,9 @@ const SITE_MAP = {
   MATCH_PLACE_REGISTER_DETAIL: '/match/place-register-detail',
   MATCH_PLACE_REGISTER_EDIT: '/match/place-register-edit',
   MATCH_PROFILE: 'match/profile',
+
+  CHAT: '/chat',
+  CHAT_ROOM: '/chat/room',
 
   TIMER_LIST: '/timer/list',
   TIMER_SIMPLE: '/timer/simple',

@@ -1,0 +1,68 @@
+.my-message-container,
+.other-message-container {
+  display: flex;
+}
+.my-message-container {
+  justify-content: flex-end;
+}
+.other-message-container {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.continuous-container {
+  margin-top: -7px;
+}
+
+.profile-img-wrapper {
+  flex-shrink: 0;
+}
+
+.profile-img-wrapper.hidden {
+  width: 36px;
+  height: 36px;
+  visibility: hidden;
+}
+.profile-img-wrapper .profile-img {
+  width: 36px;
+  height: 36px;
+}
+
+/* 말풍선 */
+.bubble-wrapper {
+  max-width: 80%;
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.bubble {
+  padding: 10px 15px;
+  border-radius: 15px;
+  word-break: break-word;
+}
+.my-bubble {
+  background-color: var(--color-green);
+  color: var(--color-white-300);
+}
+.other-bubble {
+  background-color: var(--color-white-300);
+}
+
+.time {
+  flex-shrink: 0;
+  color: var(--color-gray-200);
+}
+
+/* 시스템 메세지 */
+.system-message-container {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.system-message {
+  display: inline-block;
+  padding: 6px 12px;
+  background: rgba(158, 158, 158, 0.3);
+  border-radius: 20px;
+}

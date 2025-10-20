@@ -4,8 +4,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 19px 20px;
-  border-bottom: 1px solid #e5e5e5;
-  background-color: white;
+  border-bottom: 1px solid var(--color-gray-200);
+  background-color: var(--color-white-300);
   text-align: left;
   cursor: pointer;
 }

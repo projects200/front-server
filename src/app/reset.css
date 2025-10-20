@@ -39,6 +39,14 @@ button {
   cursor: pointer;
 }
 
+input,
+textarea {
+  font-family:
+    'Pretendard', system-ui, 'Helvetica Neue', 'Segoe UI',
+    'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
 input:focus,
 textarea:focus {
   outline: none;
