@@ -6,7 +6,14 @@ import {
   readNewChatMessages,
   deleteChatRoom,
 } from '@/api/chat'
-import { ChatRoomId, ChatRoom, ChatList, ChatId, NewChat } from '@/types/chat'
+import {
+  ChatRoomId,
+  ChatRoom,
+  ChatList,
+  ChatId,
+  NewChat,
+  ChatContent,
+} from '@/types/chat'
 import {
   adapterChatRoomId,
   adapterChatRoomList,
@@ -17,6 +24,7 @@ import {
 
 import useApiGet from './useApiGet'
 import useApiMutation from './useApiMutation'
+import useApiGetInfinite from './useApiGetInfinite'
 
 // 채팅방 생성
 export const usePostChatRoom = () =>
@@ -35,15 +43,67 @@ export const useReadChatRoomList = () =>
   )
 
 // 특정 채팅방 메시지 목록 조회
-export const useReadChatMessages = (chatroomId: number) =>
-  useApiGet<ChatList>(
-    [`chatRoom/messages`, chatroomId],
-    (token) => readChatMessages(token, chatroomId).then(adapterChatList),
+// export const useReadChatMessages = (chatroomId: number) =>
+//   useApiGet<ChatList>(
+//     [`chatRoom/messages`, chatroomId],
+//     (token) => readChatMessages(token, chatroomId).then(adapterChatList),
+//     {
+//       revalidateOnFocus: false,
+//       revalidateOnReconnect: false,
+//     },
+//   )
+
+export const useReadChatMessages = (chatroomId: number) => {
+  const getKey: (
+    pageIndex: number,
+    previousPageData: ChatList | null,
+  ) => [number, number | undefined] | null = (pageIndex, previousPageData) => {
+    if (!chatroomId) return null
+
+    if (pageIndex === 0) {
+      return [chatroomId, undefined]
+    }
+
+    if (!previousPageData || !previousPageData.hasNext) {
+      return null
+    }
+
+    const lastMessageId = previousPageData.content[0]?.chatId
+    if (!lastMessageId) return null
+
+    return [chatroomId, lastMessageId]
+  }
+
+  const { data, size, setSize, mutate, isValidating } = useApiGetInfinite<
+    ChatList,
+    [number, number | undefined]
+  >(
+    getKey,
+    (token: string, reqChatroomId: number, reqPrevChatId?: number) =>
+      readChatMessages(token, reqChatroomId, reqPrevChatId).then(
+        adapterChatList,
+      ),
     {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
+      revalidateFirstPage: false,
     },
   )
+
+  const messages: ChatContent[] = data
+    ? [...data].reverse().flatMap((page) => page.content)
+    : []
+  const isFetchingPrevMessages = isValidating && size > 1
+  const hasNextPage = data?.[data.length - 1]?.hasNext ?? true
+  const opponentActive = data?.[0]?.opponentActive ?? true
+
+  return {
+    messages,
+    isFetchingPrevMessages,
+    hasNextPage,
+    opponentActive,
+    setSize,
+    mutate,
+  }
+}
 
 // 메시지 생성
 export const usePostChatMessage = (chatroomId: number) =>

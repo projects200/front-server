@@ -15,7 +15,6 @@ import {
 } from '@/hooks/api/useChatApi'
 import { ChatContent } from '@/types/chat'
 
-import { useFetchPrevMessages } from './_hooks/useFetchPrevMessages'
 import KebabModal from './_components/kebabModal'
 import MyMessage from './_components/myMessage'
 import OtherMessage from './_components/otherMessage'
@@ -35,9 +34,6 @@ export default function ChatRoom() {
   const nickName = searchParams.get('nickName')
 
   // State
-  const [messages, setMessages] = useState<ChatContent[]>([])
-  const [hasNextPage, setHasNextPage] = useState(true)
-  const [otherUserLeft, setOtherUserLeft] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visibleDate, setVisibleDate] = useState<string | null>(null)
   const [isDateVisible, setIsDateVisible] = useState(false)
@@ -45,22 +41,27 @@ export default function ChatRoom() {
   // Refs
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const messageContainerRef = useRef<HTMLDivElement>(null)
-  const preventAutoScrollRef = useRef(false)
   const messageEndRef = useRef<HTMLDivElement>(null)
+  const prevScrollHeightRef = useRef<number | null>(null)
 
   // API Hooks
-  const { data: initialMessagesData } = useReadChatMessages(chatRoomId)
+  const {
+    messages,
+    hasNextPage,
+    opponentActive,
+    setSize,
+    mutate,
+    isFetchingPrevMessages,
+  } = useReadChatMessages(chatRoomId)
   const { data: newMessagesData } = useReadNewChatMessages(chatRoomId)
   const { trigger: sendMessage } = usePostChatMessage(chatRoomId)
-  const { isLoading: isFetchLoading, execute: fetchPrevMessages } =
-    useFetchPrevMessages()
   const { trigger: leaveChatRoom } = useDeleteChatRoom(chatRoomId)
+  const otherUserLeft = !opponentActive
 
   // 메세지 전송 핸들러
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || !user?.profile) return
 
-    // 임시 메세지 생성 (낙관적 업데이트)
     const tempMessage: ChatContent = {
       chatId: Date.now(),
       chatContent: message,
@@ -72,13 +73,21 @@ export default function ChatRoom() {
       senderProfileUrl: '',
       senderThumbnailUrl: '',
     }
-    setMessages((prevMessages) => [...prevMessages, tempMessage])
+    mutate((currentData) => {
+      if (!currentData) return []
+      const newData = [...currentData]
+      newData[0] = {
+        ...newData[0],
+        content: [...newData[0].content, tempMessage],
+      }
+      return newData
+    }, false)
+
     try {
       await sendMessage({ content: message })
+      mutate()
     } catch {
-      setMessages((prevMessages) =>
-        prevMessages.filter((msg) => msg.chatId !== tempMessage.chatId),
-      )
+      mutate()
     }
   }
 
@@ -119,48 +128,18 @@ export default function ChatRoom() {
     }, 500)
 
     // 스크롤 상단 도달 시 이전 메시지 로드 로직
-    if (container.scrollTop === 0 && hasNextPage && !isFetchLoading) {
-      const prevChatId = messages[0]?.chatId
-      if (!prevChatId) return
-
-      const prevScrollHeight = container.scrollHeight
-      preventAutoScrollRef.current = true
-      try {
-        const prevMessagesData = await fetchPrevMessages(chatRoomId, prevChatId)
-
-        if (prevMessagesData.content.length > 0) {
-          setMessages((prev) => [...prevMessagesData.content, ...prev])
-        }
-        setHasNextPage(prevMessagesData.hasNext)
-
-        requestAnimationFrame(() => {
-          container.scrollTop = container.scrollHeight - prevScrollHeight
-        })
-      } catch {}
+    if (container.scrollTop === 0 && hasNextPage && !isFetchingPrevMessages) {
+      prevScrollHeightRef.current = container.scrollHeight
+      setSize((prevSize) => prevSize + 1)
     }
-  }, [messages])
-
-  // 초기 메시지 데이터 로드
-  useEffect(() => {
-    if (initialMessagesData?.content) {
-      setMessages(initialMessagesData.content)
-      setOtherUserLeft(!initialMessagesData.opponentActive)
-    }
-  }, [initialMessagesData])
+  }, [hasNextPage, isFetchingPrevMessages, setSize])
 
   // 새로운 메시지에 대한 처리 로직
   useEffect(() => {
-    if (!newMessagesData) return
-    setOtherUserLeft(!newMessagesData.opponentActive)
-
-    if (newMessagesData.newChats.length === 0) return
-    const otherUserMessages = newMessagesData.newChats.filter(
-      (chat) => !chat.mine,
-    )
-
-    if (otherUserMessages.length === 0) return
-    setMessages((prevMessages) => [...prevMessages, ...otherUserMessages])
-  }, [newMessagesData])
+    if (newMessagesData && newMessagesData.newChats.length > 0) {
+      mutate()
+    }
+  }, [newMessagesData, mutate])
 
   // 컴포넌트 언마운트시 타이머 정리
   useEffect(() => {
@@ -182,14 +161,18 @@ export default function ChatRoom() {
     }
   }, [handleScroll])
 
-  // 이전 메시지가 로드되어 스크롤 발생 시 최하단으로 스크롤 방지
+  // 스크롤 위치 조정 로직
   useEffect(() => {
-    if (preventAutoScrollRef.current) {
-      preventAutoScrollRef.current = false
-      return
+    const container = messageContainerRef.current
+    if (!container) return
+
+    if (prevScrollHeightRef.current !== null) {
+      container.scrollTop = container.scrollHeight - prevScrollHeightRef.current
+      prevScrollHeightRef.current = null
+    } else {
+      messageEndRef.current?.scrollIntoView()
     }
-    messageEndRef.current?.scrollIntoView()
-  }, [messages])
+  }, [messages.length])
 
   const menuRef = (node: HTMLDivElement) => {
     const handleClickOutside = (event: MouseEvent) => {
