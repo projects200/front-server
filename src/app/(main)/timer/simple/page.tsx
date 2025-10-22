@@ -23,15 +23,56 @@ import { simpleTimerEndSound } from '../_utils/timerEndSound'
 import PresetCard from './_components/presetCard'
 import styles from './simple.module.css'
 
+const requestNotificationPermission = async () => {
+  // 브라우저가 알림을 지원하는지 확인
+  if (!('Notification' in window)) {
+    alert('이 브라우저는 데스크톱 알림을 지원하지 않습니다.')
+    return
+  }
+
+  // 현재 권한 상태 확인
+  if (Notification.permission === 'granted') {
+    alert('알림 권한이 이미 허용되었습니다.')
+    return
+  }
+
+  if (Notification.permission !== 'denied') {
+    const permission = await Notification.requestPermission()
+    if (permission === 'granted') {
+      alert('알림 권한이 허용되었습니다.')
+    }
+  }
+}
+
+const postMessageToSw = (message: { action: string; payload?: unknown }) => {
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage(message)
+  }
+}
+
 export default function Simple() {
+  const showToast = useToast()
   const { data } = useReadSimpleTimerList()
-  const [displayedTimers, setDisplayedTimers] = useState<SimpleTimer[]>([])
   const { trigger: timerCreate } = usePostSimpleTimer()
   const [initialTime, setInitialTime] = useState(0)
+  const [displayedTimers, setDisplayedTimers] = useState<SimpleTimer[]>([])
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const showToast = useToast()
-  const { timeLeft, isActive, isFinished, start, pause, resume } = useTimer({})
+  const {
+    timeLeft,
+    isActive,
+    isFinished,
+    targetTime,
+    start,
+    pause,
+    resume,
+    reset,
+    syncState,
+  } = useTimer({})
+
+  useEffect(() => {
+    requestNotificationPermission()
+  }, [])
 
   useEffect(() => {
     if (isFinished) {
@@ -39,10 +80,51 @@ export default function Simple() {
     }
   }, [isFinished])
 
+  // 하이브리드 제어권 전환을 위한 로직
   useEffect(() => {
-    if (data) {
-      setDisplayedTimers(data.simpleTimerList)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (isActive) {
+          postMessageToSw({
+            action: 'TAKE_OVER_TIMER',
+            payload: { targetTime },
+          })
+          pause()
+        }
+      } else {
+        postMessageToSw({ action: 'STOP_BACKGROUND_TIMER' })
+        if (targetTime > 0) {
+          const newTimeLeft = targetTime - Date.now()
+          syncState(newTimeLeft)
+        }
+      }
     }
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'TIMER_FINISHED') {
+        if (document.hidden) {
+          // simpleTimerEndSound()
+          reset(0)
+        }
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.addEventListener('message', handleMessage)
+    }
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', handleMessage)
+      }
+    }
+  }, [isActive, targetTime])
+
+  useEffect(() => {
+    if (data) setDisplayedTimers(data.simpleTimerList)
   }, [data])
 
   const handleSortToggle = () => {
@@ -146,9 +228,7 @@ export default function Simple() {
           {displayedTimers && displayedTimers.length < 6 && (
             <button
               className={styles['add-preset-button']}
-              onClick={() => {
-                setIsTimePickerOpen(true)
-              }}
+              onClick={() => setIsTimePickerOpen(true)}
             >
               <PlusIcon className={styles['plus-icon']} />
             </button>

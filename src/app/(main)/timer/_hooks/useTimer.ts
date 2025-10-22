@@ -82,5 +82,32 @@ export const useTimer = ({ onSecondChange }: Props) => {
     setIsFinished(false)
   }, [])
 
-  return { timeLeft, isActive, isFinished,start, pause, resume, reset }
+  // 백그라운드에서 돌아온 후 타이머 상태를 강제로 동기화하는 함수
+  const syncState = useCallback((newTimeLeft: number) => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+
+    if (newTimeLeft > 0) {
+      const newTargetTime = Date.now() + newTimeLeft
+      setTargetTime(newTargetTime)
+      setTimeLeft(newTimeLeft)
+      setIsActive(true)
+      setIsFinished(false)
+    } else {
+      setTimeLeft(0)
+      setIsActive(false)
+      setIsFinished(true)
+    }
+  }, [])
+
+  return {
+    timeLeft,
+    isActive,
+    isFinished,
+    targetTime,
+    start,
+    pause,
+    resume,
+    reset,
+    syncState,
+  }
 }
