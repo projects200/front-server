@@ -215,7 +215,8 @@ export default function ChatRoom() {
               prevChat &&
               prevChat.senderId === chat.senderId &&
               prevChat.chatType === 'USER' &&
-              chat.chatType === 'USER'
+              chat.chatType === 'USER' &&
+              isSameMinute(prevChat.sentAt, chat.sentAt)
             )
 
             const shouldShowTime =

@@ -39,7 +39,7 @@ export const useReadChatRoomList = () =>
   useApiGet<ChatRoom[]>(
     ['chatRoom/list'],
     (token) => readChatRoomList(token).then(adapterChatRoomList),
-    {},
+    { refreshInterval: 15000 },
   )
 
 // 특정 채팅방 메시지 목록 조회
