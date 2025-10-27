@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { signOutRedirect } from '@/lib/auth'
 import LegalDocModal from '@/components/commons/legalDocModal'
@@ -8,6 +9,7 @@ import Header from '@/components/commons/header'
 import CenterModal from '@/components/commons/centerModal'
 import Typography from '@/components/ui/typography'
 import HelpIcon from '@/assets/icon_help.svg'
+import BlockIcon from '@/assets/icon_block.svg'
 import LogoutIcon from '@/assets/icon_logout.svg'
 import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
@@ -15,6 +17,7 @@ import InfoIcon from '@/assets/icon_info.svg'
 import AlertIcon from '@/assets/icon_alert.svg'
 import BottomNavigation from '@/components/commons/bottomNavigation'
 import { useDeleteFcmToken } from '@/hooks/api/useFcmApi'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import MenuItem from './_components/menuItem'
 import styles from './settings.module.css'
@@ -30,6 +33,7 @@ const GOOGLE_FORM_URLS = {
 }
 
 export default function Settings() {
+  const router = useRouter()
   const [isCenterModalOpen, setIsCenterModalOpen] = useState(false)
   const [legalDocUrl, setLegalDocUrl] = useState('')
   const { trigger: unregisterToken } = useDeleteFcmToken()
@@ -73,14 +77,19 @@ export default function Settings() {
           onClick={() => handleLinkInNewTab(GOOGLE_FORM_URLS.WITHDRAWAL)}
         />
         <MenuItem
-          icon={<DocumentIcon className={styles['icon']} />}
-          label="이용약관"
-          onClick={() => handleLegalDocModal(LEGAL_DOC_URLS.TERMS)}
+          icon={<BlockIcon className={styles['icon']} />}
+          label="차단된 계정"
+          onClick={() => router.push(SITE_MAP.SETTINGS_BLOCK)}
         />
         <MenuItem
           icon={<DocumentIcon className={styles['icon']} />}
           label="개인정보 처리방침"
           onClick={() => handleLegalDocModal(LEGAL_DOC_URLS.PRIVACY)}
+        />
+        <MenuItem
+          icon={<DocumentIcon className={styles['icon']} />}
+          label="이용약관"
+          onClick={() => handleLegalDocModal(LEGAL_DOC_URLS.TERMS)}
         />
         <MenuItem
           icon={<AlertIcon className={styles['icon']} />}

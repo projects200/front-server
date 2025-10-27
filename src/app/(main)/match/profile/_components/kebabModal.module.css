@@ -21,10 +21,6 @@
   border-radius: 4px;
   text-align: left;
   width: 100%;
-  color: var(--color-black);
-}
-
-.red {
   color: var(--color-red);
 }
 

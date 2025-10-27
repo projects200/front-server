@@ -1,9 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { useQueryState } from 'nuqs'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
+import KebabIcon from '@/assets/icon_kebab.svg'
 import Header from '@/components/commons/header'
 import BottomButton from '@/components/commons/bottomButton'
 import { useReadOtherUserFullProfile } from '@/hooks/api/useMypageApi'
@@ -14,6 +16,7 @@ import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCale
 import { formatGenderToKR, formatDateToKR } from '@/utils/dataFormatting'
 import SITE_MAP from '@/constants/siteMap.constant'
 
+import KebabModal from './_components/kebabModal'
 import styles from './profile.module.css'
 
 export default function Profile() {
@@ -21,10 +24,15 @@ export default function Profile() {
   const [memberId] = useQueryState('memberId')
   const [lat] = useQueryState('lat')
   const [lng] = useQueryState('lng')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { trigger: createChatRoom } = usePostChatRoom()
   const { data: profileData, isLoading: profileLoading } =
     useReadOtherUserFullProfile(memberId!)
   const todayString = format(new Date(), 'yyyy-MM-dd')
+
+  const handleBlock = async () => {
+    alert('차단')
+  }
 
   const handleBottomButton = async () => {
     if (!memberId || !profileData) return
@@ -38,6 +46,20 @@ export default function Profile() {
     } catch {}
   }
 
+  const menuRef = (node: HTMLDivElement) => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!node.contains(event.target as Node)) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }
+
   if (profileLoading || !profileData) return null
 
   return (
@@ -46,6 +68,8 @@ export default function Profile() {
         onBack={() => {
           router.replace(`${SITE_MAP.MATCH}?lat=${lat}&lng=${lng}`)
         }}
+        rightIcon={<KebabIcon />}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         {''}
       </Header>
@@ -146,6 +170,17 @@ export default function Profile() {
       >
         1:1 채팅하기
       </BottomButton>
+
+      {/* 케밥 버튼 */}
+      {isMenuOpen && (
+        <KebabModal
+          ref={menuRef}
+          onBlock={() => {
+            handleBlock()
+            setIsMenuOpen(false)
+          }}
+        />
+      )}
     </>
   )
 }

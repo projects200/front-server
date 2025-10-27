@@ -3,6 +3,7 @@ const SITE_MAP = {
 
   SETTINGS: '/settings',
   SETTINGS_ALERT: '/settings/alert',
+  SETTINGS_BLOCK: '/settings/block',
 
   LOGIN: '/auth/login',
   CALLBACK: '/auth/callback',
