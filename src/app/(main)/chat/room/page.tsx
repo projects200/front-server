@@ -99,10 +99,6 @@ export default function ChatRoom() {
     } catch {}
   }
 
-  const handleBlock = async () => {
-    alert('차단')
-  }
-
   // 스크롤시 이벤트 핸들러
   const handleScroll = useCallback(async () => {
     const container = messageContainerRef.current
@@ -263,10 +259,6 @@ export default function ChatRoom() {
           ref={menuRef}
           onExit={() => {
             handleLeaveChat()
-            setIsMenuOpen(false)
-          }}
-          onBlock={() => {
-            handleBlock()
             setIsMenuOpen(false)
           }}
         />

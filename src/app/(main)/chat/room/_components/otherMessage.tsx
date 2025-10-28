@@ -1,10 +1,12 @@
 import { memo } from 'react'
 import clsx from 'clsx'
+import { useRouter } from 'next/navigation'
 
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import { ChatContent } from '@/types/chat'
 import { formatChatTime } from '@/utils/dataFormatting'
+import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './message.module.css'
 
@@ -15,6 +17,8 @@ type Props = {
 }
 
 function OtherMessage({ chat, isContinuous, shouldShowTime }: Props) {
+  const router = useRouter()
+
   return (
     <div
       className={clsx(
@@ -34,6 +38,8 @@ function OtherMessage({ chat, isContinuous, shouldShowTime }: Props) {
             profileImageUrl={chat.senderProfileUrl}
             profileThumbnailUrl={chat.senderThumbnailUrl}
             mode="view"
+            // memberId 파라미터로 넣어야함
+            onClick={() => router.push(SITE_MAP.CHAT_PROFILE)}
           />
         )}
       </div>

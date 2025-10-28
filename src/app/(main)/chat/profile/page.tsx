@@ -10,7 +10,6 @@ import Header from '@/components/commons/header'
 import BottomButton from '@/components/commons/bottomButton'
 import { useReadOtherUserFullProfile } from '@/hooks/api/useMypageApi'
 import { usePostChatRoom } from '@/hooks/api/useChatApi'
-import { usePostBlockMember } from '@/hooks/api/useBlockApi'
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
@@ -23,23 +22,14 @@ import styles from './profile.module.css'
 export default function Profile() {
   const router = useRouter()
   const [memberId] = useQueryState('memberId')
-  const [lat] = useQueryState('lat')
-  const [lng] = useQueryState('lng')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { trigger: createChatRoom } = usePostChatRoom()
-  const { trigger: createBlockMember } = usePostBlockMember()
   const { data: profileData, isLoading: profileLoading } =
     useReadOtherUserFullProfile(memberId!)
   const todayString = format(new Date(), 'yyyy-MM-dd')
 
   const handleBlock = async () => {
-    if (!memberId) return
-    try {
-      await createBlockMember({
-        memberId: memberId,
-      })
-      router.replace(`${SITE_MAP.MATCH}?lat=${lat}&lng=${lng}`)
-    } catch {}
+    alert('차단')
   }
 
   const handleBottomButton = async () => {
@@ -73,9 +63,6 @@ export default function Profile() {
   return (
     <>
       <Header
-        onBack={() => {
-          router.replace(`${SITE_MAP.MATCH}?lat=${lat}&lng=${lng}`)
-        }}
         rightIcon={<KebabIcon />}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >

@@ -26,6 +26,7 @@ const SITE_MAP = {
 
   CHAT: '/chat',
   CHAT_ROOM: '/chat/room',
+  CHAT_PROFILE: '/chat/profile',
 
   TIMER_LIST: '/timer/list',
   TIMER_SIMPLE: '/timer/simple',
@@ -36,7 +37,5 @@ const SITE_MAP = {
   MYPAGE: '/mypage',
   MYPAGE_EDIT: '/mypage/edit',
   MYPAGE_PICTURES: '/mypage/pictures',
-  MYPAGE_OPEN_CHAT_CREATE: '/mypage/open-chat-create',
-  MYPAGE_OPEN_CHAT_EDIT: '/mypage/open-chat-edit',
 } as const
 export default SITE_MAP
