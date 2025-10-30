@@ -5,6 +5,8 @@ import { useQueryState } from 'nuqs'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
+import Button from '@/components/ui/button'
+import CenterDialog from '@/components/ui/CenterDialog'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import Header from '@/components/commons/header'
 import BottomButton from '@/components/commons/bottomButton'
@@ -26,6 +28,7 @@ export default function Profile() {
   const [lat] = useQueryState('lat')
   const [lng] = useQueryState('lng')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { trigger: createChatRoom } = usePostChatRoom()
   const { trigger: createBlockMember } = usePostBlockMember()
   const { data: profileData, isLoading: profileLoading } =
@@ -49,7 +52,7 @@ export default function Profile() {
         receiverId: memberId,
       })
       router.push(
-        `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}`,
+        `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}&memberId=${memberId}`,
       )
     } catch {}
   }
@@ -184,10 +187,43 @@ export default function Profile() {
         <KebabModal
           ref={menuRef}
           onBlock={() => {
-            handleBlock()
+            setIsDialogOpen(true)
             setIsMenuOpen(false)
           }}
         />
+      )}
+      
+      {/* 차단 다이어로그 */}
+      {isDialogOpen && (
+        <CenterDialog>
+          <Typography as="p" variant="content-large" weight="bold">
+            회원 차단
+          </Typography>
+          <Typography
+            className={styles['dialog-content']}
+            as="p"
+            variant="content-small"
+          >
+            차단하면 차단한 회원이 보내는 메세지를 받을 수 없습니다. 또한, 매칭
+            지도에서 차단한 회원을 조회할 수 없습니다.
+          </Typography>
+          <div className={styles['dialog-button-group']}>
+            <Button
+              className={styles['dialog-button']}
+              variant="secondary"
+              onClick={() => setIsDialogOpen(false)}
+            >
+              취소
+            </Button>
+            <Button
+              className={styles['dialog-button']}
+              variant="warning"
+              onClick={() => handleBlock()}
+            >
+              차단
+            </Button>
+          </div>
+        </CenterDialog>
       )}
     </>
   )

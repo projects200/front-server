@@ -3,6 +3,7 @@ export type ChatRoomIdDto = {
 }
 
 export type ChatRoomDto = ChatRoomIdDto & {
+  otherMemberId:string
   otherMemberNickname: string
   otherMemberProfileImageUrl: string
   otherMemberThumbnailImageUrl: string

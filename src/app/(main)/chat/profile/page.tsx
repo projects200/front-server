@@ -5,11 +5,14 @@ import { useQueryState } from 'nuqs'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
+import Button from '@/components/ui/button'
+import CenterDialog from '@/components/ui/CenterDialog'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import Header from '@/components/commons/header'
 import BottomButton from '@/components/commons/bottomButton'
 import { useReadOtherUserFullProfile } from '@/hooks/api/useMypageApi'
 import { usePostChatRoom } from '@/hooks/api/useChatApi'
+import { usePostBlockMember } from '@/hooks/api/useBlockApi'
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
@@ -23,13 +26,21 @@ export default function Profile() {
   const router = useRouter()
   const [memberId] = useQueryState('memberId')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { trigger: createChatRoom } = usePostChatRoom()
+  const { trigger: createBlockMember } = usePostBlockMember()
   const { data: profileData, isLoading: profileLoading } =
     useReadOtherUserFullProfile(memberId!)
   const todayString = format(new Date(), 'yyyy-MM-dd')
 
   const handleBlock = async () => {
-    alert('차단')
+    if (!memberId) return
+    try {
+      await createBlockMember({
+        memberId: memberId,
+      })
+      router.back()
+    } catch {}
   }
 
   const handleBottomButton = async () => {
@@ -171,10 +182,43 @@ export default function Profile() {
         <KebabModal
           ref={menuRef}
           onBlock={() => {
-            handleBlock()
+            setIsDialogOpen(true)
             setIsMenuOpen(false)
           }}
         />
+      )}
+
+      {/* 차단 다이어로그 */}
+      {isDialogOpen && (
+        <CenterDialog>
+          <Typography as="p" variant="content-large" weight="bold">
+            회원 차단
+          </Typography>
+          <Typography
+            className={styles['dialog-content']}
+            as="p"
+            variant="content-small"
+          >
+            차단하면 차단한 회원이 보내는 메세지를 받을 수 없습니다. 또한, 매칭
+            지도에서 차단한 회원을 조회할 수 없습니다.
+          </Typography>
+          <div className={styles['dialog-button-group']}>
+            <Button
+              className={styles['dialog-button']}
+              variant="secondary"
+              onClick={() => setIsDialogOpen(false)}
+            >
+              취소
+            </Button>
+            <Button
+              className={styles['dialog-button']}
+              variant="warning"
+              onClick={() => handleBlock()}
+            >
+              차단
+            </Button>
+          </div>
+        </CenterDialog>
       )}
     </>
   )

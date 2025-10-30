@@ -23,6 +23,7 @@ export function adapterChatRoomId(dto: ChatRoomIdDto): ChatRoomId {
 
 export function adapterChatRoom(dto: ChatRoomDto): ChatRoom {
   return {
+    otherMemberId: dto.otherMemberId,
     chatRoomId: dto.chatRoomId,
     otherMemberNickname: dto.otherMemberNickname,
     otherMemberProfileImageUrl: dto.otherMemberProfileImageUrl,

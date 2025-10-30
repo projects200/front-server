@@ -32,6 +32,7 @@ export default function ChatRoom() {
   // URL 파라미터에서 채팅방 정보 추출
   const chatRoomId = Number(searchParams.get('chatRoomId'))
   const nickName = searchParams.get('nickName')
+  const memberId = searchParams.get('memberId')
 
   // State
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -188,6 +189,8 @@ export default function ChatRoom() {
     }
   }
 
+  if (!chatRoomId || !nickName || !memberId) return null
+
   return (
     <div className={styles['container']}>
       {/* 헤더 영역 */}
@@ -243,6 +246,7 @@ export default function ChatRoom() {
                   chat={chat}
                   isContinuous={isContinuous}
                   shouldShowTime={shouldShowTime}
+                  memberId={memberId}
                 />
               </div>
             )

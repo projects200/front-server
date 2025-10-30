@@ -2,13 +2,10 @@ import Portal from './portal'
 import styles from './modal.module.css'
 
 interface CenterModalProps {
-  isOpen: boolean
   children: React.ReactNode
 }
 
-const CenterDialog = ({ isOpen, children }: CenterModalProps) => {
-  if (!isOpen) return null
-
+const CenterDialog = ({ children }: CenterModalProps) => {
   return (
     <Portal>
       <div className={styles['overlay']}>

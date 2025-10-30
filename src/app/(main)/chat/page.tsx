@@ -24,7 +24,7 @@ export default function Chat() {
       {chatRoomList.length > 0 ? (
         chatRoomList.map((data, index) => (
           <Link
-            href={`${SITE_MAP.CHAT_ROOM}?chatRoomId=${data.chatRoomId}&nickName=${data.otherMemberNickname}`}
+            href={`${SITE_MAP.CHAT_ROOM}?chatRoomId=${data.chatRoomId}&nickName=${data.otherMemberNickname}&memberId=${data.otherMemberId}`}
             key={`${data.otherMemberNickname}-${index}`}
             className={styles['list-container']}
           >

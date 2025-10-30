@@ -14,9 +14,10 @@ type Props = {
   chat: ChatContent
   isContinuous: boolean
   shouldShowTime: boolean
+  memberId: string
 }
 
-function OtherMessage({ chat, isContinuous, shouldShowTime }: Props) {
+function OtherMessage({ chat, isContinuous, shouldShowTime, memberId }: Props) {
   const router = useRouter()
 
   return (
@@ -38,8 +39,9 @@ function OtherMessage({ chat, isContinuous, shouldShowTime }: Props) {
             profileImageUrl={chat.senderProfileUrl}
             profileThumbnailUrl={chat.senderThumbnailUrl}
             mode="view"
-            // memberId 파라미터로 넣어야함
-            onClick={() => router.push(SITE_MAP.CHAT_PROFILE)}
+            onClick={() =>
+              router.push(`${SITE_MAP.CHAT_PROFILE}?memberId=${memberId}`)
+            }
           />
         )}
       </div>

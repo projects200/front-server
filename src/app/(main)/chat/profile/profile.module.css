@@ -70,6 +70,22 @@
   margin-top: 55px;
 }
 
+/* 차단 다이어로그 */
+.dialog-content {
+  margin-top: 13px;
+}
+.dialog-button-group {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+.dialog-button-group .dialog-button {
+  height: 40px;
+  border-radius: 8px;
+}
+
 @media (min-width: 768px) {
   .header-section {
     height: 80px;
