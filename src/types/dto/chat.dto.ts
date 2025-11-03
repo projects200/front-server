@@ -3,7 +3,7 @@ export type ChatRoomIdDto = {
 }
 
 export type ChatRoomDto = ChatRoomIdDto & {
-  otherMemberId:string
+  otherMemberId: string
   otherMemberNickname: string
   otherMemberProfileImageUrl: string
   otherMemberThumbnailImageUrl: string
@@ -31,9 +31,11 @@ export type ChatListDto = {
   content: ChatContentDto[]
   hasNext: boolean
   opponentActive: boolean
+  blockActive: boolean
 }
 
 export type NewChatDto = {
   newChats: ChatContentDto[]
   opponentActive: boolean
+  blockActive: boolean
 }

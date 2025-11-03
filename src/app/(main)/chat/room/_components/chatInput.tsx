@@ -7,9 +7,10 @@ import styles from './chatInput.module.css'
 type Props = {
   onSend: (message: string) => void
   disabled: boolean
+  blocked: boolean
 }
 
-export default function ChatInput({ onSend, disabled }: Props) {
+export default function ChatInput({ onSend, disabled, blocked }: Props) {
   const [value, setValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -53,16 +54,20 @@ export default function ChatInput({ onSend, disabled }: Props) {
           onKeyDown={handleKeyDown}
           className={styles['textarea']}
           placeholder={
-            disabled ? '상대방이 채팅방을 나갔습니다' : '메시지 입력'
+            blocked
+              ? '차단한 회원과는 대화할 수 없습니다'
+              : disabled
+                ? '상대방이 채팅방을 나갔습니다'
+                : '메시지 입력'
           }
-          disabled={disabled}
+          disabled={disabled || blocked}
           rows={1}
         />
       </div>
       <button
         onClick={handleSend}
         className={styles['send-button']}
-        disabled={!value.trim() || disabled}
+        disabled={!value.trim() || disabled || blocked}
       >
         <SendIcon className={styles['send-icon']} />
       </button>

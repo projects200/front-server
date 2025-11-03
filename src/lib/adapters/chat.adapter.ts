@@ -63,6 +63,7 @@ export function adapterChatList(dto: ChatListDto): ChatList {
     content: dto.content.map(adapterChatContent),
     hasNext: dto.hasNext,
     opponentActive: dto.opponentActive,
+    blockActive: dto.blockActive,
   }
 }
 
@@ -70,5 +71,6 @@ export function adapterNewChat(dto: NewChatDto): NewChat {
   return {
     newChats: dto.newChats.map(adapterChatContent),
     opponentActive: dto.opponentActive,
+    blockActive: dto.blockActive,
   }
 }

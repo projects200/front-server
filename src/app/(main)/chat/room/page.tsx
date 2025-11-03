@@ -50,14 +50,18 @@ export default function ChatRoom() {
     messages,
     hasNextPage,
     opponentActive,
+    blockActive,
     setSize,
     mutate,
     isFetchingPrevMessages,
   } = useReadChatMessages(chatRoomId)
-  const { data: newMessagesData } = useReadNewChatMessages(chatRoomId)
+  const { data: newMessagesData } = useReadNewChatMessages(
+    chatRoomId,
+  )
   const { trigger: sendMessage } = usePostChatMessage(chatRoomId)
   const { trigger: leaveChatRoom } = useDeleteChatRoom(chatRoomId)
   const otherUserLeft = !opponentActive
+  const isBlockActive = blockActive || newMessagesData?.blockActive || false
 
   // 메세지 전송 핸들러
   const handleSendMessage = async (message: string) => {
@@ -256,7 +260,11 @@ export default function ChatRoom() {
       </div>
 
       {/* 채팅 입력 영역 */}
-      <ChatInput onSend={handleSendMessage} disabled={otherUserLeft} />
+      <ChatInput
+        onSend={handleSendMessage}
+        disabled={otherUserLeft}
+        blocked={isBlockActive}
+      />
 
       {isMenuOpen && (
         <KebabModal

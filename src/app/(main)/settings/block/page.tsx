@@ -36,7 +36,7 @@ export default function Block() {
             <ProfileImg
               className={styles['profile-img']}
               profileImageUrl={data.profileImageUrl}
-              profileThumbnailUrl={null}
+              profileThumbnailUrl={data.thumbnailImageUrl}
               mode="view"
             />
             <Typography as="p" variant="content-large" weight="bold">

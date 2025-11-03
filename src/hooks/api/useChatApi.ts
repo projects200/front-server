@@ -84,12 +84,14 @@ export const useReadChatMessages = (chatroomId: number) => {
   const isFetchingPrevMessages = isValidating && size > 1
   const hasNextPage = data?.at(-1)?.hasNext ?? true
   const opponentActive = data?.at(0)?.opponentActive ?? true
+  const blockActive = data?.at(0)?.blockActive ?? false
 
   return {
     messages,
     isFetchingPrevMessages,
     hasNextPage,
     opponentActive,
+    blockActive,
     setSize,
     mutate,
   }
@@ -110,7 +112,12 @@ export const useReadNewChatMessages = (chatroomId: number) =>
     [`chatRoom/messages/new`, chatroomId],
     (token) => readNewChatMessages(token, chatroomId).then(adapterNewChat),
     {
-      refreshInterval: 2000,
+      refreshInterval: (latestData) => {
+        if (latestData?.blockActive || !latestData?.opponentActive) {
+          return 0
+        }
+        return 2000
+      },
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       policy: {
