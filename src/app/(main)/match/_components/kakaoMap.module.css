@@ -20,13 +20,44 @@
   background-color: var(--color-white-300);
   box-shadow: var(--color-boxshadow-100);
   border-radius: 8px;
-  z-index: 1000;
+  z-index: 800;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .current-location-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.bottom-sheet-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: var(--color-white-300);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 900;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.bottom-sheet-container.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 20px;
+}
+
+.close-button {
   width: 24px;
   height: 24px;
 }

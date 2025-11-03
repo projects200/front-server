@@ -1,3 +1,5 @@
+type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN'
+
 export type MemberSocreDto = {
   memberId: string
   memberScore: number
@@ -16,7 +18,7 @@ export type MemberProfileDto = {
   profileThumbnailUrl: string
   profileImageUrl: string
   nickname: string
-  gender: string
+  gender: Gender
   birthDate: string
   locations: MemberExerciseLocationDto[]
 }
