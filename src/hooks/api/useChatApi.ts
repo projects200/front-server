@@ -75,6 +75,8 @@ export const useReadChatMessages = (chatroomId: number) => {
       ),
     {
       revalidateFirstPage: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     },
   )
 

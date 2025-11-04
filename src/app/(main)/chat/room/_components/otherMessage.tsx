@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/navigation'
 
@@ -20,6 +20,10 @@ type Props = {
 function OtherMessage({ chat, isContinuous, shouldShowTime, memberId }: Props) {
   const router = useRouter()
 
+  const handleProfileClick = useCallback(() => {
+    router.push(`${SITE_MAP.CHAT_PROFILE}?memberId=${memberId}`)
+  }, [memberId])
+
   return (
     <div
       className={clsx(
@@ -39,9 +43,7 @@ function OtherMessage({ chat, isContinuous, shouldShowTime, memberId }: Props) {
             profileImageUrl={chat.senderProfileUrl}
             profileThumbnailUrl={chat.senderThumbnailUrl}
             mode="view"
-            onClick={() =>
-              router.push(`${SITE_MAP.CHAT_PROFILE}?memberId=${memberId}`)
-            }
+            onClick={handleProfileClick}
           />
         )}
       </div>

@@ -49,7 +49,7 @@ export default function ChatInput({ onSend, disabled, blocked }: Props) {
         <textarea
           ref={textareaRef}
           value={value}
-          maxLength={400}
+          maxLength={500}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           className={styles['textarea']}
