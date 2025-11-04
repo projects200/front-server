@@ -25,8 +25,6 @@ import styles from './profile.module.css'
 export default function Profile() {
   const router = useRouter()
   const [memberId] = useQueryState('memberId')
-  const [lat] = useQueryState('lat')
-  const [lng] = useQueryState('lng')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { trigger: createChatRoom } = usePostChatRoom()
@@ -41,7 +39,7 @@ export default function Profile() {
       await createBlockMember({
         memberId: memberId,
       })
-      router.replace(`${SITE_MAP.MATCH}?lat=${lat}&lng=${lng}`)
+      router.back()
     } catch {}
   }
 
@@ -52,7 +50,7 @@ export default function Profile() {
         receiverId: memberId,
       })
       router.push(
-        `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}&memberId=${memberId}`,
+        `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}`,
       )
     } catch {}
   }
@@ -76,9 +74,6 @@ export default function Profile() {
   return (
     <>
       <Header
-        onBack={() => {
-          router.replace(`${SITE_MAP.MATCH}?lat=${lat}&lng=${lng}`)
-        }}
         rightIcon={<KebabIcon />}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
@@ -192,7 +187,7 @@ export default function Profile() {
           }}
         />
       )}
-      
+
       {/* 차단 다이어로그 */}
       {isDialogOpen && (
         <CenterDialog>

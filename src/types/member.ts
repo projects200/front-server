@@ -1,3 +1,5 @@
+type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN'
+
 export type ScoreState = 'loading' | 'low' | 'middle' | 'high'
 
 export type MemberScore = {
@@ -18,7 +20,7 @@ export type MemberProfile = {
   profileThumbnailUrl: string
   profileImageUrl: string
   nickname: string
-  gender: string
+  gender: Gender
   birthDate: string
   locationList: MemberExerciseLocation[]
 }
@@ -28,7 +30,7 @@ export type MemberLocationFlattened = {
   profileThumbnailUrl: string | null
   profileImageUrl: string
   nickname: string
-  gender: string
+  gender: Gender
   birthDate: string
   location: MemberExerciseLocation
 }

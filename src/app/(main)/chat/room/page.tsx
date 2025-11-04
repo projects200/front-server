@@ -32,6 +32,7 @@ export default function ChatRoom() {
   // URL 파라미터에서 채팅방 정보 추출
   const chatRoomId = Number(searchParams.get('chatRoomId'))
   const nickName = searchParams.get('nickName')
+  const memberId = searchParams.get('memberId')
 
   // State
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -49,14 +50,18 @@ export default function ChatRoom() {
     messages,
     hasNextPage,
     opponentActive,
+    blockActive,
     setSize,
     mutate,
     isFetchingPrevMessages,
   } = useReadChatMessages(chatRoomId)
-  const { data: newMessagesData } = useReadNewChatMessages(chatRoomId)
+  const { data: newMessagesData } = useReadNewChatMessages(
+    chatRoomId,
+  )
   const { trigger: sendMessage } = usePostChatMessage(chatRoomId)
   const { trigger: leaveChatRoom } = useDeleteChatRoom(chatRoomId)
   const otherUserLeft = !opponentActive
+  const isBlockActive = blockActive || newMessagesData?.blockActive || false
 
   // 메세지 전송 핸들러
   const handleSendMessage = async (message: string) => {
@@ -188,6 +193,8 @@ export default function ChatRoom() {
     }
   }
 
+  if (!chatRoomId || !nickName || !memberId) return null
+
   return (
     <div className={styles['container']}>
       {/* 헤더 영역 */}
@@ -211,7 +218,8 @@ export default function ChatRoom() {
               prevChat &&
               prevChat.senderId === chat.senderId &&
               prevChat.chatType === 'USER' &&
-              chat.chatType === 'USER'
+              chat.chatType === 'USER' &&
+              isSameMinute(prevChat.sentAt, chat.sentAt)
             )
 
             const shouldShowTime =
@@ -242,6 +250,7 @@ export default function ChatRoom() {
                   chat={chat}
                   isContinuous={isContinuous}
                   shouldShowTime={shouldShowTime}
+                  memberId={memberId}
                 />
               </div>
             )
@@ -251,7 +260,11 @@ export default function ChatRoom() {
       </div>
 
       {/* 채팅 입력 영역 */}
-      <ChatInput onSend={handleSendMessage} disabled={otherUserLeft} />
+      <ChatInput
+        onSend={handleSendMessage}
+        disabled={otherUserLeft}
+        blocked={isBlockActive}
+      />
 
       {isMenuOpen && (
         <KebabModal

@@ -39,20 +39,10 @@ export const useReadChatRoomList = () =>
   useApiGet<ChatRoom[]>(
     ['chatRoom/list'],
     (token) => readChatRoomList(token).then(adapterChatRoomList),
-    {},
+    { refreshInterval: 15000 },
   )
 
 // 특정 채팅방 메시지 목록 조회
-// export const useReadChatMessages = (chatroomId: number) =>
-//   useApiGet<ChatList>(
-//     [`chatRoom/messages`, chatroomId],
-//     (token) => readChatMessages(token, chatroomId).then(adapterChatList),
-//     {
-//       revalidateOnFocus: false,
-//       revalidateOnReconnect: false,
-//     },
-//   )
-
 export const useReadChatMessages = (chatroomId: number) => {
   const getKey: (
     pageIndex: number,
@@ -92,14 +82,16 @@ export const useReadChatMessages = (chatroomId: number) => {
     ? [...data].reverse().flatMap((page) => page.content)
     : []
   const isFetchingPrevMessages = isValidating && size > 1
-  const hasNextPage = data?.[data.length - 1]?.hasNext ?? true
-  const opponentActive = data?.[0]?.opponentActive ?? true
+  const hasNextPage = data?.at(-1)?.hasNext ?? true
+  const opponentActive = data?.at(0)?.opponentActive ?? true
+  const blockActive = data?.at(0)?.blockActive ?? false
 
   return {
     messages,
     isFetchingPrevMessages,
     hasNextPage,
     opponentActive,
+    blockActive,
     setSize,
     mutate,
   }
@@ -120,7 +112,12 @@ export const useReadNewChatMessages = (chatroomId: number) =>
     [`chatRoom/messages/new`, chatroomId],
     (token) => readNewChatMessages(token, chatroomId).then(adapterNewChat),
     {
-      refreshInterval: 2000,
+      refreshInterval: (latestData) => {
+        if (latestData?.blockActive || !latestData?.opponentActive) {
+          return 0
+        }
+        return 2000
+      },
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       policy: {
