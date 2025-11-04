@@ -21,7 +21,7 @@ function MyMessage({ chat, isContinuous, shouldShowTime }: Props) {
         isContinuous && styles['continuous-container'],
       )}
     >
-      <div className={styles['bubble-wrapper']}>
+      <div className={clsx(styles['bubble-wrapper'],styles['my-bubble-wrapper'])}>
         {shouldShowTime && (
           <Typography className={styles['time']} as="p" variant="content-small">
             {formatChatTime(chat.sentAt)}

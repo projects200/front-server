@@ -1,5 +1,6 @@
 .my-message-container,
 .other-message-container {
+  width: 100%;
   display: flex;
 }
 .my-message-container {
@@ -30,18 +31,23 @@
 
 /* 말풍선 */
 .bubble-wrapper {
-  max-width: 80%;
+  width: 100%;
   display: flex;
   gap: 5px;
   align-items: flex-end;
 }
+.my-bubble-wrapper {
+  justify-content: flex-end;
+}
 
 .bubble {
+  max-width: 75%;
   padding: 10px 15px;
   border-radius: 15px;
   word-break: break-word;
 }
 .my-bubble {
+  text-align: right;
   background-color: var(--color-green);
   color: var(--color-white-300);
 }

@@ -11,6 +11,7 @@ type Props = {
 }
 
 export default function ChatInput({ onSend, disabled, blocked }: Props) {
+  const [isComposing, setIsComposing] = useState(false)
   const [value, setValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -37,7 +38,7 @@ export default function ChatInput({ onSend, disabled, blocked }: Props) {
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
       e.preventDefault()
       handleSend()
     }
@@ -52,6 +53,8 @@ export default function ChatInput({ onSend, disabled, blocked }: Props) {
           maxLength={500}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={() => setIsComposing(false)}
           className={styles['textarea']}
           placeholder={
             blocked
@@ -64,13 +67,15 @@ export default function ChatInput({ onSend, disabled, blocked }: Props) {
           rows={1}
         />
       </div>
-      <button
-        onClick={handleSend}
-        className={styles['send-button']}
-        disabled={!value.trim() || disabled || blocked}
-      >
-        <SendIcon className={styles['send-icon']} />
-      </button>
+      <div className={styles['send-button-wrapper']}>
+        <button
+          onClick={handleSend}
+          className={styles['send-button']}
+          disabled={!value.trim() || disabled || blocked}
+        >
+          <SendIcon className={styles['send-icon']} />
+        </button>
+      </div>
     </div>
   )
 }
