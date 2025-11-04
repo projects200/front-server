@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import clsx from 'clsx'
+import { memo } from 'react'
 
 import DefaultProfile from '@/assets/default_profile.svg'
 import PlusIcon from '@/assets/icon_img_plus.svg'
@@ -16,7 +17,7 @@ type Props = {
   onClick?: () => void
 }
 
-export default function ProfileImg({
+function ProfileImg({
   className,
   profileThumbnailUrl,
   profileImageUrl,
@@ -59,3 +60,5 @@ export default function ProfileImg({
     </button>
   )
 }
+
+export default memo(ProfileImg)

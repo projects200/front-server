@@ -55,9 +55,7 @@ export default function ChatRoom() {
     mutate,
     isFetchingPrevMessages,
   } = useReadChatMessages(chatRoomId)
-  const { data: newMessagesData } = useReadNewChatMessages(
-    chatRoomId,
-  )
+  const { data: newMessagesData } = useReadNewChatMessages(chatRoomId)
   const { trigger: sendMessage } = usePostChatMessage(chatRoomId)
   const { trigger: leaveChatRoom } = useDeleteChatRoom(chatRoomId)
   const otherUserLeft = !opponentActive
@@ -67,8 +65,9 @@ export default function ChatRoom() {
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || !user?.profile) return
 
+    const tempChatId = Date.now()
     const tempMessage: ChatContent = {
-      chatId: Date.now(),
+      chatId: tempChatId,
       chatContent: message,
       sentAt: new Date().toISOString(),
       mine: true,
@@ -89,10 +88,40 @@ export default function ChatRoom() {
     }, false)
 
     try {
-      await sendMessage({ content: message })
-      mutate()
+      const response = await sendMessage({ content: message })
+      const realChatId = response.data.chatId
+      mutate((currentData) => {
+        if (!currentData) return []
+
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: [...page.content],
+        }))
+
+        const pageWithTempMessage = newData.find((page) =>
+          page.content.some((chat) => chat.chatId === tempChatId),
+        )
+
+        if (pageWithTempMessage) {
+          const messageToUpdate = pageWithTempMessage.content.find(
+            (chat) => chat.chatId === tempChatId,
+          )
+          if (messageToUpdate) {
+            messageToUpdate.chatId = realChatId
+          }
+        }
+
+        return newData
+      }, false)
     } catch {
-      mutate()
+      mutate((currentData) => {
+        if (!currentData) return []
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: page.content.filter((chat) => chat.chatId !== tempChatId),
+        }))
+        return newData
+      }, false)
     }
   }
 
@@ -142,7 +171,32 @@ export default function ChatRoom() {
   // 새로운 메시지에 대한 처리 로직
   useEffect(() => {
     if (newMessagesData && newMessagesData.newChats.length > 0) {
-      mutate()
+      mutate((currentData) => {
+        if (!currentData) return []
+
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: [...page.content],
+        }))
+
+        // 새로운 메시지들을 최신 페이지(0번 인덱스)에 추가합니다.
+        // 중복 추가를 방지하기 위해 이미 캐시에 없는 메시지만 추가합니다.
+        const existingChatIds = new Set(newData[0].content.map((c) => c.chatId))
+        const chatsToAdd = newMessagesData.newChats.filter(
+          (newChat) => !existingChatIds.has(newChat.chatId),
+        )
+
+        if (chatsToAdd.length > 0) {
+          // newChats 배열은 시간 역순일 수 있으므로 올바른 순서로 정렬 후 추가
+          chatsToAdd.sort(
+            (a, b) =>
+              new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime(),
+          )
+          newData[0].content.push(...chatsToAdd)
+        }
+
+        return newData
+      }, false) // revalidate: false
     }
   }, [newMessagesData, mutate])
 
