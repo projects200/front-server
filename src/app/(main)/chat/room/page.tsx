@@ -179,15 +179,12 @@ export default function ChatRoom() {
           content: [...page.content],
         }))
 
-        // 새로운 메시지들을 최신 페이지(0번 인덱스)에 추가합니다.
-        // 중복 추가를 방지하기 위해 이미 캐시에 없는 메시지만 추가합니다.
         const existingChatIds = new Set(newData[0].content.map((c) => c.chatId))
         const chatsToAdd = newMessagesData.newChats.filter(
           (newChat) => !existingChatIds.has(newChat.chatId),
         )
 
         if (chatsToAdd.length > 0) {
-          // newChats 배열은 시간 역순일 수 있으므로 올바른 순서로 정렬 후 추가
           chatsToAdd.sort(
             (a, b) =>
               new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime(),
@@ -196,7 +193,7 @@ export default function ChatRoom() {
         }
 
         return newData
-      }, false) // revalidate: false
+      }, false)
     }
   }, [newMessagesData, mutate])
 
