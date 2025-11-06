@@ -116,8 +116,6 @@ export default function Settings() {
         </Typography>
       </CenterModal>
 
-      <BottomNavigation />
-
       {/* 각종 약관 */}
       {legalDocUrl && (
         <LegalDocModal
