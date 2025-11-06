@@ -94,8 +94,7 @@ export default function Settings() {
         <MenuItem
           icon={<AlertIcon className={styles['icon']} />}
           label="알림설정"
-          // onClick={() => router.push(SITE_MAP.SETTINGS_ALERT)}
-          onClick={() => alert('알림기능 준비중 입니다.')}
+          onClick={() => router.push(SITE_MAP.SETTINGS_ALERT)}
         />
         <MenuItem
           icon={<InfoIcon className={styles['icon']} />}
