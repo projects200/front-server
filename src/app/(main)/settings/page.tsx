@@ -15,7 +15,6 @@ import ImportanceIcon from '@/assets/icon_importance.svg'
 import DocumentIcon from '@/assets/icon_document.svg'
 import InfoIcon from '@/assets/icon_info.svg'
 import AlertIcon from '@/assets/icon_alert.svg'
-import BottomNavigation from '@/components/commons/bottomNavigation'
 import { useDeleteFcmToken } from '@/hooks/api/useFcmApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -94,8 +93,7 @@ export default function Settings() {
         <MenuItem
           icon={<AlertIcon className={styles['icon']} />}
           label="알림설정"
-          // onClick={() => router.push(SITE_MAP.SETTINGS_ALERT)}
-          onClick={() => alert('알림기능 준비중 입니다.')}
+          onClick={() => router.push(SITE_MAP.SETTINGS_ALERT)}
         />
         <MenuItem
           icon={<InfoIcon className={styles['icon']} />}
@@ -116,8 +114,6 @@ export default function Settings() {
           로그아웃 하시겠습니까?
         </Typography>
       </CenterModal>
-
-      <BottomNavigation />
 
       {/* 각종 약관 */}
       {legalDocUrl && (
