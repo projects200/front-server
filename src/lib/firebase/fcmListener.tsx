@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
-import { getMessaging, onMessage } from 'firebase/messaging'
+import { useEffect, useRef } from 'react'
+import { getMessaging, onMessage, Messaging } from 'firebase/messaging'
 
 import {
   ChatMessagePayload,
@@ -12,12 +12,15 @@ import { firebaseApp } from './config'
 
 function FcmListener() {
   const { showChatAlert } = useChatAlertContext()
+  const messagingRef = useRef<Messaging | null>(null)
 
   useEffect(() => {
-    const messaging = getMessaging(firebaseApp)
+    if (!messagingRef.current) {
+      messagingRef.current = getMessaging(firebaseApp)
+    }
 
     // onMessage 리스터 등록. 웹이 켜져 있을 때 메시지가 오면 해당 콜백이 실행됨
-    const unsubscribe = onMessage(messaging, (payload) => {
+    const unsubscribe = onMessage(messagingRef.current, (payload) => {
       const chatRoomIdFromMessage = payload.data?.chatRoomId
       const searchParams = new URLSearchParams(window.location.search)
       const chatRoomIdFromUrl = searchParams.get('chatRoomId')
