@@ -1,27 +1,80 @@
 'use client'
 
+// 주석처리된 부분은 백엔드 API 개발이 완료되면 추가될 코드들 입니다.
+// 현재 내 기기의 각 알림별 on/off 상태 조회 API 개발이 되어있지 않아 페이지 진입시
+// 조회를 하게되면 에러가 발생하기 때문에 주석처리 해두었습니다.
+
 import { useState, useEffect } from 'react'
 
+import {
+  // useReadNotificationSettingList,
+  usePatchNotificationSettingItems,
+} from '@/hooks/api/useFcmApi'
 import Header from '@/components/commons/header'
 import ToggleSwitch from '@/components/ui/toggleSwitch'
 import Typography from '@/components/ui/typography'
+import { NotificationType, NotificationSetting } from '@/types/fcm'
 
 import styles from './alert.module.css'
 
 export default function Alert() {
+  const fcmToken = sessionStorage.getItem('fcm_token')
   const [exerciseAlert, setExerciseAlert] = useState(false)
   const [chatAlert, setChatAlert] = useState(false)
   const [notificationPermission, setNotificationPermission] =
     useState('default')
 
-  const handleExerciseToggle = async () => {
-    // Todo : 운동알림 on/off API 호출
-    setExerciseAlert(!exerciseAlert)
+  // const { data } = useReadNotificationSettingList(fcmToken)
+  const { trigger: updateNotificationSetting } =
+    usePatchNotificationSettingItems(fcmToken)
+
+  const handleSettingChange = async (
+    typeToChange: NotificationType,
+    newEnabled: boolean,
+  ) => {
+    const payload: NotificationSetting[] = [
+      {
+        type: 'WORKOUT_REMINDER',
+        enabled:
+          typeToChange === 'WORKOUT_REMINDER' ? newEnabled : exerciseAlert,
+      },
+      {
+        type: 'CHAT_MESSAGE',
+        enabled: typeToChange === 'CHAT_MESSAGE' ? newEnabled : chatAlert,
+      },
+    ]
+
+    try {
+      await updateNotificationSetting(payload)
+
+      if (typeToChange === 'WORKOUT_REMINDER') {
+        setExerciseAlert(newEnabled)
+      } else {
+        setChatAlert(newEnabled)
+      }
+    } catch {}
   }
-  const handleChatToggle = async () => {
-    // Todo : 채팅알림 on/off API 호출
-    setChatAlert(!chatAlert)
-  }
+
+  const handleExerciseToggle = () =>
+    handleSettingChange('WORKOUT_REMINDER', !exerciseAlert)
+  const handleChatToggle = () => handleSettingChange('CHAT_MESSAGE', !chatAlert)
+
+  // useEffect(() => {
+  //   if (data && Array.isArray(data)) {
+  //     data.forEach((setting) => {
+  //       switch (setting.type) {
+  //         case 'WORKOUT_REMINDER':
+  //           setExerciseAlert(setting.enabled)
+  //           break
+  //         case 'CHAT_MESSAGE':
+  //           setChatAlert(setting.enabled)
+  //           break
+  //         default:
+  //           break
+  //       }
+  //     })
+  //   }
+  // }, [data])
 
   // 브라우저의 안림권한이 있는지 확인
   useEffect(() => {
