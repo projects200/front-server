@@ -1,5 +1,6 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app'
 import { getMessaging, getToken, Messaging } from 'firebase/messaging'
+import { getRemoteConfig, fetchAndActivate } from 'firebase/remote-config'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,6 +15,14 @@ const firebaseConfig = {
 const firebaseApp: FirebaseApp = !getApps().length
   ? initializeApp(firebaseConfig)
   : getApp()
+
+const remoteConfig = getRemoteConfig(firebaseApp)
+
+if (process.env.NEXT_PUBLIC_ENV === 'prod') {
+  remoteConfig.settings.minimumFetchIntervalMillis = 12 * 60 * 60 * 1000
+} else {
+  remoteConfig.settings.minimumFetchIntervalMillis = 60 * 60 * 1000
+}
 
 let messaging: Messaging | null = null
 
@@ -45,4 +54,10 @@ const requestFcmToken = async (): Promise<string | null> => {
   }
 }
 
-export { firebaseApp, messaging, requestFcmToken }
+export {
+  firebaseApp,
+  remoteConfig,
+  fetchAndActivate,
+  messaging,
+  requestFcmToken,
+}

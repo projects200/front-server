@@ -2,6 +2,7 @@
 
 import { AuthProvider } from 'react-oidc-context'
 
+import { RemoteConfigProvider } from '@/context/remoteConfigContext'
 import { ToastProvider } from '@/context/toastContext'
 import { ChatAlertProvider } from '@/context/chatAlertContext'
 import { Toast } from '@/components/commons/toast'
@@ -14,16 +15,18 @@ import { SwrProvider } from './swrProvider'
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider userManager={userManager}>
-      <ToastProvider>
-        <ChatAlertProvider>
-          <SwrProvider>{children}</SwrProvider>
-          <Toast />
-          <ChatAlert />
-          <ServiceWorkerRegister />
-          <FcmListener />
-        </ChatAlertProvider>
-      </ToastProvider>
-    </AuthProvider>
+    <RemoteConfigProvider>
+      <AuthProvider userManager={userManager}>
+        <ToastProvider>
+          <ChatAlertProvider>
+            <SwrProvider>{children}</SwrProvider>
+            <Toast />
+            <ChatAlert />
+            <ServiceWorkerRegister />
+            <FcmListener />
+          </ChatAlertProvider>
+        </ToastProvider>
+      </AuthProvider>
+    </RemoteConfigProvider>
   )
 }
