@@ -14,7 +14,11 @@ import SITE_MAP from '@/constants/siteMap.constant'
 
 import styles from './login.module.css'
 
+import { useRemoteConfig } from '@/hooks/useRemoteConfig'
+
 export default function Login() {
+  const { config } = useRemoteConfig()
+  console.log(config)
   return (
     <section className={styles['container']}>
       <Logo className={styles['logo']} width={150} height={150} />
