@@ -22,3 +22,9 @@ export type UserFullProfile = UserProfile & {
   exerciseScore: number
   preferredExercises: PreferExercises[]
 }
+
+export type ExerciseItem = {
+  exerciseTypeId: number
+  name: string
+  imageUrl: string | null
+}

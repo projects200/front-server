@@ -38,6 +38,5 @@ const SITE_MAP = {
   MYPAGE_EDIT: '/mypage/edit',
   MYPAGE_PICTURES: '/mypage/pictures',
   MYPAGE_PREFER_SELECT: '/mypage/prefer-select',
-  MYPAGE_PREFER_DETAIL: '/mypage/prefer-detail',
 } as const
 export default SITE_MAP

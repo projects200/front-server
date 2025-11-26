@@ -22,3 +22,9 @@ export type UserFullProfileDto = UserProfileDto & {
   exerciseScore: number
   preferredExercises: PreferExercisesDto[]
 }
+
+export type ExerciseItemDto = {
+  exerciseTypeId: number
+  name: string
+  imageUrl: string | null
+}

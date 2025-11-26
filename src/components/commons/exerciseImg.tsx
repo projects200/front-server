@@ -14,24 +14,18 @@ type Props = {
 }
 
 function ExerciseImg({ className, imageUrl }: Props) {
-  const ExerciseImageComponent = () => {
-    if (imageUrl) {
-      return (
+  return (
+    <div className={clsx(className, styles['exercise-container'])}>
+      {imageUrl ? (
         <Image
           className={styles['exercise-img']}
           src={imageUrl}
           alt="운동 이미지"
           fill
         />
-      )
-    } else {
-      return <DefaultExerciseIMage className={styles['exercise-img']} />
-    }
-  }
-
-  return (
-    <div className={clsx(className, styles['exercise-container'])}>
-      <ExerciseImageComponent />
+      ) : (
+        <DefaultExerciseIMage className={styles['exercise-img']} />
+      )}
     </div>
   )
 }
