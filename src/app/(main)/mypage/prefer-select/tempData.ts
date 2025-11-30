@@ -160,3 +160,22 @@ export const TEMP_DATA = [
     imageUrl: null,
   },
 ]
+
+export const TEMP_MY_DATA = [
+  {
+    preferredExerciseId: 101,
+    exerciseTypeId: 1,
+    name: '축구',
+    imageUrl: null,
+    skillLevel: 'NOVICE',
+    daysOfWeek: [true, false, true, false, false, false, false],
+  },
+  {
+    preferredExerciseId: 102,
+    exerciseTypeId: 2,
+    name: '컬링',
+    imageUrl: null,
+    skillLevel: 'NOVICE',
+    daysOfWeek: [false, false, false, false, false, true, true],
+  },
+]

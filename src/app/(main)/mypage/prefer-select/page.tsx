@@ -1,17 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
 import { useToast } from '@/hooks/useToast'
+import { ExerciseItem, PreferExercises, EditableKeys } from '@/types/mypage'
 
 import SelectionStep from './_components/selectionStep'
 import DetailStep from './_components/detailStep'
 import styles from './preferSelect.module.css'
 
-import { TEMP_DATA } from './tempData'
+import { TEMP_DATA, TEMP_MY_DATA } from './tempData'
+
+const createNewExercise = (item: ExerciseItem): PreferExercises => ({
+  preferredExerciseId: 0,
+  exerciseTypeId: item.exerciseTypeId,
+  name: item.name,
+  imageUrl: item.imageUrl,
+  skillLevel: '',
+  daysOfWeek: [false, false, false, false, false, false, false],
+})
 
 export default function PreferSelect() {
   const router = useRouter()
@@ -20,22 +30,58 @@ export default function PreferSelect() {
   const nickName = searchParams.get('nickName') || '회원'
 
   const [step, setStep] = useState<'select' | 'detail'>('select')
-  const [selectedIds, setSelectedIds] = useState<number[]>([])
+  const [allExercises, setAllExercises] = useState<ExerciseItem[]>([])
+  const [initialData, setInitialData] = useState<PreferExercises[]>([])
+  const [myExercises, setMyExercises] = useState<PreferExercises[]>([])
 
+  // 초기 데이터 로드, 백엔드 API 개발 완료시 실제 데이터 호출
+  useEffect(() => {
+    setAllExercises(TEMP_DATA)
+    setInitialData(TEMP_MY_DATA)
+    setMyExercises(TEMP_MY_DATA)
+  }, [])
+
+  // 선호운동 아이템 토글 로직
   const handleToggleExercise = (id: number) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds((prev) => prev.filter((itemId) => itemId !== id))
+    const exists = myExercises.find((e) => e.exerciseTypeId === id)
+    if (exists) {
+      setMyExercises((prev) => prev.filter((e) => e.exerciseTypeId !== id))
     } else {
-      if (selectedIds.length < 5) {
-        setSelectedIds((prev) => [...prev, id])
-      } else {
+      if (myExercises.length >= 5) {
         showToast('최대 5개까지 선택 가능해요', 'info')
+        return
+      }
+
+      const prevData = initialData.find((e) => e.exerciseTypeId === id)
+      const baseInfo = allExercises.find((e) => e.exerciseTypeId === id)
+
+      if (!baseInfo) return
+
+      if (prevData) {
+        setMyExercises((prev) => [...prev, prevData])
+      } else {
+        setMyExercises((prev) => [...prev, createNewExercise(baseInfo)])
       }
     }
   }
 
+  // 선택한 운동의 상세 정보 업데이트 로직
+  const handleUpdateDetail = <K extends EditableKeys>(
+    exerciseTypeId: number,
+    field: K,
+    value: PreferExercises[K],
+  ) => {
+    setMyExercises((prev) =>
+      prev.map((item) =>
+        item.exerciseTypeId === exerciseTypeId
+          ? { ...item, [field]: value }
+          : item,
+      ),
+    )
+  }
+
   const handleNext = () => {
-    if (selectedIds.length === 0) {
+    if (myExercises.length === 0) {
       showToast('최소 1개 이상의 운동을 선택해주세요.', 'info')
       return
     }
@@ -43,6 +89,7 @@ export default function PreferSelect() {
   }
 
   const handleComplete = () => {
+    // 백엔드 API 연결 후 제출 로직 작성
     alert('완료')
   }
 
@@ -60,12 +107,12 @@ export default function PreferSelect() {
       {step === 'select' ? (
         <SelectionStep
           nickName={nickName}
-          allExercises={TEMP_DATA}
-          selectedExercises={selectedIds}
+          allExercises={allExercises}
+          selectedExercises={myExercises.map((e) => e.exerciseTypeId)}
           onToggle={handleToggleExercise}
         />
       ) : (
-        <DetailStep nickName={nickName} />
+        <DetailStep myExercises={myExercises} onUpdate={handleUpdateDetail} />
       )}
     </div>
   )

@@ -28,3 +28,5 @@ export type ExerciseItem = {
   name: string
   imageUrl: string | null
 }
+
+export type EditableKeys = 'skillLevel' | 'daysOfWeek'
