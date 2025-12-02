@@ -2,7 +2,7 @@ import { createContext, useContext, useState, ReactNode, useRef } from 'react'
 import type { MessagePayload } from 'firebase/messaging'
 
 type ChatAlertPayloadData = {
-  chatRoomId: number
+  chatroomId: number
   memberId: string
   nickname: string
   content: string
