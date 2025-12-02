@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 
-import { PreferExercises, EditableKeys } from '@/types/mypage'
+import { PreferExercises } from '@/types/mypage'
 import ExerciseImg from '@/components/commons/exerciseImg'
 import Typography from '@/components/ui/typography'
 import {
@@ -24,14 +24,15 @@ const SKILL_LEVELS = [
 
 type Props = {
   myExercises: PreferExercises[]
-  onUpdate: <K extends EditableKeys>(
-    id: number,
-    field: K,
-    value: PreferExercises[K],
-  ) => void
+  onUpdateDay: (id: number, daysOfWeek: boolean[]) => void
+  onUpdateSkill: (id: number, skillLevel: string) => void
 }
 
-export default function DetailStep({ myExercises, onUpdate }: Props) {
+export default function DetailStep({
+  myExercises,
+  onUpdateDay,
+  onUpdateSkill,
+}: Props) {
   // 요일 토글 헬퍼 함수
   const handleDayToggle = (
     exerciseId: number,
@@ -40,7 +41,7 @@ export default function DetailStep({ myExercises, onUpdate }: Props) {
   ) => {
     const newDays = [...currentDays]
     newDays[dayIndex] = !newDays[dayIndex]
-    onUpdate(exerciseId, 'daysOfWeek', newDays)
+    onUpdateDay(exerciseId, newDays)
   }
 
   return (
@@ -126,7 +127,7 @@ export default function DetailStep({ myExercises, onUpdate }: Props) {
                       exercise.skillLevel === level && styles['selected'],
                     )}
                     onClick={() =>
-                      onUpdate(exercise.exerciseTypeId, 'skillLevel', level)
+                      onUpdateSkill(exercise.exerciseTypeId, level)
                     }
                   >
                     <Typography

@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
 import { useToast } from '@/hooks/useToast'
-import { ExerciseItem, PreferExercises, EditableKeys } from '@/types/mypage'
+import { ExerciseItem, PreferExercises } from '@/types/mypage'
 
 import SelectionStep from './_components/selectionStep'
 import DetailStep from './_components/detailStep'
@@ -65,16 +65,23 @@ export default function PreferSelect() {
     }
   }
 
-  // 선택한 운동의 상세 정보 업데이트 로직
-  const handleUpdateDetail = <K extends EditableKeys>(
-    exerciseTypeId: number,
-    field: K,
-    value: PreferExercises[K],
-  ) => {
+  // 요일 업데이트 로직
+  const handleUpdateDay = (exerciseTypeId: number, daysOfWeek: boolean[]) => {
     setMyExercises((prev) =>
       prev.map((item) =>
         item.exerciseTypeId === exerciseTypeId
-          ? { ...item, [field]: value }
+          ? { ...item, daysOfWeek: daysOfWeek }
+          : item,
+      ),
+    )
+  }
+
+  // 숙련도 업데이트 로직
+  const handleUpdateSkill = (exerciseTypeId: number, skillLevel: string) => {
+    setMyExercises((prev) =>
+      prev.map((item) =>
+        item.exerciseTypeId === exerciseTypeId
+          ? { ...item, skillLevel: skillLevel }
           : item,
       ),
     )
@@ -112,7 +119,11 @@ export default function PreferSelect() {
           onToggle={handleToggleExercise}
         />
       ) : (
-        <DetailStep myExercises={myExercises} onUpdate={handleUpdateDetail} />
+        <DetailStep
+          myExercises={myExercises}
+          onUpdateDay={handleUpdateDay}
+          onUpdateSkill={handleUpdateSkill}
+        />
       )}
     </div>
   )
