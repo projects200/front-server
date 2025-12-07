@@ -14,6 +14,7 @@ import {
   useDeleteChatRoom,
 } from '@/hooks/api/useChatApi'
 import { ChatContent } from '@/types/chat'
+import { logAnalyticsEvent } from '@/lib/firebase/analytics'
 
 import KebabModal from './_components/kebabModal'
 import MyMessage from './_components/myMessage'
@@ -90,6 +91,7 @@ export default function ChatRoom() {
     try {
       const response = await sendMessage({ content: message })
       const realChatId = response.data.chatId
+
       mutate((currentData) => {
         if (!currentData) return []
 
@@ -113,6 +115,13 @@ export default function ChatRoom() {
 
         return newData
       }, false)
+
+      // 채팅 데이터 로그 이벤트
+      logAnalyticsEvent('chat_sent', {
+        screen_name: 'chat_room',
+        event_category: 'engagement',
+        event_label: 'chat_message',
+      })
     } catch {
       mutate((currentData) => {
         if (!currentData) return []
