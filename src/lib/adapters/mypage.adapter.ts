@@ -18,6 +18,7 @@ export function adapterPreferExercises(
 ): PreferExercises {
   return {
     preferredExerciseId: dto.preferredExerciseId,
+    exerciseTypeId: dto.exerciseTypeId,
     name: dto.name,
     skillLevel: dto.skillLevel,
     daysOfWeek: dto.daysOfWeek,

@@ -1,0 +1,38 @@
+.content {
+  margin-top: 44px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+}
+
+.sub-text {
+  margin-top: 4px;
+  margin-bottom: 20px;
+  color: var(--color-gray-200);
+}
+
+.list-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background-color: var(--color-gray-300);
+}
+
+.selected {
+  background-color: var(--color-green);
+  color: var(--color-white-300);
+}
+
+.check-icon {
+  margin-right: 5px;
+  width: 12px;
+  height: 12px;
+}
