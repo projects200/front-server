@@ -35,18 +35,31 @@ const initializeMessaging = () => {
   return messaging
 }
 
-const requestFcmToken = async (): Promise<string | null> => {
+const requestNotificationPermission =
+  async (): Promise<NotificationPermission> => {
+    if (typeof window === 'undefined' || !('Notification' in window)) {
+      return 'denied'
+    }
+
+    try {
+      const permission = await Notification.requestPermission()
+      return permission
+    } catch (err) {
+      console.error('알림 권한 요청 에러:', err)
+      return 'denied'
+    }
+  }
+
+const getFcmToken = async (): Promise<string | null> => {
   const messagingInstance = initializeMessaging()
-  if (!messagingInstance) return null
+  if (!messagingInstance || Notification.permission !== 'granted') {
+    return null
+  }
 
   try {
-    const permission = await Notification.requestPermission()
-    if (permission !== 'granted') return null
-
     const currentToken = await getToken(messagingInstance, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
     })
-
     return currentToken
   } catch (err) {
     console.error('FCM 토큰 발급 중 에러:', err)
@@ -59,5 +72,6 @@ export {
   remoteConfig,
   fetchAndActivate,
   messaging,
-  requestFcmToken,
+  requestNotificationPermission,
+  getFcmToken,
 }

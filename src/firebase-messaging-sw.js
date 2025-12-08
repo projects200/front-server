@@ -25,14 +25,48 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-try {
-  if (typeof firebase !== 'undefined') {
+if (typeof firebase !== 'undefined') {
+  try {
     firebase.initializeApp(firebaseConfig)
-    firebase.messaging()
-    console.log('Firebase initialized in Service Worker')
-  } else {
-    console.warn('Firebase not available in Service Worker, because firebase type is undefined')
+    const messaging = firebase.messaging()
+
+    messaging.onBackgroundMessage((payload) => {
+      console.log(
+        '[firebase-messaging-sw.js] Received background message ',
+        payload,
+      )
+
+      const data = payload.data || {}
+      let notificationTitle
+      let notificationOptions = {
+        body: '',
+        icon: '/icons/apple-touch-icon.png',
+        data: data, 
+        tag: 'default-alert',
+      }
+
+      switch (data.type) {
+        case 'CHAT_MESSAGE':
+          notificationTitle = data.nickname
+          notificationOptions.body = data.content
+          notificationOptions.tag = `chat-${data.chatroomId}`
+          break
+        default:
+          notificationTitle = '운다방'
+          notificationOptions.body = '운다방에서 알림이 도착했습니다.'
+          break
+      }
+
+      return self.registration.showNotification(
+        notificationTitle,
+        notificationOptions,
+      )
+    })
+  } catch (error) {
+    console.error('Error in firebase-messaging-sw.js:', error)
   }
-} catch (error) {
-  console.error('Firebase initialization failed:', error)
+} else {
+  console.error(
+    'Firebase is not defined. Check if the SDK scripts were loaded correctly.',
+  )
 }

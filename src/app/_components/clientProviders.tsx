@@ -11,6 +11,7 @@ import ServiceWorkerRegister from '@/lib/serviceWorkerRegister'
 import FcmListener from '@/lib/firebase/fcmListener'
 
 import { SwrProvider } from './swrProvider'
+import { DeviceInfoReporter } from './deviceInfo'
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -22,6 +23,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
           <ChatAlert />
           <ServiceWorkerRegister />
           <FcmListener />
+          <DeviceInfoReporter />
         </ChatAlertProvider>
       </ToastProvider>
     </AuthProvider>

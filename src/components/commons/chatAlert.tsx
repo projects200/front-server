@@ -15,10 +15,10 @@ const ChatAlert = () => {
   if (!chatAlert) return null
 
   const handleChatAlertClick = () => {
-    const { chatRoomId, memberId, nickname } = chatAlert.payload.data
-    if (chatRoomId) {
+    const { chatroomId, memberId, nickname } = chatAlert.payload.data
+    if (chatroomId) {
       router.push(
-        `${SITE_MAP.CHAT_ROOM}?chatRoomId=${chatRoomId}&nickName=${nickname}&memberId=${memberId}`,
+        `${SITE_MAP.CHAT_ROOM}?chatRoomId=${chatroomId}&nickName=${nickname}&memberId=${memberId}`,
       )
     }
   }
