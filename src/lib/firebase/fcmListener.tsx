@@ -22,7 +22,6 @@ function FcmListener() {
     // onMessage 리스너 등록. 웹이 켜져 있을 때 메시지가 오면 해당 콜백이 실행됨
     const unsubscribe = onMessage(messagingRef.current, (payload) => {
       if (document.visibilityState === 'visible') {
-        console.log(payload)
         const chatRoomIdFromMessage = payload.data?.chatroomId
         const searchParams = new URLSearchParams(window.location.search)
         const chatRoomIdFromUrl = searchParams.get('chatRoomId')

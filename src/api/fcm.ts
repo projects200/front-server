@@ -2,9 +2,21 @@ import { NotificationSettingItems, NotificationSetting } from '@/types/fcm'
 import { NotificationSettingDto } from '@/types/dto/fcm.dto'
 import { adapterNotificationSettingListToDtoList } from '@/lib/adapters/fcm.adapter'
 import { fetchWrapper } from '@/utils/fetchWrapper'
+import { getDeviceInfo } from '@/app/_components/deviceInfo'
 
 // FCM 토큰 전달
 export function createFcmToken(token: string, fcmToken: string): Promise<null> {
+  let storedPlatform = sessionStorage.getItem('platform')
+  let storedAccessMode = sessionStorage.getItem('access_mode')
+
+  if (!storedPlatform || !storedAccessMode) {
+    const deviceInfo = getDeviceInfo()
+    storedPlatform = deviceInfo.platform
+    storedAccessMode = deviceInfo.accessMode
+    sessionStorage.setItem('platform', deviceInfo.platform)
+    sessionStorage.setItem('access_mode', deviceInfo.accessMode)
+  }
+
   return fetchWrapper<null>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/login`,
     {
@@ -12,6 +24,10 @@ export function createFcmToken(token: string, fcmToken: string): Promise<null> {
       headers: {
         'X-Fcm-Token': fcmToken,
       },
+      body: JSON.stringify({
+        platform: storedPlatform,
+        accessMode: storedAccessMode,
+      }),
     },
     token,
   )

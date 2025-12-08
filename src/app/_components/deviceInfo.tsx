@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 type Platform = 'ANDROID' | 'IOS' | 'PC' | 'ETC'
 type AccessMode = 'PWA' | 'BROWSER'
-type DeviceInfo = {
+type DeviceInfoType = {
   platform: Platform
   accessMode: AccessMode
 }
@@ -14,7 +14,7 @@ declare global {
   }
 }
 
-function getDeviceInfo(): DeviceInfo {
+export function getDeviceInfo(): DeviceInfoType {
   const userAgent = navigator.userAgent
 
   // 1. Platform 감지
@@ -32,8 +32,8 @@ function getDeviceInfo(): DeviceInfo {
   // 2. AccessMode 감지
   let accessMode: AccessMode = 'BROWSER'
   if (
-    window.matchMedia('(display-mode: standalone)').matches ||
-    navigator.standalone // iOS PWA에서 설치된 앱으로 실행 중일 때
+    window.matchMedia('(display-mode: standalone)').matches || // Android PWA로 실행중일 때
+    navigator.standalone // iOS PWA로 실행중일 때
   ) {
     accessMode = 'PWA'
   }
@@ -41,15 +41,16 @@ function getDeviceInfo(): DeviceInfo {
   return { platform, accessMode }
 }
 
-export function DeviceInfo() {
+export function DeviceInfoReporter() {
   useEffect(() => {
-    const deviceInfo = getDeviceInfo()
+    const storedPlatform = sessionStorage.getItem('platform')
+    const storedAccessMode = sessionStorage.getItem('access_mode')
 
-    alert(`
-      Platform: ${deviceInfo.platform}
-      Access Mode: ${deviceInfo.accessMode}
-    `)
+    if (!storedPlatform || !storedAccessMode) {
+      const deviceInfo = getDeviceInfo()
+      sessionStorage.setItem('platform', deviceInfo.platform)
+      sessionStorage.setItem('access_mode', deviceInfo.accessMode)
+    }
   }, [])
-
   return null
 }

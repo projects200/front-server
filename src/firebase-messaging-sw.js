@@ -25,41 +25,48 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-try {
-  if (typeof firebase === 'undefined') return
+if (typeof firebase !== 'undefined') {
+  try {
+    firebase.initializeApp(firebaseConfig)
+    const messaging = firebase.messaging()
 
-  firebase.initializeApp(firebaseConfig)
-  const messaging = firebase.messaging()
+    messaging.onBackgroundMessage((payload) => {
+      console.log(
+        '[firebase-messaging-sw.js] Received background message ',
+        payload,
+      )
 
-  messaging.onBackgroundMessage((payload) => {
-    const data = payload.data || {}
-    let notificationTitle
-    let notificationOptions = {
-      body: '',
-      icon: '/icons/apple-touch-icon.png',
-      data: data,
-      tag: 'default-alert',
-    }
+      const data = payload.data || {}
+      let notificationTitle
+      let notificationOptions = {
+        body: '',
+        icon: '/icons/apple-touch-icon.png',
+        data: data, 
+        tag: 'default-alert',
+      }
 
-    switch (data.type) {
-      case 'CHAT_MESSAGE':
-        notificationTitle = data.nickname
-        notificationOptions.body = data.content
-        notificationOptions.tag = `chat-${data.chatroomId}`
-        break
+      switch (data.type) {
+        case 'CHAT_MESSAGE':
+          notificationTitle = data.nickname
+          notificationOptions.body = data.content
+          notificationOptions.tag = `chat-${data.chatroomId}`
+          break
+        default:
+          notificationTitle = '운다방'
+          notificationOptions.body = '운다방에서 알림이 도착했습니다.'
+          break
+      }
 
-      // 타입이 지정되지 않은경우
-      default:
-        notificationTitle = '운다방'
-        notificationOptions.body = '운다방에서 알림이 도착했습니다.'
-        break
-    }
-
-    return self.registration.showNotification(
-      notificationTitle,
-      notificationOptions,
-    )
-  })
-} catch (error) {
-  console.error('Firebase initialization failed:', error)
+      return self.registration.showNotification(
+        notificationTitle,
+        notificationOptions,
+      )
+    })
+  } catch (error) {
+    console.error('Error in firebase-messaging-sw.js:', error)
+  }
+} else {
+  console.error(
+    'Firebase is not defined. Check if the SDK scripts were loaded correctly.',
+  )
 }

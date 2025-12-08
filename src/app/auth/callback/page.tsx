@@ -4,7 +4,6 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from 'react-oidc-context'
 
-import FcmTokenSyncer from '@/lib/firebase/fcmTokenSyncer'
 import { useReadRegistered } from '@/hooks/api/useAuthApi'
 import { useToast } from '@/hooks/useToast'
 import LoadingScreen from '@/components/commons/loadingScreen'
@@ -16,7 +15,6 @@ function CallbackLogic() {
   const showToast = useToast()
   const auth = useAuth()
   const [isCompletedStep1, setIsCompletedStep1] = useState(false)
-  const [isCompletedStep2, setIsCompletedStep2] = useState(false)
   const [processLock, setProcessLock] = useState(false)
   const {
     data: registeredData,
@@ -86,7 +84,7 @@ function CallbackLogic() {
       }
 
       if (registeredData.isRegistered) {
-        setIsCompletedStep2(true)
+        router.replace(SITE_MAP.EXERCISE)
       } else {
         router.replace(SITE_MAP.AGREEMENT)
       }
@@ -100,18 +98,6 @@ function CallbackLogic() {
     router,
     auth,
   ])
-
-  // 3단계: FcmTokenSyncer 컴포넌트를 렌더링합니다.
-  if (isCompletedStep2) {
-    return (
-      <FcmTokenSyncer
-        shouldSync={true}
-        onSyncComplete={() => {
-          router.replace(SITE_MAP.EXERCISE)
-        }}
-      />
-    )
-  }
 
   return <LoadingScreen />
 }
