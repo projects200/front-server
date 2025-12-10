@@ -58,6 +58,19 @@
   background-color: var(--color-white-300);
 }
 
+.prefer-exercise-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prefer-exercise-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 /* 달력 영역 */
 .calender-section {
   margin-top: 5px;
