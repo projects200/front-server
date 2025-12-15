@@ -6,10 +6,11 @@ export type UserProfile = {
 
 export type PreferExercises = {
   preferredExerciseId: number
+  exerciseTypeId: number
   name: string
   skillLevel: string
   daysOfWeek: boolean[]
-  imageUrl: string
+  imageUrl: string | null
 }
 
 export type UserFullProfile = UserProfile & {
@@ -20,4 +21,10 @@ export type UserFullProfile = UserProfile & {
   exerciseCountInLast30Days: number
   exerciseScore: number
   preferredExercises: PreferExercises[]
+}
+
+export type ExerciseItem = {
+  exerciseTypeId: number
+  name: string
+  imageUrl: string | null
 }

@@ -1,0 +1,79 @@
+.alert-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 40px;
+  max-width: calc(100vw - 40px);
+  padding: 0 14px 0 5px;
+  background-color: var(--color-white-300);
+  border-radius: 20px;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 3000;
+  cursor: pointer;
+  animation: slideDown 0.5s ease-in-out forwards;
+}
+
+.alert-container.disappearing {
+  animation: slideUp 0.5s ease-in-out forwards;
+}
+
+.logo {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.text-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.nickname {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+@keyframes slideDown {
+  from {
+    top: -100px;
+    opacity: 0;
+  }
+  to {
+    top: 12px;
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    top: 12px;
+    opacity: 1;
+  }
+  to {
+    top: -100px;
+    opacity: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .alert-container {
+    max-width: 400px;
+  }
+}

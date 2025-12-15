@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exercise-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.days-of-week {
+  color: var(--color-gray-200);
+}
+
+.exercise-level {
+  margin-left: auto;
+}

@@ -19,10 +19,34 @@ import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCale
 import { formatGenderToKR, formatDateToKR } from '@/utils/dataFormatting'
 import SITE_MAP from '@/constants/siteMap.constant'
 
+import PreferExerciseItem from '../../mypage/_components/preferExerciseItem'
 import KebabModal from './_components/kebabModal'
 import styles from './profile.module.css'
 
+import { useRemoteConfig } from '@/hooks/useRemoteConfig' //12월 17일 제거
+
+const TEMP_DATA = [
+  {
+    preferredExerciseId: 1,
+    exerciseTypeId: 1,
+    name: '테니스',
+    skillLevel: 'BEGINNER',
+    daysOfWeek: [true, true, true, true, true, true, true],
+    imageUrl: null,
+  },
+  {
+    preferredExerciseId: 2,
+    exerciseTypeId: 2,
+    name: '축구',
+    skillLevel: 'BEGINNER',
+    daysOfWeek: [true, false, true, true, false, true, true],
+    imageUrl: null,
+  },
+]
+
 export default function Profile() {
+  const { config, isLoading: remoteConfigIsLoading } = useRemoteConfig() //12월17일 제거
+
   const router = useRouter()
   const [memberId] = useQueryState('memberId')
   const [lat] = useQueryState('lat')
@@ -71,7 +95,7 @@ export default function Profile() {
     }
   }
 
-  if (profileLoading || !profileData) return null
+  if (profileLoading || !profileData || remoteConfigIsLoading) return null //12월17일 remoteConfigIsLoading 제거
 
   return (
     <>
@@ -161,9 +185,24 @@ export default function Profile() {
       </section>
 
       {/* 선호운동 영역 */}
-      {/* <section className={styles['prefer-exercise-section']}>
-        선호운동 예정
-      </section> */}
+      {/* 12월 17일 플래그 제거 */}
+      {config.new_feautre_flag && TEMP_DATA.length > 0 && (
+        <section className={styles['prefer-exercise-section']}>
+          <div className={styles['prefer-exercise-title']}>
+            <Typography as="p" variant="content-large" weight="bold">
+              선호 운동
+            </Typography>
+          </div>
+          <div className={styles['prefer-exercise-list']}>
+            {TEMP_DATA.map((data) => (
+              <PreferExerciseItem
+                key={`prefer-${data.preferredExerciseId}`}
+                data={data}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 달력 영역 */}
       <section className={styles['calender-section']}>
@@ -192,7 +231,7 @@ export default function Profile() {
           }}
         />
       )}
-      
+
       {/* 차단 다이어로그 */}
       {isDialogOpen && (
         <CenterDialog>

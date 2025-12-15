@@ -1,5 +1,5 @@
 import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation'
-import { Key } from 'swr'
+import { Key, mutate  } from 'swr'
 import { useAuth } from 'react-oidc-context'
 
 import { ApiError, ErrorPolicy } from '@/types/common'
@@ -55,6 +55,13 @@ export default function useApiMutation<Data = unknown, Body = unknown>(
     {
       ...swrOptions,
       onError: (error) => handleError(error, policy),
+      onSuccess: async (data, mutationKey, config) => {
+        await mutate(key)
+
+        if (swrOptions.onSuccess) {
+          await swrOptions.onSuccess(data, mutationKey, config)
+        }
+      },
     },
   )
 }
