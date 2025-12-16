@@ -99,12 +99,6 @@ export default function Settings() {
           icon={<InfoIcon className={styles['icon']} />}
           label="버전정보"
           rightText="1.0.0"
-          // 임시코드 테스트 완료시 삭제
-          onClick={() => {
-            const platform = sessionStorage.getItem('platform')
-            const accessMode = sessionStorage.getItem('access_mode')
-            alert(`platform: ${platform}, accessMode: ${accessMode}`)
-          }}
         />
       </div>
 
