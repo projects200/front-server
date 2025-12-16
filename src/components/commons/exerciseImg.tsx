@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import clsx from 'clsx'
-import { memo } from 'react'
+import { memo, useEffect, useState } from 'react'
 
 import DefaultExerciseIMage from '@/assets/default_exercise_image.svg'
 
@@ -14,17 +14,26 @@ type Props = {
 }
 
 function ExerciseImg({ className, imageUrl }: Props) {
+  const [imgError, setImgError] = useState(false)
+
+  useEffect(() => {
+    setImgError(false)
+  }, [imageUrl])
+
+  const showDefault = !imageUrl || imgError
+
   return (
-    <div className={clsx(className, styles['exercise-container'])}>
-      {imageUrl ? (
+    <div className={clsx(styles['exercise-container'], className)}>
+      {showDefault ? (
+        <DefaultExerciseIMage className={styles['exercise-img']} />
+      ) : (
         <Image
           className={styles['exercise-img']}
           src={imageUrl}
           alt="운동 이미지"
           fill
+          onError={() => setImgError(true)}
         />
-      ) : (
-        <DefaultExerciseIMage className={styles['exercise-img']} />
       )}
     </div>
   )
