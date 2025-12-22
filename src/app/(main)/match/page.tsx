@@ -8,7 +8,8 @@ import SITE_MAP from '@/constants/siteMap.constant'
 import Typography from '@/components/ui/typography'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 
-import FilterBar, { FilterItems } from './_components/filterBar'
+import FilterBar from './_components/filterBar'
+import type { FilterItems } from './_components/filterBar'
 import KakaoMap from './_components/kakaoMap'
 import styles from './match.module.css'
 
