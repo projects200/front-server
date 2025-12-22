@@ -174,7 +174,7 @@ export const TEMP_MY_DATA = [
     preferredExerciseId: 102,
     exerciseTypeId: 2,
     name: '컬링',
-    imageUrl: null,
+    imageUrl: 'temp/url',
     skillLevel: 'NOVICE',
     daysOfWeek: [false, false, false, false, false, true, true],
   },
