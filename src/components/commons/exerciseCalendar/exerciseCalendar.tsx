@@ -17,11 +17,18 @@ type Props = {
   selectedDate: string
   isReadOnly?: boolean
   isOthers?: boolean
+  showStamps?: boolean
 }
 
 const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
   (
-    { onDateSelect, selectedDate, isReadOnly = false, isOthers = false },
+    {
+      onDateSelect,
+      selectedDate,
+      isReadOnly = false,
+      isOthers = false,
+      showStamps = true,
+    },
     ref,
   ) => {
     const today = new Date()
@@ -136,6 +143,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
               isOthers={isOthers}
+              showStamps={showStamps}
             />
             <MonthViewWithData
               today={today}
@@ -145,6 +153,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
               isOthers={isOthers}
+              showStamps={showStamps}
             />
             <MonthViewWithData
               today={today}
@@ -154,6 +163,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
               isOthers={isOthers}
+              showStamps={showStamps}
             />
           </animated.div>
         </div>

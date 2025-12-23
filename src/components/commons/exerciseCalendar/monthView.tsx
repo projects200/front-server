@@ -28,6 +28,7 @@ type Props = {
   onDateClick: (date: Date) => void
   selectedDate: string
   isReadOnly: boolean
+  showStamps: boolean
 }
 
 const MonthView = memo(function MonthView({
@@ -37,6 +38,7 @@ const MonthView = memo(function MonthView({
   onDateClick,
   selectedDate,
   isReadOnly,
+  showStamps,
 }: Props) {
   const prevCounts = useRef(counts)
   const shouldAnimate = useMemo(() => {
@@ -85,6 +87,7 @@ const MonthView = memo(function MonthView({
                   !isCurrent && styles['empty'],
                   isFuture && styles['disabled'],
                   isSelected && styles['selected'],
+                  !showStamps && styles['is-picker']
                 )}
                 onClick={() => {
                   if (!isCurrent || isFuture || isReadOnly) return

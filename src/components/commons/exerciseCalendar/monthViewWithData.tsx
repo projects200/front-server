@@ -19,6 +19,7 @@ type Props = {
   selectedDate: string
   isReadOnly: boolean
   isOthers: boolean
+  showStamps: boolean
 }
 
 const MonthViewWithData = ({
@@ -29,9 +30,10 @@ const MonthViewWithData = ({
   selectedDate,
   isReadOnly,
   isOthers,
+  showStamps,
 }: Props) => {
   const isFutureMonth = monthToShow.getTime() > startOfMonth(today).getTime()
-  const shouldFetch = !isFutureMonth && isActive
+  const shouldFetch = !isFutureMonth && isActive && showStamps
   const startDate = format(startOfMonth(monthToShow), 'yyyy-MM-dd')
   const endDate = isSameMonth(monthToShow, today)
     ? format(today, 'yyyy-MM-dd')
@@ -74,10 +76,11 @@ const MonthViewWithData = ({
         key={monthToShow.toISOString()}
         month={monthToShow}
         today={today}
-        counts={counts}
+        counts={showStamps ? counts : {}}
         onDateClick={handleDateClick}
         selectedDate={selectedDate}
         isReadOnly={isReadOnly}
+        showStamps={showStamps}
       />
     </div>
   )

@@ -1,3 +1,5 @@
+import { parseISO, format } from 'date-fns'
+
 // 영문 성별을 한글 성별로 변환 함수
 type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN'
 
@@ -46,4 +48,22 @@ export function isSameMinute(date1: string, date2: string): boolean {
   const d1 = new Date(date1)
   const d2 = new Date(date2)
   return d1.getHours() === d2.getHours() && d1.getMinutes() === d2.getMinutes()
+}
+
+// 로컬 ISO 포맷팅
+export const toLocalISOString = (date: Date) => {
+  const offset = date.getTimezoneOffset() * 60000
+  const localTime = new Date(date.getTime() - offset)
+  return localTime.toISOString().slice(0, 19)
+}
+
+/**
+ * ISO 날짜 문자열을 운동기록 디스플레이용 포맷(YY.MM.DD HH:mm)으로 변환
+ * @param dateString '2025-12-24T06:00:00'
+ * @returns '25.12.24 06:00'
+ */
+export const formatExerciseDetailTime = (dateString: string) => {
+  if (!dateString) return ''
+  const date = parseISO(dateString)
+  return format(date, 'yy.MM.dd HH:mm')
 }
