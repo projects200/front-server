@@ -97,13 +97,18 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
     return (
       <div className={styles['container']} ref={ref}>
         <div className={styles['header']}>
-          <button onClick={handlePrev} className={styles['nav-button']}>
+          <button
+            type="button"
+            onClick={handlePrev}
+            className={styles['nav-button']}
+          >
             <LeftArrow />
           </button>
           <Typography as="span" variant="content-large" weight="bold">
             {format(currentMonth, 'yyyy년 M월', { locale: ko })}
           </Typography>
           <button
+            type="button"
             onClick={handleNext}
             className={styles['nav-button']}
             disabled={currentMonth.getTime() >= startOfMonth(today).getTime()}
