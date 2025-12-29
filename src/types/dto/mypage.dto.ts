@@ -4,9 +4,8 @@ export type UserProfileDto = {
   bio: string
 }
 
-export type PreferExercisesDto = {
+export type UserProfilePreferExerciseDto = {
   preferredExerciseId: number
-  exerciseTypeId: number
   name: string
   skillLevel: string
   daysOfWeek: boolean[]
@@ -20,11 +19,26 @@ export type UserFullProfileDto = UserProfileDto & {
   yearlyExerciseDays: number
   exerciseCountInLast30Days: number
   exerciseScore: number
-  preferredExercises: PreferExercisesDto[]
+  preferredExercises: UserProfilePreferExerciseDto[]
 }
 
 export type ExerciseItemDto = {
-  exerciseTypeId: number
-  name: string
+  exerciseId: number
+  exerciseName: string
   imageUrl: string | null
+}
+
+export type PreferExerciseDto = {
+  preferredExerciseId: number
+  exerciseTypeId: number
+  exerciseName: string
+  skillLevel: string
+  daysOfWeek: boolean[]
+  imageUrl: string | null
+}
+
+export type PreferExerciseFormDto = {
+  exerciseTypeId: number
+  skillLevel: string
+  daysOfWeek: boolean[]
 }

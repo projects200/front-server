@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 
-import { ExerciseItem, PreferExercises } from '@/types/mypage'
+import { ExerciseItem, PreferExercise } from '@/types/mypage'
 import CheckIcon from '@/assets/icon_check.svg'
 import Typography from '@/components/ui/typography'
 
@@ -11,7 +11,7 @@ import styles from './selectionStep.module.css'
 type Props = {
   nickName: string
   allExercises: ExerciseItem[]
-  selectedExercises: PreferExercises[]
+  selectedExercises: PreferExercise[]
   onToggle: (item: ExerciseItem) => void
 }
 
@@ -21,6 +21,7 @@ export default function SelectionStep({
   selectedExercises,
   onToggle,
 }: Props) {
+
   return (
     <div className={styles['content']}>
       <Typography as="h1" variant="content-large" weight="bold">

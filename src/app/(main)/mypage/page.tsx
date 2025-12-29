@@ -18,25 +18,6 @@ import styles from './mypage.module.css'
 
 import { useRemoteConfig } from '@/hooks/useRemoteConfig' //12월 17일 제거
 
-const TEMP_DATA = [
-  {
-    preferredExerciseId: 1,
-    exerciseTypeId: 1,
-    name: '테니스',
-    skillLevel: 'BEGINNER',
-    daysOfWeek: [true, true, true, true, true, true, true],
-    imageUrl: null,
-  },
-  {
-    preferredExerciseId: 2,
-    exerciseTypeId: 2,
-    name: '축구',
-    skillLevel: 'BEGINNER',
-    daysOfWeek: [true, false, true, true, false, true, true],
-    imageUrl: null,
-  },
-]
-
 export default function Mypage() {
   const todayString = format(new Date(), 'yyyy-MM-dd')
   const { data: profileData, isLoading: profileLoading } =
@@ -156,9 +137,9 @@ export default function Mypage() {
               <EditIcon className={styles['prefer-exercise-edit-icon']} />
             </Link>
           </div>
-          {TEMP_DATA.length > 0 ? (
+          {profileData.preferredExercises.length > 0 ? (
             <div className={styles['prefer-exercise-list']}>
-              {TEMP_DATA.map((data) => (
+              {profileData.preferredExercises.map((data) => (
                 <PreferExerciseItem
                   key={`prefer-${data.preferredExerciseId}`}
                   data={data}

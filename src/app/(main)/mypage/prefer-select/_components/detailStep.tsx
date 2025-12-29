@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 
-import { PreferExercises } from '@/types/mypage'
+import { PreferExercise } from '@/types/mypage'
 import ExerciseImg from '@/components/commons/exerciseImg'
 import Typography from '@/components/ui/typography'
 import {
@@ -23,7 +23,7 @@ const SKILL_LEVELS = [
 ]
 
 type Props = {
-  myExercises: PreferExercises[]
+  myExercises: PreferExercise[]
   onUpdateDay: (exerciseIndex: number, dayIndex: number) => void
   onUpdateSkill: (exerciseIndex: number, skillLevel: string) => void
 }
