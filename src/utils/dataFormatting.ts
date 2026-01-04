@@ -50,11 +50,9 @@ export function isSameMinute(date1: string, date2: string): boolean {
   return d1.getHours() === d2.getHours() && d1.getMinutes() === d2.getMinutes()
 }
 
-// 로컬 ISO 포맷팅
-export const toLocalISOString = (date: Date) => {
-  const offset = date.getTimezoneOffset() * 60000
-  const localTime = new Date(date.getTime() - offset)
-  return localTime.toISOString().slice(0, 19)
+// 한국 ISO 포맷팅
+export const toKoreanISOString = (date: Date) => {
+  return format(date, "yyyy-MM-dd'T'HH:mm:ss")
 }
 
 /**

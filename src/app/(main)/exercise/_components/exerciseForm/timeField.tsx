@@ -18,7 +18,7 @@ import ClockIcon from '@/assets/icon_clock.svg'
 import Typography from '@/components/ui/typography'
 import ArrowIcon from '@/assets/icon_right_arrow.svg'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
-import { toLocalISOString } from '@/utils/dataFormatting'
+import { toKoreanISOString } from '@/utils/dataFormatting'
 
 import styles from './timeField.module.css'
 
@@ -58,8 +58,8 @@ export default function TimeField({
     if (!startedAt) {
       const now = new Date()
       const initialStart = setSeconds(setMinutes(now, 0), 0)
-      onStartedAtChange(toLocalISOString(initialStart))
-      onEndedAtChange(toLocalISOString(now))
+      onStartedAtChange(toKoreanISOString(initialStart))
+      onEndedAtChange(toKoreanISOString(now))
     }
   }, [])
 
@@ -80,8 +80,8 @@ export default function TimeField({
         if (isBefore(finalEnd, finalStart)) finalStart = subHours(finalEnd, 1)
       }
 
-      onStartedAtChange(toLocalISOString(finalStart))
-      onEndedAtChange(toLocalISOString(finalEnd))
+      onStartedAtChange(toKoreanISOString(finalStart))
+      onEndedAtChange(toKoreanISOString(finalEnd))
     },
     [onStartedAtChange, onEndedAtChange],
   )
@@ -220,8 +220,8 @@ export default function TimeField({
             <ExerciseCalendar
               selectedDate={
                 activeView.field === 'start'
-                  ? toLocalISOString(startDate)
-                  : toLocalISOString(endDate)
+                  ? toKoreanISOString(startDate)
+                  : toKoreanISOString(endDate)
               }
               onDateSelect={handleDateSelect}
               showStamps={false}
