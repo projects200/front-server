@@ -83,3 +83,28 @@ export function createPreferredExerciseList(
     token,
   )
 }
+
+// 유저 선호운동 수정
+export function updatePreferredExerciseList(
+  token: string,
+  data: PreferExerciseForm[],
+): Promise<PreferExerciseDto[]> {
+  const dto: PreferExerciseForm[] = adapterPreferExerciseFormToDto(data)
+  return fetchWrapper<PreferExerciseDto[]>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/preferred-exercises`,
+    { method: 'PATCH', body: JSON.stringify(dto) },
+    token,
+  )
+}
+
+// 유저 선호운동 삭제
+export function deletePreferredExerciseList(
+  token: string,
+  data: number[],
+): Promise<null> {
+  return fetchWrapper<null>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/preferred-exercises`,
+    { method: 'DELETE', body: JSON.stringify({ preferredExerciseIds: data }) },
+    token,
+  )
+}

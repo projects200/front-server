@@ -9,7 +9,11 @@ import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
 import { useToast } from '@/hooks/useToast'
 import type { ExerciseItem, PreferExercise } from '@/types/mypage'
-import { usePostPreferredExerciseFormList } from '@/hooks/api/useMypageApi'
+import {
+  usePostPreferredExerciseFormList,
+  usePatchPreferredExerciseFormList,
+  useDeletePreferredExerciseFormList,
+} from '@/hooks/api/useMypageApi'
 
 import SelectionStep from './selectionStep'
 import DetailStep from './detailStep'
@@ -60,8 +64,12 @@ export default function PreferSelectForm({
   const nickName = searchParams.get('nickName') || '회원'
   const [step, setStep] = useState<'select' | 'detail'>('select')
 
-  const { trigger: createExercise, isMutating: iscreateMutating } =
+  const { trigger: createExercise, isMutating: isCreateMutating } =
     usePostPreferredExerciseFormList()
+  const { trigger: updateExercise, isMutating: isUpdateMutating } =
+    usePatchPreferredExerciseFormList()
+  const { trigger: deleteExercise, isMutating: isDeleteMutating } =
+    useDeletePreferredExerciseFormList()
 
   const form = useForm({
     defaultValues: { myExercises: initialPreferredExercise },
@@ -78,6 +86,22 @@ export default function PreferSelectForm({
     onSubmit: async ({ value }) => {
       const currentExercises = value.myExercises
 
+      // 삭제 : 초기 데이터에는 있으나 현재 데이터에 없는 항목
+      const deleteIds = initialPreferredExercise
+        .filter(
+          (init) =>
+            !currentExercises.some(
+              (curr) => curr.preferredExerciseId === init.preferredExerciseId,
+            ),
+        )
+        .map((item) => item.preferredExerciseId)
+
+      let deletePromise = null
+
+      if (deleteIds.length > 0) {
+        deletePromise = deleteExercise(deleteIds)
+      }
+
       // 생성 : preferredExerciseId가 -1인 항목
       const newItems = currentExercises.filter(
         (curr) => curr.preferredExerciseId === -1,
@@ -91,53 +115,52 @@ export default function PreferSelectForm({
           skillLevel: item.skillLevel,
           daysOfWeek: item.daysOfWeek,
         }))
-
         createPromise = createExercise(createPayload)
       }
-      // 수정 : ID가 있고(0이 아님), 내용이 변경된 항목
-      // const updatePromises = currentExercises
-      //   .filter((curr) => {
-      //     if (curr.preferredExerciseId === -1) return false // 생성 대상임
 
-      //     const original = initialPreferredExercise.find(
-      //       (init) => init.preferredExerciseId === curr.preferredExerciseId,
-      //     )
+      // 수정 : ID가 있고(-1이 아님), 내용이 변경된 항목
+      const updatedItems = currentExercises.filter((curr) => {
+        if (curr.preferredExerciseId === -1) return false
 
-      //     if (!original) return false
+        const original = initialPreferredExercise.find(
+          (init) => init.preferredExerciseId === curr.preferredExerciseId,
+        )
 
-      //     const isDaysChanged =
-      //       JSON.stringify(curr.daysOfWeek) !==
-      //       JSON.stringify(original.daysOfWeek)
-      //     const isSkillChanged = curr.skillLevel !== original.skillLevel
+        if (!original) return false
 
-      //     return isDaysChanged || isSkillChanged
-      //   })
-      //   .map((item) =>
-      //     updateExercise({
-      //       preferredExerciseId: item.preferredExerciseId,
-      //       skillLevel: item.skillLevel,
-      //       daysOfWeek: item.daysOfWeek,
-      //     }),
-      //   )
+        const isDaysChanged =
+          JSON.stringify(curr.daysOfWeek) !==
+          JSON.stringify(original.daysOfWeek)
+        const isSkillChanged = curr.skillLevel !== original.skillLevel
 
-      // 삭제 : 초기 데이터에는 있으나 현재 데이터에 없는 항목
-      // const deletePromises = initialPreferredExercise
-      //   .filter(
-      //     (init) =>
-      //       !currentExercises.some(
-      //         (curr) => curr.preferredExerciseId === init.preferredExerciseId,
-      //       ),
-      //   )
-      //   .map((item) => deleteExercise(item.preferredExerciseId))
+        return isDaysChanged || isSkillChanged
+      })
 
+      let updatePromise = null
+
+      if (updatedItems.length > 0) {
+        const updatePayload = updatedItems.map((item) => ({
+          exerciseTypeId: item.exerciseTypeId,
+          skillLevel: item.skillLevel,
+          daysOfWeek: item.daysOfWeek,
+        }))
+
+        updatePromise = updateExercise(updatePayload)
+      }
+
+      // API 병렬 전송
       try {
-        await Promise.all([
-          // ...deletePromises,
-          ...(createPromise ? [createPromise] : []),
-          // ...updatePromises,
-        ])
+        const promises = []
+        if (deletePromise) promises.push(deletePromise)
+        if (createPromise) promises.push(createPromise)
+        if (updatePromise) promises.push(updatePromise)
 
-        router.back()
+        if (promises.length > 0) {
+          await Promise.all(promises)
+          router.back()
+        } else {
+          showToast('변경사항이 없습니다.', 'info')
+        }
       } catch {}
     },
   })
@@ -193,7 +216,7 @@ export default function PreferSelectForm({
     form.handleSubmit()
   }
 
-  if (iscreateMutating) return null
+  if (isCreateMutating || isUpdateMutating || isDeleteMutating) return null
 
   return (
     <div className={styles['container']}>

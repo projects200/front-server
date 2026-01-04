@@ -14,12 +14,12 @@ import styles from './detailStep.module.css'
 
 const WEEK_DAYS = ['월', '화', '수', '목', '금', '토', '일']
 const SKILL_LEVELS = [
-  'NOVICE',
   'BEGINNER',
+  'ROOKIE',
   'INTERMEDIATE',
   'ADVANCED',
-  'EXPERT',
-  'PROFESSIONAL',
+  'SKILLED',
+  'PRO',
 ]
 
 type Props = {

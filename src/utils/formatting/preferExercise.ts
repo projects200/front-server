@@ -1,10 +1,10 @@
 const SKILL_LEVEL_MAP: { [key: string]: string } = {
-  NOVICE: '입문',
-  BEGINNER: '초급',
+  BEGINNER: '입문',
+  ROOKIE: '초급',
   INTERMEDIATE: '중급',
   ADVANCED: '고급',
-  EXPERT: '숙련',
-  PROFESSIONAL: '선출',
+  SKILLED: '숙련',
+  PRO: '선출',
 }
 
 export const formatSkillLevelToKo = (skillLevel: string): string => {

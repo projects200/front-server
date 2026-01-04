@@ -5,6 +5,8 @@ import {
   readExerciseTypeList,
   readPreferredExerciseList,
   createPreferredExerciseList,
+  updatePreferredExerciseList,
+  deletePreferredExerciseList
 } from '@/api/mypage'
 import {
   adapterUserFullProfile,
@@ -79,7 +81,23 @@ export const useReadPreferredExerciseList = () =>
 // 유저 선호운동 생성
 export const usePostPreferredExerciseFormList = () =>
   useApiMutation<PreferExerciseDto[], PreferExerciseForm[]>(
-    ['mypage/preferExercise/create'],
+    ['mypage/preferExercise'],
     (token, body) => createPreferredExerciseList(token, body),
+    {},
+  )
+
+// 유저 선호운동 수정
+export const usePatchPreferredExerciseFormList = () =>
+  useApiMutation<PreferExerciseDto[], PreferExerciseForm[]>(
+    ['mypage/preferExercise'],
+    (token, body) => updatePreferredExerciseList(token, body),
+    {},
+  )
+
+// 유저 선호운동 삭제
+export const useDeletePreferredExerciseFormList = () =>
+  useApiMutation<null, number[]>(
+    ['mypage/preferExercise'],
+    (token, body) => deletePreferredExerciseList(token, body),
     {},
   )
