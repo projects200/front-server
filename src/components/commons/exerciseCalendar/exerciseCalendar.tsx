@@ -1,5 +1,6 @@
 'use client'
 
+import { useQueryState } from 'nuqs'
 import { useState, useMemo, useRef, forwardRef } from 'react'
 import { startOfMonth, subMonths, addMonths, format } from 'date-fns'
 import { ko } from 'date-fns/locale'
@@ -31,6 +32,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
+    const [memberId] = useQueryState('memberId')
     const today = new Date()
     const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(today))
     const prevMonth = useMemo(() => subMonths(currentMonth, 1), [currentMonth])
@@ -149,6 +151,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               isReadOnly={isReadOnly}
               isOthers={isOthers}
               showStamps={showStamps}
+              memberId={memberId ?? undefined}
             />
             <MonthViewWithData
               today={today}
@@ -159,6 +162,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               isReadOnly={isReadOnly}
               isOthers={isOthers}
               showStamps={showStamps}
+              memberId={memberId ?? undefined}
             />
             <MonthViewWithData
               today={today}
@@ -169,6 +173,7 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               isReadOnly={isReadOnly}
               isOthers={isOthers}
               showStamps={showStamps}
+              memberId={memberId ?? undefined}
             />
           </animated.div>
         </div>

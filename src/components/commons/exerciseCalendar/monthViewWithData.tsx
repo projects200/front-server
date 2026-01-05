@@ -1,12 +1,6 @@
 'use client'
 
-import { useQueryState } from 'nuqs'
-import useSWR from 'swr'
-import { format, isSameMonth, startOfMonth, endOfMonth } from 'date-fns'
-
-import { useReadExerciseRange } from '@/hooks/api/useExerciseApi'
-import { useReadMemberExerciseRange } from '@/hooks/api/useMemberApi'
-import { ExerciseRange } from '@/types/exercise'
+import { useExerciseCalendarData } from '@/hooks/useExerciseCalendar'
 
 import MonthView from './monthView'
 import styles from './monthViewWithData.module.css'
@@ -20,6 +14,7 @@ type Props = {
   isReadOnly: boolean
   isOthers: boolean
   showStamps: boolean
+  memberId?: string
 }
 
 const MonthViewWithData = ({
@@ -31,38 +26,16 @@ const MonthViewWithData = ({
   isReadOnly,
   isOthers,
   showStamps,
+  memberId,
 }: Props) => {
-  const isFutureMonth = monthToShow.getTime() > startOfMonth(today).getTime()
-  const shouldFetch = !isFutureMonth && isActive && showStamps
-  const startDate = format(startOfMonth(monthToShow), 'yyyy-MM-dd')
-  const endDate = isSameMonth(monthToShow, today)
-    ? format(today, 'yyyy-MM-dd')
-    : format(endOfMonth(monthToShow), 'yyyy-MM-dd')
-  const [memberId] = useQueryState('memberId')
-  const { data: myData } = useReadExerciseRange(
-    startDate,
-    endDate,
-    shouldFetch && !isOthers,
-  )
-  const { data: othersData } = useReadMemberExerciseRange(
-    memberId!,
-    startDate,
-    endDate,
-    shouldFetch && isOthers,
-  )
-  const fetchedData = isOthers ? othersData : myData
-  const swrKey = isOthers
-    ? ['member/exerciseRange', memberId, startDate.substring(0, 7)]
-    : ['exercise/range', startDate.substring(0, 7)]
-  const { data: cachedData } = useSWR<ExerciseRange[]>(swrKey, null)
-  const data = fetchedData || cachedData
-  const counts: Record<string, number> = {}
-
-  if (data) {
-    data.forEach(({ date, record }) => {
-      counts[date] = record
-    })
-  }
+  const { counts } = useExerciseCalendarData({
+    monthToShow,
+    today,
+    isOthers,
+    memberId,
+    isActive,
+    showStamps,
+  })
 
   const handleDateClick = (date: Date) => {
     if (onDateSelect) {

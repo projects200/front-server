@@ -3,6 +3,8 @@
 import { memo, useMemo, useRef } from 'react'
 
 import {
+  eachWeekOfInterval,
+  eachDayOfInterval,
   format,
   isSameMonth,
   isSameDay,
@@ -48,19 +50,22 @@ const MonthView = memo(function MonthView({
   }, [counts])
 
   const weeks = useMemo(() => {
-    const gridStart = startOfWeek(startOfMonth(month), { weekStartsOn: 0 })
-    const gridEnd = endOfWeek(endOfMonth(month), { weekStartsOn: 0 })
-    const newWeeks: Date[][] = []
-    let cursor = gridStart
-    while (cursor <= gridEnd) {
-      const days: Date[] = []
-      for (let i = 0; i < 7; i++) {
-        days.push(cursor)
-        cursor = addDays(cursor, 1)
-      }
-      newWeeks.push(days)
-    }
-    return newWeeks
+    const monthStart = startOfMonth(month)
+    const monthEnd = endOfMonth(month)
+    const gridStart = startOfWeek(monthStart, { weekStartsOn: 0 })
+    const gridEnd = endOfWeek(monthEnd, { weekStartsOn: 0 })
+
+    const weekStarts = eachWeekOfInterval(
+      { start: gridStart, end: gridEnd },
+      { weekStartsOn: 0 },
+    )
+
+    return weekStarts.map((weekStart) =>
+      eachDayOfInterval({
+        start: weekStart,
+        end: addDays(weekStart, 6),
+      }),
+    )
   }, [month])
 
   return (
@@ -87,7 +92,7 @@ const MonthView = memo(function MonthView({
                   !isCurrent && styles['empty'],
                   isFuture && styles['disabled'],
                   isSelected && styles['selected'],
-                  !showStamps && styles['is-picker']
+                  !showStamps && styles['is-picker'],
                 )}
                 onClick={() => {
                   if (!isCurrent || isFuture || isReadOnly) return
