@@ -10,7 +10,7 @@ import LeftArrow from '@/assets/icon_left_arrow.svg'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import Typography from '@/components/ui/typography'
 
-import MonthViewWithData from './monthViewWithData'
+import MonthView from './monthView'
 import styles from './exerciseCalendar.module.css'
 
 type Props = {
@@ -142,9 +142,10 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               ),
             }}
           >
-            <MonthViewWithData
+            <MonthView
+              key={prevMonth.toISOString()}
+              month={prevMonth}
               today={today}
-              monthToShow={prevMonth}
               isActive={false}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
@@ -153,9 +154,10 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               showStamps={showStamps}
               memberId={memberId ?? undefined}
             />
-            <MonthViewWithData
+            <MonthView
+              key={currentMonth.toISOString()}
+              month={currentMonth}
               today={today}
-              monthToShow={currentMonth}
               isActive={true}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
@@ -164,9 +166,10 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               showStamps={showStamps}
               memberId={memberId ?? undefined}
             />
-            <MonthViewWithData
+            <MonthView
+              key={nextMonth.toISOString()}
+              month={nextMonth}
               today={today}
-              monthToShow={nextMonth}
               isActive={false}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
