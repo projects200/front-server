@@ -91,3 +91,15 @@ export function deleteChatRoom(
     token,
   )
 }
+
+// 웹소켓 티켓 발급
+export function getChatTicket(
+  token: string,
+  chatroomId: number,
+): Promise<{ chatTicket: string }> {
+  return fetchWrapper<{ chatTicket: string }>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/chat-rooms/${chatroomId}/ticket`,
+    { method: 'POST' },
+    token,
+  )
+}

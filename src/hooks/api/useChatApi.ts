@@ -5,6 +5,7 @@ import {
   createChatMessage,
   readNewChatMessages,
   deleteChatRoom,
+  getChatTicket,
 } from '@/api/chat'
 import {
   ChatRoomId,
@@ -135,5 +136,13 @@ export const useDeleteChatRoom = (chatroomId: number) =>
   useApiMutation<void, void>(
     ['chatRoom/list'],
     (token) => deleteChatRoom(token, chatroomId),
+    {},
+  )
+
+// 웹소켓 티켓 발급
+export const useGetChatTicket = () =>
+  useApiMutation<{ chatTicket: string }, { chatroomId: number }>(
+    ['chat/ticket'],
+    (token, { chatroomId }) => getChatTicket(token, chatroomId),
     {},
   )

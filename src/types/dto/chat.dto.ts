@@ -39,3 +39,13 @@ export type NewChatDto = {
   opponentActive: boolean
   blockActive: boolean
 }
+
+export type SocketChatContentDto = ChatIdDto & {
+  senderId: string
+  senderNickname: string
+  senderProfileUrl: string
+  senderThumbnailUrl: string
+  chatContent: string
+  chatType: string
+  sentAt: string
+}

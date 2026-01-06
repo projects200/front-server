@@ -8,12 +8,12 @@ import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { isSameMinute } from '@/utils/dataFormatting'
 import {
+  usePostChatMessage,
   useReadChatMessages,
+  useReadNewChatMessages,
   useDeleteChatRoom,
-  useGetChatTicket,
 } from '@/hooks/api/useChatApi'
-import { useChatSocket } from '@/hooks/useChatSocket'
-import type { ChatContent, SocketChatContent } from '@/types/chat'
+import { ChatContent } from '@/types/chat'
 import { logAnalyticsEvent } from '@/lib/firebase/analytics'
 
 import KebabModal from './_components/kebabModal'
@@ -39,7 +39,6 @@ export default function ChatRoom() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visibleDate, setVisibleDate] = useState<string | null>(null)
   const [isDateVisible, setIsDateVisible] = useState(false)
-  const [ticket, setTicket] = useState<string | null>(null)
 
   // Refs
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -57,59 +56,16 @@ export default function ChatRoom() {
     mutate,
     isFetchingPrevMessages,
   } = useReadChatMessages(chatRoomId)
-  const { trigger: getTicket } = useGetChatTicket()
+  const { data: newMessagesData } = useReadNewChatMessages(chatRoomId)
+  const { trigger: sendMessage } = usePostChatMessage(chatRoomId)
   const { trigger: leaveChatRoom } = useDeleteChatRoom(chatRoomId)
-  // const otherUserLeft = !opponentActive
-  // const isBlockActive = blockActive || newMessagesData?.blockActive || false
-
-  // 티켓 발급
-  useEffect(() => {
-    const fetchTicket = async () => {
-      if (!chatRoomId) return
-
-      try {
-        const res = await getTicket({ chatroomId: chatRoomId })
-        setTicket(res.data.chatTicket)
-      } catch {}
-    }
-
-    fetchTicket()
-  }, [chatRoomId, getTicket])
-
-  // 새 메시지 수신 시 처리 로직
-  const handleNewMessage = useCallback(
-    (newChat: SocketChatContent) => {
-      mutate((currentData) => {
-        if (!currentData) return []
-
-        const newData = [...currentData]
-        const isDuplicate = newData.some((page) =>
-          page.content.some((chat) => chat.chatId === newChat.chatId),
-        )
-
-        if (isDuplicate) return currentData
-
-        newData[0] = {
-          ...newData[0],
-          content: [...newData[0].content, newChat as ChatContent],
-        }
-        return newData
-      }, false)
-    },
-    [mutate],
-  )
-
-  // 웹소켓 연결
-  const { sendMessage: sendMessageBySocket } = useChatSocket(
-    chatRoomId,
-    ticket,
-    handleNewMessage,
-  )
+  const otherUserLeft = !opponentActive
+  const isBlockActive = blockActive || newMessagesData?.blockActive || false
 
   // 메세지 전송 핸들러
-
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
     if (!message.trim() || !user?.profile) return
+
     const tempChatId = Date.now()
     const tempMessage: ChatContent = {
       chatId: tempChatId,
@@ -122,7 +78,6 @@ export default function ChatRoom() {
       senderProfileUrl: '',
       senderThumbnailUrl: '',
     }
-
     mutate((currentData) => {
       if (!currentData) return []
       const newData = [...currentData]
@@ -133,14 +88,50 @@ export default function ChatRoom() {
       return newData
     }, false)
 
-    // 실제 웹소켓으로 전송
-    sendMessageBySocket(message)
+    try {
+      const response = await sendMessage({ content: message })
+      const realChatId = response.data.chatId
 
-    logAnalyticsEvent('chat_sent', {
-      screen_name: 'chat_room',
-      event_category: 'engagement',
-      event_label: 'chat_message',
-    })
+      mutate((currentData) => {
+        if (!currentData) return []
+
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: [...page.content],
+        }))
+
+        const pageWithTempMessage = newData.find((page) =>
+          page.content.some((chat) => chat.chatId === tempChatId),
+        )
+
+        if (pageWithTempMessage) {
+          const messageToUpdate = pageWithTempMessage.content.find(
+            (chat) => chat.chatId === tempChatId,
+          )
+          if (messageToUpdate) {
+            messageToUpdate.chatId = realChatId
+          }
+        }
+
+        return newData
+      }, false)
+
+      // 채팅 데이터 로그 이벤트
+      logAnalyticsEvent('chat_sent', {
+        screen_name: 'chat_room',
+        event_category: 'engagement',
+        event_label: 'chat_message',
+      })
+    } catch {
+      mutate((currentData) => {
+        if (!currentData) return []
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: page.content.filter((chat) => chat.chatId !== tempChatId),
+        }))
+        return newData
+      }, false)
+    }
   }
 
   // 채팅방 나가기 핸들러
@@ -185,6 +176,35 @@ export default function ChatRoom() {
       setSize((prevSize) => prevSize + 1)
     }
   }, [hasNextPage, isFetchingPrevMessages, setSize])
+
+  // 새로운 메시지에 대한 처리 로직
+  useEffect(() => {
+    if (newMessagesData && newMessagesData.newChats.length > 0) {
+      mutate((currentData) => {
+        if (!currentData) return []
+
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: [...page.content],
+        }))
+
+        const existingChatIds = new Set(newData[0].content.map((c) => c.chatId))
+        const chatsToAdd = newMessagesData.newChats.filter(
+          (newChat) => !existingChatIds.has(newChat.chatId),
+        )
+
+        if (chatsToAdd.length > 0) {
+          chatsToAdd.sort(
+            (a, b) =>
+              new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime(),
+          )
+          newData[0].content.push(...chatsToAdd)
+        }
+
+        return newData
+      }, false)
+    }
+  }, [newMessagesData, mutate])
 
   // 컴포넌트 언마운트시 타이머 정리
   useEffect(() => {
@@ -302,8 +322,8 @@ export default function ChatRoom() {
       {/* 채팅 입력 영역 */}
       <ChatInput
         onSend={handleSendMessage}
-        disabled={!opponentActive}
-        blocked={blockActive}
+        disabled={otherUserLeft}
+        blocked={isBlockActive}
       />
 
       {isMenuOpen && (
