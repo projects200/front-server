@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 20px;
+}
+
+.reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 15px;
+  background-color: var(--color-white-100);
+  flex-shrink: 0;
+}
