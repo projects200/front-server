@@ -1,5 +1,6 @@
 'use client'
 
+import { useQueryState } from 'nuqs'
 import { useState, useMemo, useRef, forwardRef } from 'react'
 import { startOfMonth, subMonths, addMonths, format } from 'date-fns'
 import { ko } from 'date-fns/locale'
@@ -9,7 +10,7 @@ import LeftArrow from '@/assets/icon_left_arrow.svg'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 import Typography from '@/components/ui/typography'
 
-import MonthViewWithData from './monthViewWithData'
+import MonthView from './monthView'
 import styles from './exerciseCalendar.module.css'
 
 type Props = {
@@ -17,13 +18,21 @@ type Props = {
   selectedDate: string
   isReadOnly?: boolean
   isOthers?: boolean
+  showStamps?: boolean
 }
 
 const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
   (
-    { onDateSelect, selectedDate, isReadOnly = false, isOthers = false },
+    {
+      onDateSelect,
+      selectedDate,
+      isReadOnly = false,
+      isOthers = false,
+      showStamps = true,
+    },
     ref,
   ) => {
+    const [memberId] = useQueryState('memberId')
     const today = new Date()
     const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(today))
     const prevMonth = useMemo(() => subMonths(currentMonth, 1), [currentMonth])
@@ -90,13 +99,18 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
     return (
       <div className={styles['container']} ref={ref}>
         <div className={styles['header']}>
-          <button onClick={handlePrev} className={styles['nav-button']}>
+          <button
+            type="button"
+            onClick={handlePrev}
+            className={styles['nav-button']}
+          >
             <LeftArrow />
           </button>
           <Typography as="span" variant="content-large" weight="bold">
             {format(currentMonth, 'yyyy년 M월', { locale: ko })}
           </Typography>
           <button
+            type="button"
             onClick={handleNext}
             className={styles['nav-button']}
             disabled={currentMonth.getTime() >= startOfMonth(today).getTime()}
@@ -128,32 +142,41 @@ const ExerciseCalendar = forwardRef<HTMLDivElement, Props>(
               ),
             }}
           >
-            <MonthViewWithData
+            <MonthView
+              key={prevMonth.toISOString()}
+              month={prevMonth}
               today={today}
-              monthToShow={prevMonth}
               isActive={false}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
               isOthers={isOthers}
+              showStamps={showStamps}
+              memberId={memberId ?? undefined}
             />
-            <MonthViewWithData
+            <MonthView
+              key={currentMonth.toISOString()}
+              month={currentMonth}
               today={today}
-              monthToShow={currentMonth}
               isActive={true}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
               isOthers={isOthers}
+              showStamps={showStamps}
+              memberId={memberId ?? undefined}
             />
-            <MonthViewWithData
+            <MonthView
+              key={nextMonth.toISOString()}
+              month={nextMonth}
               today={today}
-              monthToShow={nextMonth}
               isActive={false}
               onDateSelect={onDateSelect}
               selectedDate={selectedDate}
               isReadOnly={isReadOnly}
               isOthers={isOthers}
+              showStamps={showStamps}
+              memberId={memberId ?? undefined}
             />
           </animated.div>
         </div>

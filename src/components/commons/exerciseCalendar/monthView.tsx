@@ -1,44 +1,47 @@
 'use client'
 
 import { memo, useMemo, useRef } from 'react'
-
-import {
-  format,
-  isSameMonth,
-  isSameDay,
-  isAfter,
-  startOfWeek,
-  endOfWeek,
-  startOfMonth,
-  endOfMonth,
-  addDays,
-  parseISO,
-} from 'date-fns'
+import { eachWeekOfInterval, eachDayOfInterval, format, isSameMonth, isSameDay, isAfter, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addDays, parseISO } from 'date-fns'
 import clsx from 'clsx'
-
+import { useExerciseCalendarData } from '@/hooks/useExerciseCalendar' // 훅 직접 호출
 import StampIcon from '@/assets/stamp.svg'
 import Typography from '@/components/ui/typography'
-
 import styles from './monthView.module.css'
 
 type Props = {
   month: Date
   today: Date
-  counts: Record<string, number>
-  onDateClick: (date: Date) => void
+  onDateSelect?: (date: Date) => void
   selectedDate: string
   isReadOnly: boolean
+  isOthers: boolean
+  showStamps: boolean
+  isActive: boolean
+  memberId?: string
 }
 
 const MonthView = memo(function MonthView({
   month,
   today,
-  counts,
-  onDateClick,
+  onDateSelect,
   selectedDate,
   isReadOnly,
+  isOthers,
+  showStamps,
+  isActive,
+  memberId,
 }: Props) {
+  const { counts } = useExerciseCalendarData({
+    monthToShow: month,
+    today,
+    isOthers,
+    memberId,
+    isActive,
+    showStamps,
+  })
+
   const prevCounts = useRef(counts)
+
   const shouldAnimate = useMemo(() => {
     const prevData = Object.keys(prevCounts.current).length === 0
     const currentData = Object.keys(counts).length > 0
@@ -46,19 +49,16 @@ const MonthView = memo(function MonthView({
   }, [counts])
 
   const weeks = useMemo(() => {
-    const gridStart = startOfWeek(startOfMonth(month), { weekStartsOn: 0 })
-    const gridEnd = endOfWeek(endOfMonth(month), { weekStartsOn: 0 })
-    const newWeeks: Date[][] = []
-    let cursor = gridStart
-    while (cursor <= gridEnd) {
-      const days: Date[] = []
-      for (let i = 0; i < 7; i++) {
-        days.push(cursor)
-        cursor = addDays(cursor, 1)
-      }
-      newWeeks.push(days)
-    }
-    return newWeeks
+    const monthStart = startOfMonth(month)
+    const monthEnd = endOfMonth(month)
+    const gridStart = startOfWeek(monthStart, { weekStartsOn: 0 })
+    const gridEnd = endOfWeek(monthEnd, { weekStartsOn: 0 })
+
+    const weekStarts = eachWeekOfInterval({ start: gridStart, end: gridEnd }, { weekStartsOn: 0 })
+
+    return weekStarts.map((weekStart) =>
+      eachDayOfInterval({ start: weekStart, end: addDays(weekStart, 6) })
+    )
   }, [month])
 
   return (
@@ -70,12 +70,7 @@ const MonthView = memo(function MonthView({
             const isCurrent = isSameMonth(day, month)
             const isFuture = isAfter(day, today)
             const isSelected = isSameDay(day, parseISO(selectedDate))
-            const count = counts[dateStr] ?? 0
-
-            const stampIconClassName = clsx(styles['stamp-icon'], {
-              [styles['animate-fade-in']]: shouldAnimate,
-              [styles['show-immediately']]: !shouldAnimate,
-            })
+            const count = showStamps ? (counts[dateStr] ?? 0) : 0
 
             return (
               <div
@@ -85,16 +80,24 @@ const MonthView = memo(function MonthView({
                   !isCurrent && styles['empty'],
                   isFuture && styles['disabled'],
                   isSelected && styles['selected'],
+                  !showStamps && styles['is-picker']
                 )}
                 onClick={() => {
-                  if (!isCurrent || isFuture || isReadOnly) return
-                  onDateClick(day)
+                  if (!isCurrent || isFuture || isReadOnly || !onDateSelect) return
+                  onDateSelect(day)
                 }}
               >
                 <Typography as="span" variant="content-medium">
                   {format(day, 'd')}
                 </Typography>
-                {count > 0 && <StampIcon className={stampIconClassName} />}
+                {count > 0 && (
+                  <StampIcon 
+                    className={clsx(styles['stamp-icon'], {
+                      [styles['animate-fade-in']]: shouldAnimate,
+                      [styles['show-immediately']]: !shouldAnimate,
+                    })} 
+                  />
+                )}
               </div>
             )
           })}
