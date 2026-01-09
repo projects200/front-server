@@ -39,6 +39,10 @@
   background: #dce4d9;
   border-radius: 50%;
 }
+.selected.is-picker {
+  color: var(--color-white-300);
+  background: var(--color-green);
+}
 
 .stamp-icon {
   position: absolute;

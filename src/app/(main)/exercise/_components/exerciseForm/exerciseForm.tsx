@@ -11,10 +11,8 @@ import {
   ExerciseRecordReq,
 } from '@/types/exercise'
 import { useReadExerciseScore } from '@/hooks/api/useScoreApi'
-import WarningIcon from '@/assets/icon_warning.svg'
-import Typography from '@/components/ui/typography'
 
-import DateTimePicker from './dateTimePicker'
+import TimeField from './timeField'
 import InputField from './inputField'
 import TextareaField from './textareaField'
 import ImageUploader from './imageUploader'
@@ -198,7 +196,7 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
               <form.Field name="endedAt">
                 {(endedAtField) => (
                   <div className={styles['form-field']}>
-                    <DateTimePicker
+                    <TimeField
                       label="운동 시간 *"
                       startedAt={startedAtField.state.value}
                       endedAt={endedAtField.state.value}
@@ -208,19 +206,8 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
                       onEndedAtChange={(value) =>
                         endedAtField.handleChange(value)
                       }
+                      description={scoreDescription}
                     />
-                    {scoreDescription && (
-                      <div className={styles['score-description']}>
-                        <WarningIcon className={styles['warning-icon']} />
-                        <Typography
-                          as="span"
-                          variant="content-small"
-                          className={styles['description']}
-                        >
-                          {scoreDescription}
-                        </Typography>
-                      </div>
-                    )}
                   </div>
                 )}
               </form.Field>

@@ -1,15 +1,41 @@
 'use client'
 
+import Link from 'next/link'
+import { useState } from 'react'
+
 import BottomNavigation from '@/components/commons/bottomNavigation'
 import SITE_MAP from '@/constants/siteMap.constant'
 import Typography from '@/components/ui/typography'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 
+import FilterBar from './_components/filterBar'
+import type { FilterItems } from './_components/filterBar'
 import KakaoMap from './_components/kakaoMap'
 import styles from './match.module.css'
-import Link from 'next/link'
+
+const INITIAL_FILTERS: FilterItems = {
+  gender: null,
+  age: null,
+  sport: null,
+  skill: null,
+  workoutDays: [],
+  score: null,
+}
 
 export default function Match() {
+  const [filters, setFilters] = useState<FilterItems>(INITIAL_FILTERS)
+
+  const handleFilterChange = <K extends keyof FilterItems>(
+    key: K,
+    value: FilterItems[K],
+  ) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleResetFilters = () => {
+    setFilters(INITIAL_FILTERS)
+  }
+
   return (
     <div className={styles['container']}>
       <div className={styles['map-container']}>
@@ -23,7 +49,13 @@ export default function Match() {
             </Typography>
             <RightArrow />
           </Link>
+          <FilterBar
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onReset={handleResetFilters}
+          />
         </div>
+
         <KakaoMap />
         <BottomNavigation />
       </div>
