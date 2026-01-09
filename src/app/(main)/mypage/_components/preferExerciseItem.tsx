@@ -1,6 +1,6 @@
 'use client'
 
-import { PreferExercises } from '@/types/mypage'
+import { UserProfilePreferExercise } from '@/types/mypage'
 import ExerciseImg from '@/components/commons/exerciseImg'
 import Typography from '@/components/ui/typography'
 import {
@@ -11,7 +11,7 @@ import {
 import styles from './preferExerciseItem.module.css'
 
 type Props = {
-  data: PreferExercises
+  data: UserProfilePreferExercise
 }
 
 export default function PreferExerciseItem({ data }: Props) {
