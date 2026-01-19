@@ -312,7 +312,7 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
                 </Typography>
               )}
               <button onClick={handleRegister}>
-                <CompleteButton>등록</CompleteButton>
+                <CompleteButton>입력</CompleteButton>
               </button>
             </div>
           </div>
