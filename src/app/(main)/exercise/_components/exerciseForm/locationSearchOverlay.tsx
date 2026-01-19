@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Map } from 'react-kakao-maps-sdk'
-import { useRouter } from 'next/navigation'
 
 import { useToast } from '@/hooks/useToast'
 import useCurrentLocation from '@/hooks/useCurrentLocation'
@@ -11,9 +10,9 @@ import CompleteButton from '@/components/commons/completeButton'
 import SearchIcon from '@/assets/icon_search.svg'
 import CenterMarker from '@/assets/map_marker_black_noframe.svg'
 import Typography from '@/components/ui/typography'
-import SITE_MAP from '@/constants/siteMap.constant'
+import Portal from '@/components/ui/portal'
 
-import styles from './placeRegisterSearch.module.css'
+import styles from './locationSearchOverlay.module.css'
 
 const SEOUL_CITY_HALL = {
   lat: 37.5667,
@@ -45,7 +44,12 @@ type KakaoSearchResultItem = {
   y: string
 }
 
-export default function PlaceRegisterSearch() {
+type Props = {
+  onClose: () => void
+  onConfirm: (placeName: string) => void
+}
+
+export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
   const [mapLevel, setMapLevel] = useState(3)
   const [searchValue, setSearchValue] = useState('')
   const [mapCenter, setMapCenter] = useState(SEOUL_CITY_HALL)
@@ -63,7 +67,6 @@ export default function PlaceRegisterSearch() {
     getLocation,
   } = useCurrentLocation()
   const showToast = useToast()
-  const router = useRouter()
 
   // 좌표 이동시 도로명 주소 변경
   const updateAddressFromCoords = useCallback((coords: LatLng) => {
@@ -92,6 +95,7 @@ export default function PlaceRegisterSearch() {
       geocoder.coord2Address(coords.lng, coords.lat, callback)
     })
   }, [])
+
   // const updateAddressFromCoords = useCallback((coords: LatLng) => {
   //   if (!window.kakao) return
   //   const ps = new window.kakao.maps.services.Places()
@@ -214,12 +218,7 @@ export default function PlaceRegisterSearch() {
       showToast('정확한 장소를 선택해주세요.', 'info')
       return
     }
-    const params = new URLSearchParams()
-    params.append('lat', parseFloat(mapCenter.lat.toFixed(10)).toString())
-    params.append('lng', parseFloat(mapCenter.lng.toFixed(10)).toString())
-    params.append('name', addressInfo.name)
-    params.append('address', addressInfo.address)
-    router.push(`${SITE_MAP.MATCH_PLACE_REGISTER_DETAIL}?${params.toString()}`)
+    onConfirm(addressInfo.name || addressInfo.address)
   }
 
   // 페이지 진입시 현재 위치를 가져옴
@@ -238,85 +237,87 @@ export default function PlaceRegisterSearch() {
   if (locationLoading) return null
 
   return (
-    <div className={styles['container']}>
-      <Header
-        className="fill-space-title"
-        rightIcon={<CompleteButton>검색</CompleteButton>}
-        onClick={handleSearch}
-        onBack={isResultListVisible ? handleBackFromSearch : undefined}
-      >
-        <div className={styles['search-section']}>
-          <SearchIcon className={styles['search-icon']} />
-          <input
-            className={styles['input']}
-            value={searchValue}
-            onChange={handleSearchChange}
-            onKeyDown={handleKeyDown}
-            placeholder="운동하는 장소 검색"
-          />
-        </div>
-      </Header>
-
-      {isResultListVisible ? (
-        // --- 검색 목록 뷰 ---
-        <div className={styles['search-results-container']}>
-          {searchResults.map((place) => (
-            <div
-              key={place.id}
-              className={styles['result-item']}
-              onClick={() => handleSelectPlace(place)}
-            >
-              <Typography as="div" variant="title-small" weight="medium">
-                {place.place_name}
-              </Typography>
-              <Typography
-                variant="content-medium"
-                className={styles['result-address']}
-                as="div"
-              >
-                {place.road_address_name || place.address_name}
-              </Typography>
-            </div>
-          ))}
-        </div>
-      ) : (
-        // --- 지도 뷰 ---
-        <div className={styles['map-view-container']}>
-          <div className={styles['map-section']}>
-            <Map
-              center={mapCenter}
-              level={mapLevel}
-              className={styles['map']}
-              onDragEnd={handleMapDragEnd}
-              onZoomChanged={handleZoomChanged}
-            ></Map>
-            <CenterMarker className={styles['center-icon']} />
+    <Portal>
+      <div className={styles['container']}>
+        <Header
+          className="fill-space-title"
+          rightIcon={<CompleteButton>검색</CompleteButton>}
+          onClick={handleSearch}
+          onBack={isResultListVisible ? handleBackFromSearch : onClose}
+        >
+          <div className={styles['search-section']}>
+            <SearchIcon className={styles['search-icon']} />
+            <input
+              className={styles['input']}
+              value={searchValue}
+              onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
+              placeholder="운동하는 장소 검색"
+            />
           </div>
-          <div className={styles['bottom-section']}>
-            {addressInfo.name ? (
-              <div className={styles['address-section']}>
-                <Typography as="span" variant="title-small" weight="medium">
-                  {addressInfo.name}
+        </Header>
+
+        {isResultListVisible ? (
+          // --- 검색 목록 뷰 ---
+          <div className={styles['search-results-container']}>
+            {searchResults.map((place) => (
+              <div
+                key={place.id}
+                className={styles['result-item']}
+                onClick={() => handleSelectPlace(place)}
+              >
+                <Typography as="div" variant="title-small" weight="medium">
+                  {place.place_name}
                 </Typography>
                 <Typography
-                  className={styles['address-sub-text']}
-                  as="span"
-                  variant="content-large"
+                  variant="content-medium"
+                  className={styles['result-address']}
+                  as="div"
                 >
-                  {addressInfo.address}
+                  {place.road_address_name || place.address_name}
                 </Typography>
               </div>
-            ) : (
-              <Typography as="span" variant="title-small" weight="medium">
-                {addressInfo.address}
-              </Typography>
-            )}
-            <button onClick={handleRegister}>
-              <CompleteButton>등록</CompleteButton>
-            </button>
+            ))}
           </div>
-        </div>
-      )}
-    </div>
+        ) : (
+          // --- 지도 뷰 ---
+          <div className={styles['map-view-container']}>
+            <div className={styles['map-section']}>
+              <Map
+                center={mapCenter}
+                level={mapLevel}
+                className={styles['map']}
+                onDragEnd={handleMapDragEnd}
+                onZoomChanged={handleZoomChanged}
+              ></Map>
+              <CenterMarker className={styles['center-icon']} />
+            </div>
+            <div className={styles['bottom-section']}>
+              {addressInfo.name ? (
+                <div className={styles['address-section']}>
+                  <Typography as="span" variant="title-small" weight="medium">
+                    {addressInfo.name}
+                  </Typography>
+                  <Typography
+                    className={styles['address-sub-text']}
+                    as="span"
+                    variant="content-large"
+                  >
+                    {addressInfo.address}
+                  </Typography>
+                </div>
+              ) : (
+                <Typography as="span" variant="title-small" weight="medium">
+                  {addressInfo.address}
+                </Typography>
+              )}
+              <button onClick={handleRegister}>
+                <CompleteButton>등록</CompleteButton>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </Portal>
   )
 }

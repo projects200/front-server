@@ -1,6 +1,7 @@
 'use client'
 
-import { forwardRef, useImperativeHandle } from 'react'
+import clsx from 'clsx'
+import { forwardRef, useImperativeHandle, useState, useMemo } from 'react'
 import * as z from 'zod'
 import { format } from 'date-fns'
 import { useForm, useStore } from '@tanstack/react-form'
@@ -11,11 +12,16 @@ import {
   ExerciseRecordReq,
 } from '@/types/exercise'
 import { useReadExerciseScore } from '@/hooks/api/useScoreApi'
+import { useReadExerciseTypeList } from '@/hooks/api/useMypageApi'
+import { useReadExerciseLocationList } from '@/hooks/api/useExerciseLocationApi'
+import SingleSelector from '@/components/ui/singleSelector'
+import Typography from '@/components/ui/typography'
 
 import TimeField from './timeField'
 import InputField from './inputField'
 import TextareaField from './textareaField'
 import ImageUploader from './imageUploader'
+import LocationSearchOverlay from './locationSearchOverlay'
 import styles from './exerciseForm.module.css'
 
 export type ExerciseFormHandle = {
@@ -29,6 +35,8 @@ type Props = {
   onError: (message: string) => void
   isCreate?: boolean
 }
+
+const DIRECT_INPUT = '직접 입력'
 
 const exerciseSchema = z
   .object({
@@ -97,7 +105,40 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
     { defaultValues, defaultPictures = [], onSubmit, onError, isCreate = true },
     ref,
   ) => {
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false)
+    const [isLocationOpen, setIsLocationOpen] = useState(false)
+    const [isLocationSearchOpen, setIsLocationSearchOpen] = useState(false)
+
     const { data: scoreData } = useReadExerciseScore(isCreate)
+    const { data: exerciseList = [] } = useReadExerciseTypeList()
+    const { data: exerciseLocationList = [] } = useReadExerciseLocationList()
+
+    const categoryOptions = useMemo(() => {
+      return [DIRECT_INPUT, ...exerciseList.map((item) => item.name)]
+    }, [exerciseList])
+
+    const locationOptions = useMemo(() => {
+      return [DIRECT_INPUT, ...exerciseLocationList.map((item) => item.name)]
+    }, [exerciseLocationList])
+
+    const [selectedOption, setSelectedOption] = useState<string | null>(() => {
+      if (!defaultValues.category) return null
+      const isKnown = exerciseList.some(
+        (item) => item.name === defaultValues.category,
+      )
+      return isKnown ? defaultValues.category : DIRECT_INPUT
+    })
+
+    const [selectedLocation, setSelectedLocation] = useState<string | null>(
+      () => {
+        if (!defaultValues.location) return null
+        const isKnown = exerciseLocationList.some(
+          (item) => item.name === defaultValues.location,
+        )
+        return isKnown ? defaultValues.location : DIRECT_INPUT
+      },
+    )
+
     const existingPictures = defaultPictures.map(
       (picture) => picture.pictureUrl,
     )
@@ -216,29 +257,93 @@ const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
 
           <form.Field name="category">
             {(field) => (
-              <InputField
-                className={styles['form-field']}
-                value={field.state.value ?? ''}
-                onChange={(e) => field.handleChange(e.target.value)}
-                label="운동 종류"
-                id="category"
-                maxLength={255}
-                placeholder="운동 종류를 입력해주세요."
-              />
+              <div className={styles['form-field']}>
+                <Typography as="span" variant="content-large" weight="medium">
+                  운동 종류
+                </Typography>
+
+                <button
+                  type="button"
+                  className={clsx(styles['input-trigger'], {
+                    [styles['placeholder']]: !selectedOption,
+                  })}
+                  onClick={() => setIsCategoryOpen(true)}
+                >
+                  {selectedOption || '운동 종류를 선택해주세요.'}
+                </button>
+
+                <SingleSelector
+                  isOpen={isCategoryOpen}
+                  onClose={() => setIsCategoryOpen(false)}
+                  options={categoryOptions}
+                  value={selectedOption}
+                  onSelect={(val) => {
+                    setSelectedOption(val)
+                    if (val === DIRECT_INPUT) {
+                      field.handleChange('')
+                    } else {
+                      field.handleChange(val)
+                    }
+                  }}
+                />
+
+                {selectedOption === DIRECT_INPUT && (
+                  <InputField
+                    id="category-direct"
+                    label=""
+                    value={field.state.value ?? ''}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="운동 종류를 입력해주세요."
+                  />
+                )}
+              </div>
             )}
           </form.Field>
 
           <form.Field name="location">
             {(field) => (
-              <InputField
-                className={styles['form-field']}
-                value={field.state.value ?? ''}
-                onChange={(e) => field.handleChange(e.target.value)}
-                label="장소"
-                id="location"
-                maxLength={255}
-                placeholder="운동장소를 입력해주세요."
-              />
+              <div className={styles['form-field']}>
+                <Typography as="span" variant="content-large" weight="medium">
+                  장소
+                </Typography>
+
+                <button
+                  type="button"
+                  className={clsx(styles['input-trigger'], {
+                    [styles['placeholder']]: !selectedLocation,
+                  })}
+                  onClick={() => setIsLocationOpen(true)}
+                >
+                  {selectedLocation || '운동 장소를 선택해주세요.'}
+                </button>
+
+                <SingleSelector
+                  isOpen={isLocationOpen}
+                  onClose={() => setIsLocationOpen(false)}
+                  options={locationOptions}
+                  value={selectedLocation}
+                  onSelect={(val) => {
+                    if (val === DIRECT_INPUT) {
+                      setIsLocationOpen(false)
+                      setIsLocationSearchOpen(true)
+                    } else {
+                      setSelectedLocation(val)
+                      field.handleChange(val)
+                    }
+                  }}
+                />
+
+                {isLocationSearchOpen && (
+                  <LocationSearchOverlay
+                    onClose={() => setIsLocationSearchOpen(false)}
+                    onConfirm={(placeName: string) => {
+                      setSelectedLocation(placeName)
+                      field.handleChange(placeName)
+                      setIsLocationSearchOpen(false)
+                    }}
+                  />
+                )}
+              </div>
             )}
           </form.Field>
 
