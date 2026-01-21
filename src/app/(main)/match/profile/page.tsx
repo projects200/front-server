@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useQueryState } from 'nuqs'
+import { useQueryState, parseAsFloat, parseAsInteger } from 'nuqs'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
@@ -30,8 +30,11 @@ export default function Profile() {
 
   const router = useRouter()
   const [memberId] = useQueryState('memberId')
-  const [lat] = useQueryState('lat')
-  const [lng] = useQueryState('lng')
+  const [locationId] = useQueryState('locationId', parseAsInteger)
+  const [lat] = useQueryState('lat', parseAsFloat)
+  const [lng] = useQueryState('lng', parseAsFloat)
+  const [curLat] = useQueryState('curLat', parseAsFloat)
+  const [curLng] = useQueryState('curLng', parseAsFloat)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { trigger: createChatRoom } = usePostChatRoom()
@@ -51,10 +54,13 @@ export default function Profile() {
   }
 
   const handleBottomButton = async () => {
-    if (!memberId || !profileData) return
+    if (!memberId || !locationId || !curLat || !curLng || !profileData) return
     try {
       const res = await createChatRoom({
         receiverId: memberId,
+        exerciseLocationId: locationId,
+        requesterLatitude: curLat,
+        requesterLongitude: curLng,
       })
       router.push(
         `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}&memberId=${memberId}`,

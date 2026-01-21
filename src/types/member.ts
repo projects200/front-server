@@ -10,6 +10,7 @@ export type MemberScore = {
 }
 
 export type MemberExerciseLocation = {
+  exerciseLocationId: number
   exerciseLocationName: string
   latitude: number
   longitude: number

@@ -154,16 +154,16 @@ export default function KakaoMap() {
                 lat: data.location.latitude,
                 lng: data.location.longitude,
               }}
-              image={{
-                src: '/assets/map_marker_red.svg',
-                size: { width: 40, height: 40 },
-              }}
-              clickable={true}
-              onClick={() => {
-                router.replace(
-                  `${SITE_MAP.MATCH_PROFILE}?memberId=${data.memberId}&lat=${data.location.latitude}&lng=${data.location.longitude}`,
-                )
-              }}
+              // image={{
+              //   src: '/assets/map_marker_red.svg',
+              //   size: { width: 40, height: 40 },
+              // }}
+              // clickable={true}
+              // onClick={() => {
+              //   router.replace(
+              //     `${SITE_MAP.MATCH_PROFILE}?memberId=${data.memberId}&locationId=${data.location.exerciseLocationId}&lat=${data.location.latitude}&lng=${data.location.longitude}`,
+              //   )
+              // }}
             />
           ))}
         </MarkerClusterer>
@@ -206,7 +206,7 @@ export default function KakaoMap() {
             <CloseIcon className={styles['close-button']} />
           </button>
         </div>
-        <ClusterList members={clusterData} />
+        <ClusterList members={clusterData} myPosition={mapCenter} />
       </div>
 
       {/* 진입 시 모달 */}

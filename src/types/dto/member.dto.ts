@@ -8,6 +8,7 @@ export type MemberSocreDto = {
 }
 
 export type MemberExerciseLocationDto = {
+  exerciseLocationId: number
   exerciseLocationName: string
   latitude: number
   longitude: number

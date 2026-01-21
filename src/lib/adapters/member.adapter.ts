@@ -22,6 +22,7 @@ export function adapterMemberExerciseLocation(
   dto: MemberExerciseLocationDto,
 ): MemberExerciseLocation {
   return {
+    exerciseLocationId: dto.exerciseLocationId,
     exerciseLocationName: dto.exerciseLocationName,
     latitude: dto.latitude,
     longitude: dto.longitude,

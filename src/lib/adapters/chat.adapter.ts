@@ -1,5 +1,6 @@
 import {
   ChatRoomId,
+  RequestChatRoom,
   ChatRoom,
   ChatId,
   ChatContent,
@@ -8,6 +9,7 @@ import {
 } from '@/types/chat'
 import {
   ChatRoomIdDto,
+  RequestChatRoomDto,
   ChatRoomDto,
   ChatIdDto,
   ChatContentDto,
@@ -18,6 +20,17 @@ import {
 export function adapterChatRoomId(dto: ChatRoomIdDto): ChatRoomId {
   return {
     chatRoomId: dto.chatRoomId,
+  }
+}
+
+export function adapterRequestChatRoomToDto(
+  data: RequestChatRoom,
+): RequestChatRoomDto {
+  return {
+    receiverId: data.receiverId,
+    exerciseLocationId: data.exerciseLocationId,
+    requesterLatitude: data.requesterLatitude,
+    requesterLongitude: data.requesterLongitude,
   }
 }
 
