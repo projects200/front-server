@@ -9,16 +9,14 @@ import Button from '@/components/ui/button'
 import CenterDialog from '@/components/ui/CenterDialog'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import Header from '@/components/commons/header'
-import BottomButton from '@/components/commons/bottomButton'
 import { useReadOtherUserFullProfile } from '@/hooks/api/useMypageApi'
-import { usePostChatRoom } from '@/hooks/api/useChatApi'
 import { usePostBlockMember } from '@/hooks/api/useBlockApi'
 import ProfileImg from '@/components/commons/profileImg'
 import Typography from '@/components/ui/typography'
 import ExerciseCalendar from '@/components/commons/exerciseCalendar/exerciseCalendar'
 import { formatGenderToKR, formatDateToKR } from '@/utils/dataFormatting'
-import SITE_MAP from '@/constants/siteMap.constant'
 
+import PreferExerciseItem from '../../mypage/_components/preferExerciseItem'
 import KebabModal from './_components/kebabModal'
 import styles from './profile.module.css'
 
@@ -27,7 +25,6 @@ export default function Profile() {
   const [memberId] = useQueryState('memberId')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const { trigger: createChatRoom } = usePostChatRoom()
   const { trigger: createBlockMember } = usePostBlockMember()
   const { data: profileData, isLoading: profileLoading } =
     useReadOtherUserFullProfile(memberId!)
@@ -43,17 +40,6 @@ export default function Profile() {
     } catch {}
   }
 
-  const handleBottomButton = async () => {
-    if (!memberId || !profileData) return
-    try {
-      const res = await createChatRoom({
-        receiverId: memberId,
-      })
-      router.push(
-        `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}`,
-      )
-    } catch {}
-  }
 
   const menuRef = (node: HTMLDivElement) => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -156,9 +142,23 @@ export default function Profile() {
       </section>
 
       {/* 선호운동 영역 */}
-      {/* <section className={styles['prefer-exercise-section']}>
-        선호운동 예정
-      </section> */}
+      { profileData.preferredExercises.length > 0 && (
+        <section className={styles['prefer-exercise-section']}>
+          <div className={styles['prefer-exercise-title']}>
+            <Typography as="p" variant="content-large" weight="bold">
+              선호 운동
+            </Typography>
+          </div>
+          <div className={styles['prefer-exercise-list']}>
+            {profileData.preferredExercises.map((data) => (
+              <PreferExerciseItem
+                key={`prefer-${data.preferredExerciseId}`}
+                data={data}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 달력 영역 */}
       <section className={styles['calender-section']}>
@@ -168,14 +168,6 @@ export default function Profile() {
           isOthers={true}
         />
       </section>
-
-      {/* 바텀 버튼 */}
-      <BottomButton
-        className={styles['bottom-button']}
-        onClick={handleBottomButton}
-      >
-        1:1 채팅하기
-      </BottomButton>
 
       {/* 케밥 버튼 */}
       {isMenuOpen && (
