@@ -1,19 +1,5 @@
-import {
-  UserProfile,
-  UserFullProfile,
-  UserProfilePreferExercise,
-  ExerciseItem,
-  PreferExercise,
-  PreferExerciseForm,
-} from '@/types/mypage'
-import {
-  UserProfileDto,
-  UserFullProfileDto,
-  UserProfilePreferExerciseDto,
-  ExerciseItemDto,
-  PreferExerciseDto,
-  PreferExerciseFormDto,
-} from '@/types/dto/mypage.dto'
+import { UserProfile, UserFullProfile, UserProfilePreferExercise, ExerciseItem, PreferExercise, PreferExerciseForm } from '@/types/mypage'
+import { UserProfileDto, UserFullProfileDto, UserProfilePreferExerciseDto, ExerciseItemDto, PreferExerciseDto, PreferExerciseFormDto } from '@/types/dto/mypage.dto'
 
 export function adapterUserProfile(dto: UserProfileDto): UserProfile {
   return {
@@ -23,9 +9,7 @@ export function adapterUserProfile(dto: UserProfileDto): UserProfile {
   }
 }
 
-export function adapterProfilePreferExercise(
-  dto: UserProfilePreferExerciseDto,
-): UserProfilePreferExercise {
+export function adapterProfilePreferExercise(dto: UserProfilePreferExerciseDto): UserProfilePreferExercise {
   return {
     preferredExerciseId: dto.preferredExerciseId,
     name: dto.name,
@@ -35,9 +19,7 @@ export function adapterProfilePreferExercise(
   }
 }
 
-export function adapterUserFullProfile(
-  dto: UserFullProfileDto,
-): UserFullProfile {
+export function adapterUserFullProfile(dto: UserFullProfileDto): UserFullProfile {
   return {
     nickname: dto.nickname,
     gender: dto.gender,
@@ -48,9 +30,7 @@ export function adapterUserFullProfile(
     yearlyExerciseDays: dto.yearlyExerciseDays,
     exerciseCountInLast30Days: dto.exerciseCountInLast30Days,
     exerciseScore: dto.exerciseScore,
-    preferredExercises: dto.preferredExercises.map(
-      adapterProfilePreferExercise,
-    ),
+    preferredExercises: dto.preferredExercises.map(adapterProfilePreferExercise),
   }
 }
 
@@ -62,9 +42,7 @@ export function adapterExerciseItem(dto: ExerciseItemDto): ExerciseItem {
   }
 }
 
-export function adapterExerciseItemList(
-  dtoList: ExerciseItemDto[],
-): ExerciseItem[] {
+export function adapterExerciseItemList(dtoList: ExerciseItemDto[]): ExerciseItem[] {
   return dtoList.map((dto) => adapterExerciseItem(dto))
 }
 
@@ -79,15 +57,11 @@ export function adapterPreferExercise(dto: PreferExerciseDto): PreferExercise {
   }
 }
 
-export function adapterPreferExerciseList(
-  dtoList: PreferExerciseDto[],
-): PreferExercise[] {
+export function adapterPreferExerciseList(dtoList: PreferExerciseDto[]): PreferExercise[] {
   return dtoList.map((dto) => adapterPreferExercise(dto))
 }
 
-export function adapterPreferExerciseItemToDto(
-  dto: PreferExerciseForm,
-): PreferExerciseFormDto {
+export function adapterPreferExerciseItemToDto(dto: PreferExerciseForm): PreferExerciseFormDto {
   return {
     exerciseTypeId: dto.exerciseTypeId,
     skillLevel: dto.skillLevel,
@@ -95,8 +69,6 @@ export function adapterPreferExerciseItemToDto(
   }
 }
 
-export function adapterPreferExerciseFormToDto(
-  itemList: PreferExerciseForm[],
-): PreferExerciseFormDto[] {
+export function adapterPreferExerciseFormToDto(itemList: PreferExerciseForm[]): PreferExerciseFormDto[] {
   return itemList.map((item) => adapterPreferExerciseItemToDto(item))
 }

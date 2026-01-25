@@ -10,16 +10,10 @@ type Props = {
   onClose: () => void
   options: string[]
   value: string | null
-  onSelect: (value: string) => void
+  onSelect: (value: string | null) => void
 }
 
-export default function SingleSelector({
-  isOpen,
-  onClose,
-  options,
-  value,
-  onSelect,
-}: Props) {
+export default function SingleSelector({ isOpen, onClose, options, value, onSelect }: Props) {
   if (!isOpen) return null
 
   return (
@@ -32,20 +26,15 @@ export default function SingleSelector({
               <button
                 className={styles['option-item']}
                 onClick={() => {
-                  onSelect(option)
+                  const nextValue = value === option ? null : option
+                  onSelect(nextValue)
                   onClose()
                 }}
               >
-                <Typography
-                  as="span"
-                  variant="content-large"
-                  weight={value === option ? 'bold' : 'medium'}
-                >
+                <Typography as="span" variant="content-large" weight={value === option ? 'bold' : 'medium'}>
                   {option}
                 </Typography>
-                {value === option && (
-                  <CheckIcon className={styles['check-icon']} />
-                )}
+                {value === option && <CheckIcon className={styles['check-icon']} />}
               </button>
             </li>
           ))}

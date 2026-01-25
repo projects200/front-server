@@ -15,12 +15,7 @@ type Props = {
   value: string[]
 }
 
-export default function MultiSelector({
-  isOpen,
-  onClose,
-  options,
-  value,
-}: Props) {
+export default function MultiSelector({ isOpen, onClose, options, value }: Props) {
   const [tempSelection, setTempSelection] = useState<string[]>([])
 
   useEffect(() => {
@@ -32,12 +27,24 @@ export default function MultiSelector({
   const handleToggle = (option: string) => {
     setTempSelection((prev) => {
       if (option === ALL_OPTION) return [ALL_OPTION]
-      if (prev.includes(ALL_OPTION)) return [option]
-      const next = prev.includes(option)
-        ? prev.filter((i) => i !== option)
-        : [...prev, option]
+      
+      const isAllSelected = prev.includes(ALL_OPTION)
+      let next = isAllSelected ? [] : [...prev]
+
+      if (next.includes(option)) {
+        next = next.filter((i) => i !== option)
+      } else {
+        // 없으면 추가
+        next = [...next, option]
+      }
+
       return next.length === 0 ? [ALL_OPTION] : next
     })
+  }
+
+  const handleClose = () => {
+    const finalSelection = tempSelection.filter((item) => item !== ALL_OPTION)
+    onClose(finalSelection)
   }
 
   if (!isOpen) return null
@@ -46,37 +53,22 @@ export default function MultiSelector({
 
   return (
     <Portal>
-      <div
-        className={styles['overlay']}
-        onClick={() => onClose(tempSelection)}
-      />
+      <div className={styles['overlay']} onClick={handleClose} />
       <div className={styles['bottom-sheet']}>
         <ul className={styles['option-list']}>
           {displayOptions.map((option) => (
             <li key={option}>
-              <button
-                className={styles['option-item']}
-                onClick={() => handleToggle(option)}
-              >
-                <Typography
-                  as="span"
-                  variant="content-large"
-                  weight={tempSelection.includes(option) ? 'bold' : 'medium'}
-                >
+              <button className={styles['option-item']} onClick={() => handleToggle(option)}>
+                <Typography as="span" variant="content-large" weight={tempSelection.includes(option) ? 'bold' : 'medium'}>
                   {option}
                 </Typography>
-                {tempSelection.includes(option) && (
-                  <CheckIcon className={styles['check-icon']} />
-                )}
+                {tempSelection.includes(option) && <CheckIcon className={styles['check-icon']} />}
               </button>
             </li>
           ))}
         </ul>
         <div className={styles['bottom-sheet-footer']}>
-          <button
-            className={styles['close-button']}
-            onClick={() => onClose(tempSelection)}
-          >
+          <button className={styles['close-button']} onClick={handleClose}>
             <Typography as="span" variant="content-large" weight="bold">
               닫기
             </Typography>

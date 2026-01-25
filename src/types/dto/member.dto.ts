@@ -1,3 +1,5 @@
+import { UserProfilePreferExerciseDto } from './mypage.dto'
+
 type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN'
 
 export type MemberSocreDto = {
@@ -21,5 +23,7 @@ export type MemberProfileDto = {
   nickname: string
   gender: Gender
   birthDate: string
+  memberScore: number
   locations: MemberExerciseLocationDto[]
+  preferredExercises: UserProfilePreferExerciseDto[]
 }

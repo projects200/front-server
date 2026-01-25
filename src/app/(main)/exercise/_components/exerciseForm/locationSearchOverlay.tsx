@@ -63,7 +63,7 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
   const [isResultListVisible, setIsResultListVisible] = useState(false)
   const {
     location,
-    loading: locationLoading,
+    isLoading: locationLoading,
     getLocation,
   } = useCurrentLocation()
   const showToast = useToast()

@@ -1,3 +1,5 @@
+import { UserProfilePreferExercise } from './mypage'
+
 type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN'
 
 export type ScoreState = 'loading' | 'low' | 'middle' | 'high'
@@ -23,7 +25,9 @@ export type MemberProfile = {
   nickname: string
   gender: Gender
   birthDate: string
+  memberScore: number
   locationList: MemberExerciseLocation[]
+  preferredExerciseList: UserProfilePreferExercise[]
 }
 
 export type MemberLocationFlattened = {
@@ -34,4 +38,12 @@ export type MemberLocationFlattened = {
   gender: Gender
   birthDate: string
   location: MemberExerciseLocation
+  preferredExerciseList: UserProfilePreferExercise[]
+}
+
+export type MemberLocationParams = {
+  leftTopLatitude: number
+  leftTopLongitude: number
+  rightBottomLatitude: number
+  rightBottomLongitude: number
 }
