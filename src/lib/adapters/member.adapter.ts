@@ -1,13 +1,6 @@
-import {
-  MemberScore,
-  MemberExerciseLocation,
-  MemberProfile,
-} from '@/types/member'
-import {
-  MemberSocreDto,
-  MemberExerciseLocationDto,
-  MemberProfileDto,
-} from '@/types/dto/member.dto'
+import { MemberScore, MemberExerciseLocation, MemberProfile } from '@/types/member'
+import { MemberSocreDto, MemberExerciseLocationDto, MemberProfileDto } from '@/types/dto/member.dto'
+import { adapterProfilePreferExercise } from './mypage.adapter'
 
 export function adaptMemberScore(dto: MemberSocreDto): MemberScore {
   return {
@@ -18,10 +11,9 @@ export function adaptMemberScore(dto: MemberSocreDto): MemberScore {
   }
 }
 
-export function adapterMemberExerciseLocation(
-  dto: MemberExerciseLocationDto,
-): MemberExerciseLocation {
+export function adapterMemberExerciseLocation(dto: MemberExerciseLocationDto): MemberExerciseLocation {
   return {
+    exerciseLocationId: dto.exerciseLocationId,
     exerciseLocationName: dto.exerciseLocationName,
     latitude: dto.latitude,
     longitude: dto.longitude,
@@ -36,12 +28,12 @@ export function adapterMemberProfile(dto: MemberProfileDto): MemberProfile {
     nickname: dto.nickname,
     gender: dto.gender,
     birthDate: dto.birthDate,
+    memberScore: dto.memberScore,
     locationList: dto.locations.map(adapterMemberExerciseLocation),
+    preferredExerciseList: dto.preferredExercises.map(adapterProfilePreferExercise),
   }
 }
 
-export function adapterMemberProfileList(
-  dtoList: MemberProfileDto[],
-): MemberProfile[] {
+export function adapterMemberProfileList(dtoList: MemberProfileDto[]): MemberProfile[] {
   return dtoList.map((dto) => adapterMemberProfile(dto))
 }

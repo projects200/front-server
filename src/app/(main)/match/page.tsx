@@ -32,10 +32,7 @@ export default function Match() {
   const [filters, setFilters] = useState<FilterItems>(INITIAL_FILTERS)
   const [showGuide, setShowGuide] = useState<boolean | null>(null)
 
-  const handleFilterChange = <K extends keyof FilterItems>(
-    key: K,
-    value: FilterItems[K],
-  ) => {
+  const handleFilterChange = <K extends keyof FilterItems>(key: K, value: FilterItems[K]) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -59,12 +56,7 @@ export default function Match() {
       {showGuide ? (
         <div className={styles['guide-container']}>
           <header className={styles['guide-header']}>
-            <Typography
-              className={styles['guide-header-text']}
-              as="h1"
-              variant="content-large"
-              weight="bold"
-            >
+            <Typography className={styles['guide-header-text']} as="h1" variant="content-large" weight="bold">
               운동 메이트 찾기
             </Typography>
             <button
@@ -81,28 +73,13 @@ export default function Match() {
           </header>
           <div className={styles['guide-content']}>
             <MascotCharacter className={styles['guide-mascot']} />
-            <Typography
-              className={styles['guide-title']}
-              as="h2"
-              variant="title-medium"
-              weight="bold"
-            >
+            <Typography className={styles['guide-title']} as="h2" variant="title-medium" weight="bold">
               운동 메이트를 찾아보세요!
             </Typography>
-            <Typography
-              className={styles['guide-sub-text1']}
-              as="p"
-              variant="content-large"
-              weight="medium"
-            >
+            <Typography className={styles['guide-sub-text1']} as="p" variant="content-large" weight="medium">
               혼자 운동하기 지루하셨나요?
             </Typography>
-            <Typography
-              className={styles['guide-sub-text2']}
-              as="p"
-              variant="content-large"
-              weight="medium"
-            >
+            <Typography className={styles['guide-sub-text2']} as="p" variant="content-large" weight="medium">
               근처에서 함께 운동할 메이트를 만나보세요
             </Typography>
             <div className={styles['descript-box']}>
@@ -115,12 +92,7 @@ export default function Match() {
                     1
                   </Typography>
                 </div>
-                <Typography
-                  className={styles['descript-text']}
-                  as="p"
-                  variant="content-medium"
-                  weight="medium"
-                >
+                <Typography className={styles['descript-text']} as="p" variant="content-medium" weight="medium">
                   자주 이용하는 운동 장소를 등록해 주세요
                 </Typography>
               </div>
@@ -130,12 +102,7 @@ export default function Match() {
                     2
                   </Typography>
                 </div>
-                <Typography
-                  className={styles['descript-text']}
-                  as="p"
-                  variant="content-medium"
-                  weight="medium"
-                >
+                <Typography className={styles['descript-text']} as="p" variant="content-medium" weight="medium">
                   지도에서 내 주변에 있는 운동 메이트를 확인하세요{' '}
                 </Typography>
               </div>
@@ -145,14 +112,8 @@ export default function Match() {
                     3
                   </Typography>
                 </div>
-                <Typography
-                  className={styles['descript-text']}
-                  as="p"
-                  variant="content-medium"
-                  weight="medium"
-                >
-                  채팅 신청은 근처 메이트에게만 가능해요! 실제 운동가능한 거리의
-                  메이트와 채팅을 시작하세요
+                <Typography className={styles['descript-text']} as="p" variant="content-medium" weight="medium">
+                  채팅 신청은 근처 메이트에게만 가능해요! 실제 운동가능한 거리의 메이트와 채팅을 시작하세요
                 </Typography>
               </div>
             </div>
@@ -172,23 +133,16 @@ export default function Match() {
       ) : (
         <div className={styles['map-container']}>
           <div className={styles['header']}>
-            <Link
-              href={SITE_MAP.MATCH_PLACE_LIST}
-              className={styles['places-button']}
-            >
+            <Link href={SITE_MAP.MATCH_PLACE_LIST} className={styles['places-button']}>
               <Typography as="span" variant="content-large" weight="bold">
                 운동장소 목록
               </Typography>
               <RightArrow />
             </Link>
-            <FilterBar
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onReset={handleResetFilters}
-            />
+            <FilterBar filters={filters} onFilterChange={handleFilterChange} onReset={handleResetFilters} />
           </div>
 
-          <KakaoMap />
+          <KakaoMap filters={filters} />
           <BottomNavigation />
         </div>
       )}
