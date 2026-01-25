@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useQueryState } from 'nuqs'
+import { useQueryState, parseAsFloat, parseAsInteger } from 'nuqs'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
@@ -25,32 +25,16 @@ import styles from './profile.module.css'
 
 import { useRemoteConfig } from '@/hooks/useRemoteConfig' //12월 17일 제거
 
-const TEMP_DATA = [
-  {
-    preferredExerciseId: 1,
-    exerciseTypeId: 1,
-    name: '테니스',
-    skillLevel: 'BEGINNER',
-    daysOfWeek: [true, true, true, true, true, true, true],
-    imageUrl: null,
-  },
-  {
-    preferredExerciseId: 2,
-    exerciseTypeId: 2,
-    name: '축구',
-    skillLevel: 'BEGINNER',
-    daysOfWeek: [true, false, true, true, false, true, true],
-    imageUrl: null,
-  },
-]
-
 export default function Profile() {
   const { config, isLoading: remoteConfigIsLoading } = useRemoteConfig() //12월17일 제거
 
   const router = useRouter()
   const [memberId] = useQueryState('memberId')
-  const [lat] = useQueryState('lat')
-  const [lng] = useQueryState('lng')
+  const [locationId] = useQueryState('locationId', parseAsInteger)
+  const [lat] = useQueryState('lat', parseAsFloat)
+  const [lng] = useQueryState('lng', parseAsFloat)
+  const [curLat] = useQueryState('curLat', parseAsFloat)
+  const [curLng] = useQueryState('curLng', parseAsFloat)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { trigger: createChatRoom } = usePostChatRoom()
@@ -70,10 +54,13 @@ export default function Profile() {
   }
 
   const handleBottomButton = async () => {
-    if (!memberId || !profileData) return
+    if (!memberId || !locationId || !curLat || !curLng || !profileData) return
     try {
       const res = await createChatRoom({
         receiverId: memberId,
+        exerciseLocationId: locationId,
+        requesterLatitude: curLat,
+        requesterLongitude: curLng,
       })
       router.push(
         `${SITE_MAP.CHAT_ROOM}?nickName=${profileData.nickname}&chatRoomId=${res.data.chatRoomId}&memberId=${memberId}`,
@@ -186,7 +173,7 @@ export default function Profile() {
 
       {/* 선호운동 영역 */}
       {/* 12월 17일 플래그 제거 */}
-      {config.new_feautre_flag && TEMP_DATA.length > 0 && (
+      {config.new_feautre_flag && profileData.preferredExercises.length > 0 && (
         <section className={styles['prefer-exercise-section']}>
           <div className={styles['prefer-exercise-title']}>
             <Typography as="p" variant="content-large" weight="bold">
@@ -194,7 +181,7 @@ export default function Profile() {
             </Typography>
           </div>
           <div className={styles['prefer-exercise-list']}>
-            {TEMP_DATA.map((data) => (
+            {profileData.preferredExercises.map((data) => (
               <PreferExerciseItem
                 key={`prefer-${data.preferredExerciseId}`}
                 data={data}

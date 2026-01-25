@@ -33,11 +33,29 @@
   padding: 0 20px;
 }
 
-/* 채팅 링크 유도 섹션 */
-/* .guide-container {
+.guide-container {
   height: 100%;
   width: 100%;
   background-color: var(--color-white-300);
+}
+
+.guide-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--header-height);
+  padding: 0 20px;
+}
+
+.guide-header-text {
+  text-align: center;
+}
+
+.guide-header-subtext {
+  position: absolute;
+  right: 20px;
+  color: var(--color-gray-200);
 }
 
 .guide-content {
@@ -96,9 +114,10 @@
   border-radius: 50%;
   background-color: var(--color-green);
   color: var(--color-white-300);
+  flex-shrink: 0;
 }
 .descript-text {
-  color: var(--color-gray-100);
+  color: var(--color-black);
 }
 .descript-button {
   display: flex;
@@ -111,4 +130,4 @@
   background-color: var(--color-green);
   color: var(--color-white-300);
   border-radius: 15px;
-} */
+}

@@ -9,6 +9,7 @@ import {
 } from '@/api/chat'
 import {
   ChatRoomId,
+  RequestChatRoom,
   ChatRoom,
   ChatList,
   ChatId,
@@ -29,10 +30,16 @@ import useApiGetInfinite from './useApiGetInfinite'
 
 // 채팅방 생성
 export const usePostChatRoom = () =>
-  useApiMutation<ChatRoomId, { receiverId: string }>(
+  useApiMutation<ChatRoomId, RequestChatRoom>(
     ['chatRoom/list'],
     (token, body) => createChatRoom(token, body).then(adapterChatRoomId),
-    {},
+    {
+      policy: {
+        messages: {
+          409: '해당 회원님과는 채팅방을 생성하기에 너무 멀리 있습니다.',
+        },
+      },
+    },
   )
 
 // 내 채팅방 목록 조회

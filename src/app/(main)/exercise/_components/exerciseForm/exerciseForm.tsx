@@ -1,23 +1,23 @@
 'use client'
 
-import { forwardRef, useImperativeHandle } from 'react'
+import clsx from 'clsx'
+import { forwardRef, useImperativeHandle, useState, useMemo } from 'react'
 import * as z from 'zod'
 import { format } from 'date-fns'
 import { useForm, useStore } from '@tanstack/react-form'
 
-import {
-  ExerciseContent,
-  ExercisePicture,
-  ExerciseRecordReq,
-} from '@/types/exercise'
+import { ExerciseContent, ExercisePicture, ExerciseRecordReq } from '@/types/exercise'
 import { useReadExerciseScore } from '@/hooks/api/useScoreApi'
-import WarningIcon from '@/assets/icon_warning.svg'
+import { useReadExerciseTypeList } from '@/hooks/api/useMypageApi'
+import { useReadExerciseLocationList } from '@/hooks/api/useExerciseLocationApi'
+import SingleSelector from '@/components/ui/singleSelector'
 import Typography from '@/components/ui/typography'
 
-import DateTimePicker from './dateTimePicker'
+import TimeField from './timeField'
 import InputField from './inputField'
 import TextareaField from './textareaField'
 import ImageUploader from './imageUploader'
+import LocationSearchOverlay from './locationSearchOverlay'
 import styles from './exerciseForm.module.css'
 
 export type ExerciseFormHandle = {
@@ -32,6 +32,8 @@ type Props = {
   isCreate?: boolean
 }
 
+const DIRECT_INPUT = '직접 입력'
+
 const exerciseSchema = z
   .object({
     title: z
@@ -39,39 +41,15 @@ const exerciseSchema = z
       .trim()
       .min(1, '운동 제목을 입력해주세요.')
       .max(255, '운동 제목은 최대 255자까지 입력 가능합니다.')
-      .refine(
-        (val) => val.trim().length > 0,
-        '공백만으로는 입력할 수 없습니다.',
-      ),
-    category: z
-      .string()
-      .trim()
-      .max(255, '운동 종류는 최대 255자까지 입력 가능합니다.')
-      .optional(),
+      .refine((val) => val.trim().length > 0, '공백만으로는 입력할 수 없습니다.'),
+    category: z.string().trim().max(255, '운동 종류는 최대 255자까지 입력 가능합니다.').optional(),
 
-    startedAt: z
-      .string()
-      .refine(
-        (val) => new Date(val) < new Date(),
-        '시작 일시는 현재 이전이어야 합니다.',
-      ),
-    endedAt: z
-      .string()
-      .refine(
-        (val) => new Date(val) < new Date(),
-        '종료 일시는 현재 이전이어야 합니다.',
-      ),
-    location: z
-      .string()
-      .trim()
-      .max(255, '운동 장소는 최대 255자까지 입력 가능합니다.')
-      .optional(),
+    startedAt: z.string().refine((val) => new Date(val) < new Date(), '시작 일시는 현재 이전이어야 합니다.'),
+    endedAt: z.string().refine((val) => new Date(val) < new Date(), '종료 일시는 현재 이전이어야 합니다.'),
+    location: z.string().trim().max(255, '운동 장소는 최대 255자까지 입력 가능합니다.').optional(),
     content: z
       .string()
-      .refine(
-        (val) => new TextEncoder().encode(val).length <= 65535,
-        '운동 상세 내용은 최대 65,535바이트까지 입력 가능합니다.',
-      )
+      .refine((val) => new TextEncoder().encode(val).length <= 65535, '운동 상세 내용은 최대 65,535바이트까지 입력 가능합니다.')
       .optional(),
     images: z
       .array(
@@ -79,9 +57,7 @@ const exerciseSchema = z
           z
             .instanceof(File)
             .refine(
-              (file) =>
-                file.size <= 10 * 1024 * 1024 &&
-                ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
+              (file) => file.size <= 10 * 1024 * 1024 && ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
               'jpg, jpeg, png 파일만 가능하며, 용량은 10MB 이하만 업로드할 수 있습니다.',
             ),
           z.string().url('유효하지 않은 이미지 URL입니다.'),
@@ -94,191 +70,235 @@ const exerciseSchema = z
     path: ['exerciseEndedAt'],
   })
 
-const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(
-  (
-    { defaultValues, defaultPictures = [], onSubmit, onError, isCreate = true },
-    ref,
-  ) => {
-    const { data: scoreData } = useReadExerciseScore(isCreate)
-    const existingPictures = defaultPictures.map(
-      (picture) => picture.pictureUrl,
-    )
+const ExerciseForm = forwardRef<ExerciseFormHandle, Props>(({ defaultValues, defaultPictures = [], onSubmit, onError, isCreate = true }, ref) => {
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false)
+  const [isLocationOpen, setIsLocationOpen] = useState(false)
+  const [isLocationSearchOpen, setIsLocationSearchOpen] = useState(false)
 
-    const form = useForm({
-      defaultValues: {
-        ...defaultValues,
-        images: existingPictures as (File | string)[],
-      },
-      validators: { onSubmit: exerciseSchema },
-      canSubmitWhenInvalid: true,
+  const { data: scoreData } = useReadExerciseScore(isCreate)
+  const { data: exerciseList = [] } = useReadExerciseTypeList()
+  const { data: exerciseLocationList = [] } = useReadExerciseLocationList()
 
-      onSubmitInvalid: ({ formApi }) => {
-        const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
-          string,
-          z.ZodIssue[]
-        >
-        const firstIssueArr = Object.values(fieldErrorMap)[0]
-        const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
-        onError(message)
-      },
-      onSubmit: ({ value }) => {
-        const deletedIds = defaultPictures
-          .filter((picture) => !value.images.includes(picture.pictureUrl))
-          .map((picture) => picture.pictureId)
+  const categoryOptions = useMemo(() => {
+    return [DIRECT_INPUT, ...exerciseList.map((item) => item.name)]
+  }, [exerciseList])
 
-        const newFiles = value.images.filter(
-          (v): v is File => v instanceof File,
-        )
+  const locationOptions = useMemo(() => {
+    return [DIRECT_INPUT, ...exerciseLocationList.map((item) => item.name)]
+  }, [exerciseLocationList])
 
-        const payload: ExerciseRecordReq = {
-          ...value,
-          deletedIds,
-          images: newFiles,
-        }
+  const [selectedOption, setSelectedOption] = useState<string | null>(() => {
+    if (!defaultValues.category) return null
+    const isKnown = exerciseList.some((item) => item.name === defaultValues.category)
+    return isKnown ? defaultValues.category : DIRECT_INPUT
+  })
 
-        onSubmit(payload)
-      },
-    })
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(() => {
+    if (!defaultValues.location) return null
+    const isKnown = exerciseLocationList.some((item) => item.name === defaultValues.location)
+    return isKnown ? defaultValues.location : DIRECT_INPUT
+  })
 
-    useImperativeHandle(ref, () => ({
-      submit: () => {
-        form.handleSubmit()
-      },
-    }))
-    const startedDate = useStore(form.store, (state) => state.values.startedAt)
+  const existingPictures = defaultPictures.map((picture) => picture.pictureUrl)
 
-    const calculateScoreDescription = (): string => {
-      if (!isCreate || !scoreData || !startedDate) {
-        return ''
+  const form = useForm({
+    defaultValues: {
+      ...defaultValues,
+      images: existingPictures as (File | string)[],
+    },
+    validators: { onSubmit: exerciseSchema },
+    canSubmitWhenInvalid: true,
+
+    onSubmitInvalid: ({ formApi }) => {
+      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<string, z.ZodIssue[]>
+      const firstIssueArr = Object.values(fieldErrorMap)[0]
+      const message = firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.'
+      onError(message)
+    },
+    onSubmit: ({ value }) => {
+      const deletedIds = defaultPictures.filter((picture) => !value.images.includes(picture.pictureUrl)).map((picture) => picture.pictureId)
+
+      const newFiles = value.images.filter((v): v is File => v instanceof File)
+
+      const payload: ExerciseRecordReq = {
+        ...value,
+        deletedIds,
+        images: newFiles,
       }
 
-      const selectedDate = new Date(startedDate)
-      if (scoreData.currentScore >= scoreData.maxScore) {
-        return '점수가 최대치에 도달했어요!'
-      }
+      onSubmit(payload)
+    },
+  })
 
-      const validWindowStart = new Date(scoreData.validPeriod.startedAt)
-      if (selectedDate < validWindowStart) {
-        return '점수를 획득할 수 있는 기간이 지났어요'
-      }
-      const selectedDateStr = format(selectedDate, 'yyyy-MM-dd')
-      if (!scoreData.ValidDate.includes(selectedDateStr)) {
-        return '이 날은 이미 점수를 획득했어요'
-      }
+  useImperativeHandle(ref, () => ({
+    submit: () => {
+      form.handleSubmit()
+    },
+  }))
+  const startedDate = useStore(form.store, (state) => state.values.startedAt)
 
+  const calculateScoreDescription = (): string => {
+    if (!isCreate || !scoreData || !startedDate) {
       return ''
     }
-    const scoreDescription = calculateScoreDescription()
 
-    return (
-      <div className={styles['container']}>
-        <form
-          className={styles['form']}
-          onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit(e)
-          }}
-        >
-          <form.Field name="title">
-            {(field) => (
-              <InputField
-                className={styles['form-field']}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                label="제목 *"
-                id="title"
-                maxLength={255}
-                placeholder="제목을 입력해주세요."
-              />
-            )}
-          </form.Field>
+    const selectedDate = new Date(startedDate)
+    if (scoreData.currentScore >= scoreData.maxScore) {
+      return '점수가 최대치에 도달했어요!'
+    }
 
-          <form.Field name="startedAt">
-            {(startedAtField) => (
-              <form.Field name="endedAt">
-                {(endedAtField) => (
-                  <div className={styles['form-field']}>
-                    <DateTimePicker
-                      label="운동 시간 *"
-                      startedAt={startedAtField.state.value}
-                      endedAt={endedAtField.state.value}
-                      onStartedAtChange={(value) =>
-                        startedAtField.handleChange(value)
-                      }
-                      onEndedAtChange={(value) =>
-                        endedAtField.handleChange(value)
-                      }
-                    />
-                    {scoreDescription && (
-                      <div className={styles['score-description']}>
-                        <WarningIcon className={styles['warning-icon']} />
-                        <Typography
-                          as="span"
-                          variant="content-small"
-                          className={styles['description']}
-                        >
-                          {scoreDescription}
-                        </Typography>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </form.Field>
-            )}
-          </form.Field>
+    const validWindowStart = new Date(scoreData.validPeriod.startedAt)
+    if (selectedDate < validWindowStart) {
+      return '점수를 획득할 수 있는 기간이 지났어요'
+    }
+    const selectedDateStr = format(selectedDate, 'yyyy-MM-dd')
+    if (!scoreData.ValidDate.includes(selectedDateStr)) {
+      return '이 날은 이미 점수를 획득했어요'
+    }
 
-          <form.Field name="category">
-            {(field) => (
-              <InputField
-                className={styles['form-field']}
-                value={field.state.value ?? ''}
-                onChange={(e) => field.handleChange(e.target.value)}
-                label="운동 종류"
-                id="category"
-                maxLength={255}
-                placeholder="운동 종류를 입력해주세요."
-              />
-            )}
-          </form.Field>
+    return ''
+  }
+  const scoreDescription = calculateScoreDescription()
 
-          <form.Field name="location">
-            {(field) => (
-              <InputField
-                className={styles['form-field']}
-                value={field.state.value ?? ''}
-                onChange={(e) => field.handleChange(e.target.value)}
-                label="장소"
-                id="location"
-                maxLength={255}
-                placeholder="운동장소를 입력해주세요."
-              />
-            )}
-          </form.Field>
+  return (
+    <div className={styles['container']}>
+      <form
+        className={styles['form']}
+        onSubmit={(e) => {
+          e.preventDefault()
+          form.handleSubmit(e)
+        }}
+      >
+        <form.Field name="title">
+          {(field) => (
+            <InputField
+              className={styles['form-field']}
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+              label="제목 *"
+              id="title"
+              maxLength={255}
+              placeholder="제목을 입력해주세요."
+            />
+          )}
+        </form.Field>
 
-          <form.Field name="content">
-            {(field) => (
-              <TextareaField
-                className={styles['form-field']}
-                value={field.state.value ?? ''}
-                onChange={(e) => field.handleChange(e.target.value)}
-                label="내용"
-                id="content"
+        <form.Field name="startedAt">
+          {(startedAtField) => (
+            <form.Field name="endedAt">
+              {(endedAtField) => (
+                <div className={styles['form-field']}>
+                  <TimeField
+                    label="운동 시간 *"
+                    startedAt={startedAtField.state.value}
+                    endedAt={endedAtField.state.value}
+                    onStartedAtChange={(value) => startedAtField.handleChange(value)}
+                    onEndedAtChange={(value) => endedAtField.handleChange(value)}
+                    description={scoreDescription}
+                  />
+                </div>
+              )}
+            </form.Field>
+          )}
+        </form.Field>
+
+        <form.Field name="category">
+          {(field) => (
+            <div className={styles['form-field']}>
+              <Typography as="span" variant="content-large" weight="medium">
+                운동 종류
+              </Typography>
+
+              <button
+                type="button"
+                className={clsx(styles['input-trigger'], {
+                  [styles['placeholder']]: !selectedOption,
+                })}
+                onClick={() => setIsCategoryOpen(true)}
+              >
+                {selectedOption || '운동 종류를 선택해주세요.'}
+              </button>
+
+              <SingleSelector
+                isOpen={isCategoryOpen}
+                onClose={() => setIsCategoryOpen(false)}
+                options={categoryOptions}
+                value={selectedOption}
+                onSelect={(val) => {
+                  setSelectedOption(val)
+                  if (val === DIRECT_INPUT || val === null) {
+                    field.handleChange('')
+                  } else {
+                    field.handleChange(val)
+                  }
+                }}
               />
-            )}
-          </form.Field>
-          <form.Field name="images">
-            {(field) => (
-              <ImageUploader
-                files={field.state.value ?? []}
-                setFiles={(files) => field.handleChange(files)}
+
+              {selectedOption === DIRECT_INPUT && (
+                <InputField id="category-direct" label="" value={field.state.value ?? ''} onChange={(e) => field.handleChange(e.target.value)} placeholder="운동 종류를 입력해주세요." />
+              )}
+            </div>
+          )}
+        </form.Field>
+
+        <form.Field name="location">
+          {(field) => (
+            <div className={styles['form-field']}>
+              <Typography as="span" variant="content-large" weight="medium">
+                장소
+              </Typography>
+
+              <button
+                type="button"
+                className={clsx(styles['input-trigger'], {
+                  [styles['placeholder']]: !selectedLocation,
+                })}
+                onClick={() => setIsLocationOpen(true)}
+              >
+                {selectedLocation || '운동 장소를 선택해주세요.'}
+              </button>
+
+              <SingleSelector
+                isOpen={isLocationOpen}
+                onClose={() => setIsLocationOpen(false)}
+                options={locationOptions}
+                value={selectedLocation}
+                onSelect={(val) => {
+                  if (val === null) {
+                    setSelectedLocation(null)
+                    field.handleChange('')
+                  } else if (val === DIRECT_INPUT) {
+                    setIsLocationOpen(false)
+                    setIsLocationSearchOpen(true)
+                  } else {
+                    setSelectedLocation(val)
+                    field.handleChange(val)
+                  }
+                }}
               />
-            )}
-          </form.Field>
-        </form>
-      </div>
-    )
-  },
-)
+
+              {isLocationSearchOpen && (
+                <LocationSearchOverlay
+                  onClose={() => setIsLocationSearchOpen(false)}
+                  onConfirm={(placeName: string) => {
+                    setSelectedLocation(placeName)
+                    field.handleChange(placeName)
+                    setIsLocationSearchOpen(false)
+                  }}
+                />
+              )}
+            </div>
+          )}
+        </form.Field>
+
+        <form.Field name="content">
+          {(field) => <TextareaField className={styles['form-field']} value={field.state.value ?? ''} onChange={(e) => field.handleChange(e.target.value)} label="내용" id="content" />}
+        </form.Field>
+        <form.Field name="images">{(field) => <ImageUploader files={field.state.value ?? []} setFiles={(files) => field.handleChange(files)} />}</form.Field>
+      </form>
+    </div>
+  )
+})
 
 ExerciseForm.displayName = 'ExerciseForm'
 export default ExerciseForm

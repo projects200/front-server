@@ -2,6 +2,13 @@ export type ChatRoomIdDto = {
   chatRoomId: number
 }
 
+export type RequestChatRoomDto = {
+  receiverId: string
+  exerciseLocationId: number
+  requesterLatitude: number
+  requesterLongitude: number
+}
+
 export type ChatRoomDto = ChatRoomIdDto & {
   otherMemberId: string
   otherMemberNickname: string

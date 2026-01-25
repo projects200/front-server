@@ -10,14 +10,15 @@ import styles from './clusterList.module.css'
 
 type Props = {
   members: MemberLocationFlattened[]
+  myPosition: { lat: number; lng: number }
 }
 
-export default function ClusterList({ members }: Props) {
+export default function ClusterList({ members, myPosition }: Props) {
   const router = useRouter()
 
   const handleButton = (member: MemberLocationFlattened) => {
     router.replace(
-      `${SITE_MAP.MATCH_PROFILE}?memberId=${member.memberId}&lat=${member.location.latitude}&lng=${member.location.longitude}`,
+      `${SITE_MAP.MATCH_PROFILE}?memberId=${member.memberId}&locationId=${member.location.exerciseLocationId}&lat=${member.location.latitude}&lng=${member.location.longitude}&curLat=${myPosition.lat}&curLng=${myPosition.lng}`,
     )
   }
 

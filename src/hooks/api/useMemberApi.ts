@@ -8,7 +8,11 @@ import {
   adapterMemberProfileList,
 } from '@/lib/adapters/member.adapter'
 import { adaptExerciseRange } from '@/lib/adapters/exercise.adapter'
-import { MemberScore, MemberProfile } from '@/types/member'
+import {
+  MemberScore,
+  MemberProfile,
+  MemberLocationParams,
+} from '@/types/member'
 import { ExerciseRange } from '@/types/exercise'
 import SITE_MAP from '@/constants/siteMap.constant'
 
@@ -25,11 +29,22 @@ export const useReadMemberScore = () =>
   )
 
 // 다른 회원 운동장소 목록 조회
-export const useReadMemberExerciseLocation = () =>
+export const useReadMemberExerciseLocation = (
+  params: MemberLocationParams | null,
+) =>
   useApiGet<MemberProfile[]>(
-    ['member/exerciseLocation'],
-    (token) => readMemberExerciseLocation(token).then(adapterMemberProfileList),
-    {},
+    ['member/exerciseLocation', params],
+    (token) =>
+      params
+        ? readMemberExerciseLocation(token, params).then(
+            adapterMemberProfileList,
+          )
+        : Promise.resolve([]),
+    {
+      shouldFetch: !!params,
+      revalidateOnFocus: false,
+      keepPreviousData: true,
+    },
   )
 
 // 다른 회원 캘린더 조회(운동 기록 기간 조회)

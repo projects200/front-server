@@ -3,16 +3,17 @@ import { useQueryState, parseAsInteger } from 'nuqs'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
+import Typography from '@/components/ui/typography'
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { useToast } from '@/hooks/useToast'
 import { isValidExerciseId } from '@/utils/validation'
 import { useReadExercise } from '@/hooks/api/useExerciseApi'
+import { formatExerciseDetailTime } from '@/utils/dataFormatting'
 
 import ImageField from './_components/imageField'
 import InputField from '../_components/exerciseForm/inputField'
 import TextareaField from '../_components/exerciseForm/textareaField'
-import DateTimePicker from '../_components/exerciseForm/dateTimePicker'
 import KebabModal from './_components/kebabModal'
 import styles from './detail.module.css'
 
@@ -53,13 +54,24 @@ export default function Detail() {
           id="title"
           readonly={true}
         />
+
         <div className={styles['data-field']}>
-          <DateTimePicker
-            label="운동 시간"
-            startedAt={data.startedAt}
-            endedAt={data.endedAt}
-            readonly={true}
-          />
+          <Typography variant="content-large" weight="medium">
+            운동 시간
+          </Typography>
+          <div className={styles['time-container']}>
+            <div className={styles['time']}>
+              <Typography as="span" variant="content-medium">
+                {formatExerciseDetailTime(data.startedAt)}
+              </Typography>
+            </div>
+            <span className={styles['dash']} />
+            <div className={styles['time']}>
+              <Typography as="span" variant="content-medium">
+                {formatExerciseDetailTime(data.endedAt)}
+              </Typography>
+            </div>
+          </div>
         </div>
 
         {data.category && (
@@ -80,17 +92,16 @@ export default function Detail() {
             readonly={true}
           />
         )}
+        {data.content && (
+          <TextareaField
+            className={styles['text-field']}
+            value={data.content}
+            label="내용"
+            id="content"
+            readonly={true}
+          />
+        )}
       </div>
-
-      {data.content && (
-        <TextareaField
-          className={styles['text-field']}
-          value={data.content}
-          label="내용"
-          id="content"
-          readonly={true}
-        />
-      )}
       <KebabModal
         isOpen={isBottomModalOpen}
         setIsOpen={setIsBottomModalOpen}
