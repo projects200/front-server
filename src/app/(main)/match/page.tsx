@@ -11,7 +11,7 @@ import Typography from '@/components/ui/typography'
 import RightArrow from '@/assets/icon_right_arrow.svg'
 
 import FilterBar from './_components/filterBar'
-import type { FilterItems } from './_components/filterBar'
+import type { FilterItems } from '@/types/filter'
 import KakaoMap from './_components/kakaoMap'
 import styles from './match.module.css'
 
