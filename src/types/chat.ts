@@ -56,3 +56,10 @@ export type SocketChatContent = ChatId & {
   chatType: string
   sentAt: string
 }
+
+export type ChatSocketResponse = {
+  succeed: boolean
+  type: 'TALK' | 'PONG' | 'ERROR' | 'SYSTEM_BANNED' | 'SYSTEM_LEAVE'
+  message: string | null
+  data: SocketChatContent | string | null
+}
