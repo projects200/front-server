@@ -2,6 +2,13 @@ export type ChatRoomIdDto = {
   chatRoomId: number
 }
 
+export type RequestChatRoomDto = {
+  receiverId: string
+  exerciseLocationId: number
+  requesterLatitude: number
+  requesterLongitude: number
+}
+
 export type ChatRoomDto = ChatRoomIdDto & {
   otherMemberId: string
   otherMemberNickname: string
@@ -38,4 +45,14 @@ export type NewChatDto = {
   newChats: ChatContentDto[]
   opponentActive: boolean
   blockActive: boolean
+}
+
+export type SocketChatContentDto = ChatIdDto & {
+  senderId: string
+  senderNickname: string
+  senderProfileUrl: string
+  senderThumbnailUrl: string
+  chatContent: string
+  chatType: string
+  sentAt: string
 }

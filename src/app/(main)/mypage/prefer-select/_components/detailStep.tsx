@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 
-import { PreferExercises } from '@/types/mypage'
+import { PreferExercise } from '@/types/mypage'
 import ExerciseImg from '@/components/commons/exerciseImg'
 import Typography from '@/components/ui/typography'
 import {
@@ -14,18 +14,18 @@ import styles from './detailStep.module.css'
 
 const WEEK_DAYS = ['월', '화', '수', '목', '금', '토', '일']
 const SKILL_LEVELS = [
-  'NOVICE',
   'BEGINNER',
+  'ROOKIE',
   'INTERMEDIATE',
   'ADVANCED',
-  'EXPERT',
-  'PROFESSIONAL',
+  'SKILLED',
+  'PRO',
 ]
 
 type Props = {
-  myExercises: PreferExercises[]
-  onUpdateDay: (id: number, daysOfWeek: boolean[]) => void
-  onUpdateSkill: (id: number, skillLevel: string) => void
+  myExercises: PreferExercise[]
+  onUpdateDay: (exerciseIndex: number, dayIndex: number) => void
+  onUpdateSkill: (exerciseIndex: number, skillLevel: string) => void
 }
 
 export default function DetailStep({
@@ -33,21 +33,10 @@ export default function DetailStep({
   onUpdateDay,
   onUpdateSkill,
 }: Props) {
-  // 요일 토글 헬퍼 함수
-  const handleDayToggle = (
-    exerciseId: number,
-    currentDays: boolean[],
-    dayIndex: number,
-  ) => {
-    const newDays = [...currentDays]
-    newDays[dayIndex] = !newDays[dayIndex]
-    onUpdateDay(exerciseId, newDays)
-  }
-
   return (
     <div className={styles['content']}>
       <div className={styles['list-container']}>
-        {myExercises.map((exercise) => (
+        {myExercises.map((exercise, index) => (
           <div
             key={`card-${exercise.exerciseTypeId}`}
             className={styles['card']}
@@ -81,20 +70,14 @@ export default function DetailStep({
                 운동 주기
               </Typography>
               <div className={styles['day-group']}>
-                {WEEK_DAYS.map((day, index) => (
+                {WEEK_DAYS.map((day, dayIndex) => (
                   <button
-                    key={`${exercise.exerciseTypeId}-day-${index}`}
+                    key={`${exercise.exerciseTypeId}-day-${dayIndex}`}
                     className={clsx(
                       styles['day-chip'],
-                      exercise.daysOfWeek[index] && styles['selected'],
+                      exercise.daysOfWeek[dayIndex] && styles['selected'],
                     )}
-                    onClick={() =>
-                      handleDayToggle(
-                        exercise.exerciseTypeId,
-                        exercise.daysOfWeek,
-                        index,
-                      )
-                    }
+                    onClick={() => onUpdateDay(index, dayIndex)}
                   >
                     <Typography
                       as="span"
@@ -126,9 +109,7 @@ export default function DetailStep({
                       styles['skill-chip'],
                       exercise.skillLevel === level && styles['selected'],
                     )}
-                    onClick={() =>
-                      onUpdateSkill(exercise.exerciseTypeId, level)
-                    }
+                    onClick={() => onUpdateSkill(index, level)}
                   >
                     <Typography
                       as="span"

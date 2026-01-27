@@ -1,16 +1,26 @@
-import { ChatRoomId, ChatRoom, ChatList, ChatId, NewChat } from '@/types/chat'
+import {
+  ChatRoomId,
+  RequestChatRoom,
+  ChatRoom,
+  ChatList,
+  ChatId,
+  NewChat,
+} from '@/types/chat'
+import { adapterRequestChatRoomToDto } from '@/lib/adapters/chat.adapter'
+import { RequestChatRoomDto } from '@/types/dto/chat.dto'
 import { fetchWrapper } from '@/utils/fetchWrapper'
 
 // 채팅방 생성
 export function createChatRoom(
   token: string,
-  data: { receiverId: string },
+  data: RequestChatRoom,
 ): Promise<ChatRoomId> {
+  const dto: RequestChatRoomDto = adapterRequestChatRoomToDto(data)
   return fetchWrapper<ChatRoomId>(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/chat-rooms`,
     {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(dto),
     },
     token,
   )
@@ -88,6 +98,18 @@ export function deleteChatRoom(
     {
       method: 'DELETE',
     },
+    token,
+  )
+}
+
+// 웹소켓 티켓 발급
+export function getChatTicket(
+  token: string,
+  chatroomId: number,
+): Promise<{ chatTicket: string }> {
+  return fetchWrapper<{ chatTicket: string }>(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/v1/chat-rooms/${chatroomId}/ticket`,
+    { method: 'POST' },
     token,
   )
 }

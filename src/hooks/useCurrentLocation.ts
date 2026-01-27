@@ -7,23 +7,23 @@ type Location = {
 
 type UseCurrentLocationReturn = {
   location: Location | null
-  loading: boolean
+  isLoading: boolean
   error: GeolocationPositionError | null
   getLocation: () => Promise<Location>
 }
 
 export default function useCurrentLocation(): UseCurrentLocationReturn {
   const [location, setLocation] = useState<Location | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<GeolocationPositionError | null>(null)
 
   const getLocation = useCallback((): Promise<Location> => {
-    setLoading(true)
+    setIsLoading(true)
     setError(null)
 
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        setLoading(false)
+        setIsLoading(false)
         reject(new Error('Geolocation not supported'))
         return
       }
@@ -33,12 +33,12 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
           const { latitude, longitude } = position.coords
 
           setLocation({ latitude, longitude })
-          setLoading(false)
+          setIsLoading(false)
           resolve({ latitude, longitude })
         },
         (err) => {
           setError(err)
-          setLoading(false)
+          setIsLoading(false)
           reject(err)
         },
         {
@@ -50,5 +50,5 @@ export default function useCurrentLocation(): UseCurrentLocationReturn {
     })
   }, [])
 
-  return { location, loading, error, getLocation }
+  return { location, isLoading, error, getLocation }
 }

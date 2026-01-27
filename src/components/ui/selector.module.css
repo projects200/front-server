@@ -1,0 +1,73 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-overlay);
+  z-index: 2000;
+}
+
+.bottom-sheet {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-white-300);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  z-index: 2001;
+  animation: slideUp 0.3s ease-out;
+  max-height: 50vh;
+}
+
+.option-list {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.option-item {
+  height: 60px;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.check-icon {
+  height: 24px;
+  width: 24px;
+}
+
+.bottom-sheet-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-gray-300);
+}
+
+.close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .bottom-sheet {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}

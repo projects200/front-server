@@ -2,14 +2,30 @@ import {
   updateUserProfile,
   readOtherUserFullProfile,
   readUserFullProfile,
+  readExerciseTypeList,
+  readPreferredExerciseList,
+  createPreferredExerciseList,
+  updatePreferredExerciseList,
+  deletePreferredExerciseList
 } from '@/api/mypage'
-import { adapterUserFullProfile } from '@/lib/adapters/mypage.adapter'
-import { UserProfile, UserFullProfile } from '@/types/mypage'
-import { UserProfileDto } from '@/types/dto/mypage.dto'
+import {
+  adapterUserFullProfile,
+  adapterExerciseItemList,
+  adapterPreferExerciseList,
+} from '@/lib/adapters/mypage.adapter'
+import {
+  UserProfile,
+  UserFullProfile,
+  ExerciseItem,
+  PreferExercise,
+  PreferExerciseForm,
+} from '@/types/mypage'
+import { UserProfileDto, PreferExerciseDto } from '@/types/dto/mypage.dto'
 
 import useApiGet from './useApiGet'
 import useApiMutation from './useApiMutation'
 
+/***  프로필  ***/
 // 유저 전체 프로필 조회
 export const useReadUserFullProfile = () =>
   useApiGet<UserFullProfile>(
@@ -42,5 +58,46 @@ export const usePutUserProfile = () =>
   useApiMutation<UserProfileDto, UserProfile>(
     ['mypage/fullProfile'],
     (token, body) => updateUserProfile(token, body),
+    {},
+  )
+
+/***  선호운동  ***/
+// 선호운동 종류 조회
+export const useReadExerciseTypeList = () =>
+  useApiGet<ExerciseItem[]>(
+    ['exerciseItem'],
+    (token) => readExerciseTypeList(token).then(adapterExerciseItemList),
+    {},
+  )
+
+// 유저 선호운동 조회
+export const useReadPreferredExerciseList = () =>
+  useApiGet<PreferExercise[]>(
+    ['mypage/preferExercise'],
+    (token) => readPreferredExerciseList(token).then(adapterPreferExerciseList),
+    {},
+  )
+
+// 유저 선호운동 생성
+export const usePostPreferredExerciseFormList = () =>
+  useApiMutation<PreferExerciseDto[], PreferExerciseForm[]>(
+    ['mypage/preferExercise'],
+    (token, body) => createPreferredExerciseList(token, body),
+    {},
+  )
+
+// 유저 선호운동 수정
+export const usePatchPreferredExerciseFormList = () =>
+  useApiMutation<PreferExerciseDto[], PreferExerciseForm[]>(
+    ['mypage/preferExercise'],
+    (token, body) => updatePreferredExerciseList(token, body),
+    {},
+  )
+
+// 유저 선호운동 삭제
+export const useDeletePreferredExerciseFormList = () =>
+  useApiMutation<null, number[]>(
+    ['mypage/preferExercise'],
+    (token, body) => deletePreferredExerciseList(token, body),
     {},
   )

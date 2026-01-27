@@ -7,10 +7,13 @@ import { useAuth } from 'react-oidc-context'
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { isSameMinute } from '@/utils/dataFormatting'
-import { useReadChatMessages, useDeleteChatRoom, useGetChatTicket } from '@/hooks/api/useChatApi'
-import { useChatSocket } from '@/hooks/useChatSocket'
-import type { ChatContent, SocketChatContent } from '@/types/chat'
-import type { ChatSocketResponse } from '@/types/chat'
+import {
+  usePostChatMessage,
+  useReadChatMessages,
+  useReadNewChatMessages,
+  useDeleteChatRoom,
+} from '@/hooks/api/useChatApi'
+import { ChatContent } from '@/types/chat'
 import { logAnalyticsEvent } from '@/lib/firebase/analytics'
 
 import KebabModal from './_components/kebabModal'
@@ -22,158 +25,113 @@ import ChatInput from './_components/chatInput'
 import styles from './room.module.css'
 
 export default function ChatRoom() {
+  // Hooks
   const { user } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  // URL 파라미터에서 채팅방 정보 추출
   const chatRoomId = Number(searchParams.get('chatRoomId'))
   const nickName = searchParams.get('nickName')
   const memberId = searchParams.get('memberId')
 
+  // State
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visibleDate, setVisibleDate] = useState<string | null>(null)
   const [isDateVisible, setIsDateVisible] = useState(false)
-  const [ticket, setTicket] = useState<string | null>(null)
-  const [isOtherUserLeft, setIsOtherUserLeft] = useState(false)
-  const [isBlocked, setIsBlocked] = useState(false)
 
+  // Refs
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const messageContainerRef = useRef<HTMLDivElement>(null)
   const messageEndRef = useRef<HTMLDivElement>(null)
   const prevScrollHeightRef = useRef<number | null>(null)
 
-  const { messages, hasNextPage, opponentActive, blockActive, setSize, mutate, isFetchingPrevMessages } = useReadChatMessages(chatRoomId)
-  const { trigger: getTicket } = useGetChatTicket()
+  // API Hooks
+  const {
+    messages,
+    hasNextPage,
+    opponentActive,
+    blockActive,
+    setSize,
+    mutate,
+    isFetchingPrevMessages,
+  } = useReadChatMessages(chatRoomId)
+  const { data: newMessagesData } = useReadNewChatMessages(chatRoomId)
+  const { trigger: sendMessage } = usePostChatMessage(chatRoomId)
   const { trigger: leaveChatRoom } = useDeleteChatRoom(chatRoomId)
-
-  // 초기 API 로드 시 상대방 활성화/차단 상태 동기화
-  useEffect(() => {
-    setIsOtherUserLeft(!opponentActive)
-    setIsBlocked(blockActive)
-  }, [opponentActive, blockActive])
-
-  // 티켓 발급
-  useEffect(() => {
-    const fetchTicket = async () => {
-      if (!chatRoomId) return
-      try {
-        const res = await getTicket({ chatroomId: chatRoomId })
-        setTicket(res.data.chatTicket)
-      } catch (err) {
-        console.error('티켓 발급 실패:', err)
-      }
-    }
-    fetchTicket()
-  }, [chatRoomId, getTicket])
-
-  const handleSocketEvent = useCallback(
-    (response: ChatSocketResponse) => {
-      const { type, data, message } = response
-
-      if (type === 'TALK' && data) {
-        const socketData = data as SocketChatContent
-        // const isMine = socketData.senderId === user?.profile?.sub
-
-        // if (!isMine && isOtherUserLeft) {
-        //   setIsOtherUserLeft(false)
-        //   setIsBlocked(false)
-        // }
-
-        mutate((currentData) => {
-          if (!currentData) return []
-
-          const newData = [...currentData]
-          const isDuplicate = newData.some((page) => page.content.some((chat) => chat.chatId === socketData.chatId))
-
-          if (isDuplicate) return currentData
-
-          const newChatEntry: ChatContent = {
-            ...socketData,
-            mine: socketData.senderId === user?.profile?.sub,
-          }
-
-          newData[0] = {
-            ...newData[0],
-            content: [...newData[0].content, newChatEntry],
-          }
-          return newData
-        }, false)
-      }
-
-      if (message === null) return
-
-      if (type === 'SYSTEM_LEAVE') {
-        setIsOtherUserLeft(true)
-
-        mutate((currentData) => {
-          if (!currentData) return []
-          const newData = [...currentData]
-
-          const systemEntry: ChatContent = {
-            chatId: Date.now(),
-            chatContent: message,
-            sentAt: new Date().toISOString(),
-            mine: false,
-            chatType: 'SYSTEM',
-            senderId: '',
-            senderNickname: '',
-            senderProfileUrl: '',
-            senderThumbnailUrl: '',
-          }
-
-          newData[0] = { ...newData[0], content: [...newData[0].content, systemEntry] }
-          return newData
-        }, false)
-        return
-      }
-
-      if (type === 'SYSTEM_BANNED') {
-        setIsBlocked(true)
-        return
-      }
-
-      if (type === 'ERROR') {
-        console.log(message || '메시지 전송에 실패했습니다.')
-      }
-    },
-    [mutate, user?.profile?.sub],
-  )
-
-  // 웹소켓 연결
-  const { sendMessage: sendMessageBySocket } = useChatSocket(chatRoomId, ticket, handleSocketEvent)
+  const otherUserLeft = !opponentActive
+  const isBlockActive = blockActive || newMessagesData?.blockActive || false
 
   // 메세지 전송 핸들러
-
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
     if (!message.trim() || !user?.profile) return
-    sendMessageBySocket(message)
-    logAnalyticsEvent('chat_sent', {
-      screen_name: 'chat_room',
-      event_category: 'engagement',
-      event_label: 'chat_message',
-    })
 
-    // 추후 응답속도가 느려 낙관적 업데이트가 필요할 시 재사용
-    // const tempMessage: ChatContent = {
-    //   chatId: Date.now(),
-    //   chatContent: message,
-    //   sentAt: new Date().toISOString(),
-    //   mine: true,
-    //   chatType: 'USER',
-    //   senderId: user.profile.sub,
-    //   senderNickname: '',
-    //   senderProfileUrl: '',
-    //   senderThumbnailUrl: '',
-    // }
-    // mutate((currentData) => {
-    //   if (!currentData) return []
-    //   const newData = [...currentData]
-    //   newData[0] = {
-    //     ...newData[0],
-    //     content: [...newData[0].content, tempMessage],
-    //   }
-    //   return newData
-    // }, false)
+    const tempChatId = Date.now()
+    const tempMessage: ChatContent = {
+      chatId: tempChatId,
+      chatContent: message,
+      sentAt: new Date().toISOString(),
+      mine: true,
+      chatType: 'USER',
+      senderId: user.profile.sub,
+      senderNickname: '',
+      senderProfileUrl: '',
+      senderThumbnailUrl: '',
+    }
+    mutate((currentData) => {
+      if (!currentData) return []
+      const newData = [...currentData]
+      newData[0] = {
+        ...newData[0],
+        content: [...newData[0].content, tempMessage],
+      }
+      return newData
+    }, false)
+
+    try {
+      const response = await sendMessage({ content: message })
+      const realChatId = response.data.chatId
+
+      mutate((currentData) => {
+        if (!currentData) return []
+
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: [...page.content],
+        }))
+
+        const pageWithTempMessage = newData.find((page) =>
+          page.content.some((chat) => chat.chatId === tempChatId),
+        )
+
+        if (pageWithTempMessage) {
+          const messageToUpdate = pageWithTempMessage.content.find(
+            (chat) => chat.chatId === tempChatId,
+          )
+          if (messageToUpdate) {
+            messageToUpdate.chatId = realChatId
+          }
+        }
+
+        return newData
+      }, false)
+
+      // 채팅 데이터 로그 이벤트
+      logAnalyticsEvent('chat_sent', {
+        screen_name: 'chat_room',
+        event_category: 'engagement',
+        event_label: 'chat_message',
+      })
+    } catch {
+      mutate((currentData) => {
+        if (!currentData) return []
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: page.content.filter((chat) => chat.chatId !== tempChatId),
+        }))
+        return newData
+      }, false)
+    }
   }
 
   // 채팅방 나가기 핸들러
@@ -219,6 +177,35 @@ export default function ChatRoom() {
     }
   }, [hasNextPage, isFetchingPrevMessages, setSize])
 
+  // 새로운 메시지에 대한 처리 로직
+  useEffect(() => {
+    if (newMessagesData && newMessagesData.newChats.length > 0) {
+      mutate((currentData) => {
+        if (!currentData) return []
+
+        const newData = currentData.map((page) => ({
+          ...page,
+          content: [...page.content],
+        }))
+
+        const existingChatIds = new Set(newData[0].content.map((c) => c.chatId))
+        const chatsToAdd = newMessagesData.newChats.filter(
+          (newChat) => !existingChatIds.has(newChat.chatId),
+        )
+
+        if (chatsToAdd.length > 0) {
+          chatsToAdd.sort(
+            (a, b) =>
+              new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime(),
+          )
+          newData[0].content.push(...chatsToAdd)
+        }
+
+        return newData
+      }, false)
+    }
+  }, [newMessagesData, mutate])
+
   // 컴포넌트 언마운트시 타이머 정리
   useEffect(() => {
     return () => {
@@ -239,7 +226,7 @@ export default function ChatRoom() {
     }
   }, [handleScroll])
 
-  // 새 메시지 수신 시 하단 스크롤 유지
+  // 스크롤 위치 조정 로직
   useEffect(() => {
     const container = messageContainerRef.current
     if (!container) return
@@ -271,7 +258,10 @@ export default function ChatRoom() {
   return (
     <div className={styles['container']}>
       {/* 헤더 영역 */}
-      <Header rightIcon={<KebabIcon />} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+      <Header
+        rightIcon={<KebabIcon />}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
         {nickName}
       </Header>
 
@@ -281,9 +271,22 @@ export default function ChatRoom() {
         <div className={styles['message-container']} ref={messageContainerRef}>
           {messages.map((chat, index) => {
             const prevChat = index > 0 ? messages[index - 1] : null
-            const nextChat = index < messages.length - 1 ? messages[index + 1] : null
-            const isContinuous = !!(prevChat && prevChat.senderId === chat.senderId && prevChat.chatType === 'USER' && chat.chatType === 'USER' && isSameMinute(prevChat.sentAt, chat.sentAt))
-            const shouldShowTime = !nextChat || nextChat.senderId !== chat.senderId || nextChat.chatType !== 'USER' || !isSameMinute(nextChat.sentAt, chat.sentAt)
+            const nextChat =
+              index < messages.length - 1 ? messages[index + 1] : null
+
+            const isContinuous = !!(
+              prevChat &&
+              prevChat.senderId === chat.senderId &&
+              prevChat.chatType === 'USER' &&
+              chat.chatType === 'USER' &&
+              isSameMinute(prevChat.sentAt, chat.sentAt)
+            )
+
+            const shouldShowTime =
+              !nextChat ||
+              nextChat.senderId !== chat.senderId ||
+              nextChat.chatType !== 'USER' ||
+              !isSameMinute(nextChat.sentAt, chat.sentAt)
 
             if (chat.chatType === 'SYSTEM') {
               return (
@@ -295,11 +298,20 @@ export default function ChatRoom() {
 
             return chat.mine ? (
               <div key={chat.chatId} data-date={chat.sentAt}>
-                <MyMessage chat={chat} isContinuous={isContinuous} shouldShowTime={shouldShowTime} />
+                <MyMessage
+                  chat={chat}
+                  isContinuous={isContinuous}
+                  shouldShowTime={shouldShowTime}
+                />
               </div>
             ) : (
               <div key={chat.chatId} data-date={chat.sentAt}>
-                <OtherMessage chat={chat} isContinuous={isContinuous} shouldShowTime={shouldShowTime} memberId={memberId} />
+                <OtherMessage
+                  chat={chat}
+                  isContinuous={isContinuous}
+                  shouldShowTime={shouldShowTime}
+                  memberId={memberId}
+                />
               </div>
             )
           })}
@@ -308,7 +320,11 @@ export default function ChatRoom() {
       </div>
 
       {/* 채팅 입력 영역 */}
-      <ChatInput onSend={handleSendMessage} disabled={isOtherUserLeft} blocked={isBlocked} />
+      <ChatInput
+        onSend={handleSendMessage}
+        disabled={otherUserLeft}
+        blocked={isBlockActive}
+      />
 
       {isMenuOpen && (
         <KebabModal

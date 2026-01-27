@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 
-import { ExerciseItem } from '@/types/mypage'
+import { ExerciseItem, PreferExercise } from '@/types/mypage'
 import CheckIcon from '@/assets/icon_check.svg'
 import Typography from '@/components/ui/typography'
 
@@ -11,8 +11,8 @@ import styles from './selectionStep.module.css'
 type Props = {
   nickName: string
   allExercises: ExerciseItem[]
-  selectedExercises: number[]
-  onToggle: (id: number) => void
+  selectedExercises: PreferExercise[]
+  onToggle: (item: ExerciseItem) => void
 }
 
 export default function SelectionStep({
@@ -21,6 +21,7 @@ export default function SelectionStep({
   selectedExercises,
   onToggle,
 }: Props) {
+
   return (
     <div className={styles['content']}>
       <Typography as="h1" variant="content-large" weight="bold">
@@ -32,7 +33,9 @@ export default function SelectionStep({
 
       <div className={styles['list-container']}>
         {allExercises.map((exercise) => {
-          const isSelected = selectedExercises.includes(exercise.exerciseTypeId)
+          const isSelected = selectedExercises.some(
+            (e) => e.exerciseTypeId === exercise.exerciseTypeId,
+          )
 
           return (
             <button
@@ -41,7 +44,7 @@ export default function SelectionStep({
               className={clsx(styles['item'], {
                 [styles['selected']]: isSelected,
               })}
-              onClick={() => onToggle(exercise.exerciseTypeId)}
+              onClick={() => onToggle(exercise)}
             >
               {isSelected && <CheckIcon className={styles['check-icon']} />}
               <Typography as="p" variant="content-medium" weight="bold">
