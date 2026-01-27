@@ -72,12 +72,12 @@ export default function ChatRoom() {
 
       if (type === 'TALK' && data) {
         const socketData = data as SocketChatContent
-        const isMine = socketData.senderId === user?.profile?.sub
+        // const isMine = socketData.senderId === user?.profile?.sub
 
-        if (!isMine && isOtherUserLeft) {
-          setIsOtherUserLeft(false)
-          setIsBlocked(false)
-        }
+        // if (!isMine && isOtherUserLeft) {
+        //   setIsOtherUserLeft(false)
+        //   setIsBlocked(false)
+        // }
 
         mutate((currentData) => {
           if (!currentData) return []
@@ -89,7 +89,7 @@ export default function ChatRoom() {
 
           const newChatEntry: ChatContent = {
             ...socketData,
-            mine: isMine,
+            mine: socketData.senderId === user?.profile?.sub,
           }
 
           newData[0] = {
@@ -99,14 +99,16 @@ export default function ChatRoom() {
           return newData
         }, false)
       }
+
       if (message === null) return
-      if (type === 'SYSTEM_LEAVE' || type === 'SYSTEM_BANNED') {
-        if (type === 'SYSTEM_LEAVE') setIsOtherUserLeft(true)
-        if (type === 'SYSTEM_BANNED') setIsBlocked(true)
+
+      if (type === 'SYSTEM_LEAVE') {
+        setIsOtherUserLeft(true)
 
         mutate((currentData) => {
           if (!currentData) return []
           const newData = [...currentData]
+
           const systemEntry: ChatContent = {
             chatId: Date.now(),
             chatContent: message,
@@ -118,12 +120,16 @@ export default function ChatRoom() {
             senderProfileUrl: '',
             senderThumbnailUrl: '',
           }
-          newData[0] = {
-            ...newData[0],
-            content: [...newData[0].content, systemEntry],
-          }
+
+          newData[0] = { ...newData[0], content: [...newData[0].content, systemEntry] }
           return newData
         }, false)
+        return
+      }
+
+      if (type === 'SYSTEM_BANNED') {
+        setIsBlocked(true)
+        return
       }
 
       if (type === 'ERROR') {
@@ -140,6 +146,12 @@ export default function ChatRoom() {
 
   const handleSendMessage = (message: string) => {
     if (!message.trim() || !user?.profile) return
+    sendMessageBySocket(message)
+    logAnalyticsEvent('chat_sent', {
+      screen_name: 'chat_room',
+      event_category: 'engagement',
+      event_label: 'chat_message',
+    })
 
     // 추후 응답속도가 느려 낙관적 업데이트가 필요할 시 재사용
     // const tempMessage: ChatContent = {
@@ -162,14 +174,6 @@ export default function ChatRoom() {
     //   }
     //   return newData
     // }, false)
-
-    sendMessageBySocket(message)
-
-    logAnalyticsEvent('chat_sent', {
-      screen_name: 'chat_room',
-      event_category: 'engagement',
-      event_label: 'chat_message',
-    })
   }
 
   // 채팅방 나가기 핸들러

@@ -23,11 +23,7 @@ import PreferExerciseItem from '../../mypage/_components/preferExerciseItem'
 import KebabModal from './_components/kebabModal'
 import styles from './profile.module.css'
 
-import { useRemoteConfig } from '@/hooks/useRemoteConfig' //12월 17일 제거
-
 export default function Profile() {
-  const { config, isLoading: remoteConfigIsLoading } = useRemoteConfig() //12월17일 제거
-
   const router = useRouter()
   const [memberId] = useQueryState('memberId')
   const [locationId] = useQueryState('locationId', parseAsInteger)
@@ -82,7 +78,7 @@ export default function Profile() {
     }
   }
 
-  if (profileLoading || !profileData || remoteConfigIsLoading) return null //12월17일 remoteConfigIsLoading 제거
+  if (profileLoading || !profileData) return null
 
   return (
     <>
@@ -172,8 +168,7 @@ export default function Profile() {
       </section>
 
       {/* 선호운동 영역 */}
-      {/* 12월 17일 플래그 제거 */}
-      {config.new_feautre_flag && profileData.preferredExercises.length > 0 && (
+      {profileData.preferredExercises.length > 0 && (
         <section className={styles['prefer-exercise-section']}>
           <div className={styles['prefer-exercise-title']}>
             <Typography as="p" variant="content-large" weight="bold">
