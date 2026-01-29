@@ -2,10 +2,10 @@
 
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import * as z from 'zod'
-
 import { useForm } from '@tanstack/react-form'
 
-import TimePicker from '../timePicker'
+import InputTimePicker from '@/components/commons/inputTimePicker'
+
 import StepList from './stepList'
 import styles from './customTimerForm.module.css'
 
@@ -27,10 +27,7 @@ const customTimerSchema = z.object({
     .string()
     .min(1, '타이머 이름을 입력해주세요.')
     .max(100, '타이머 이름은 최대 100자까지 입력 가능합니다.')
-    .refine(
-      (val) => val.trim().length > 0,
-      '타이머 이름을 공백만으로 입력할 수 없습니다.',
-    ),
+    .refine((val) => val.trim().length > 0, '타이머 이름을 공백만으로 입력할 수 없습니다.'),
   steps: z
     .array(
       z.object({
@@ -39,132 +36,111 @@ const customTimerSchema = z.object({
           .string()
           .min(1, '모든 스탭의 이름을 입력해주세요.')
           .max(50, '스탭 이름은 최대 50자까지 가능합니다.')
-          .refine(
-            (val) => val.trim().length > 0,
-            '스탭 이름을 공백만으로 입력할 수 없습니다.',
-          ),
-        time: z
-          .number()
-          .min(5, '시간은 5초 이상이어야 합니다.')
-          .max(3599, '시간은 60분 미만이어야 합니다.'),
+          .refine((val) => val.trim().length > 0, '스탭 이름을 공백만으로 입력할 수 없습니다.'),
+        time: z.number().min(5, '시간은 5초 이상이어야 합니다.').max(3599, '시간은 60분 미만이어야 합니다.'),
       }),
     )
     .min(1, '최소 1개 이상의 스탭이 필요합니다.')
     .max(50, '스탭은 최대 50개까지 추가할 수 있습니다.'),
 })
 
-const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(
-  ({ defaultValues, onSubmit, onError }, ref) => {
-    const [editingTimeIndex, setEditingTimeIndex] = useState<number | null>(
-      null,
-    )
-    const [newStepTime, setNewStepTime] = useState(60)
+const CustomTimerForm = forwardRef<CustomTimerFormHandle, Props>(({ defaultValues, onSubmit, onError }, ref) => {
+  const [editingTimeIndex, setEditingTimeIndex] = useState<number | null>(null)
+  const [newStepTime, setNewStepTime] = useState(60)
 
-    const form = useForm({
-      defaultValues,
-      validators: { onSubmit: customTimerSchema },
-      canSubmitWhenInvalid: true,
-      onSubmitInvalid: ({ formApi }) => {
-        const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
-          string,
-          z.ZodIssue[]
-        >
-        const firstIssueArr = Object.values(fieldErrorMap)[0]
-        onError(firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.')
-      },
-      onSubmit: ({ value }) => onSubmit(value),
+  const form = useForm({
+    defaultValues,
+    validators: { onSubmit: customTimerSchema },
+    canSubmitWhenInvalid: true,
+    onSubmitInvalid: ({ formApi }) => {
+      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<string, z.ZodIssue[]>
+      const firstIssueArr = Object.values(fieldErrorMap)[0]
+      onError(firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.')
+    },
+    onSubmit: ({ value }) => onSubmit(value),
+  })
+
+  useImperativeHandle(ref, () => ({ submit: () => form.handleSubmit() }))
+
+  // StepCreator에서 새로운 스탭을 추가할 때 호출되는 콜백 함수
+  const handleAddStep = (name: string, time: number) => {
+    form.pushFieldValue('steps', {
+      id: Date.now(),
+      name: name || 'Step',
+      time,
     })
+    setNewStepTime(60)
+  }
 
-    useImperativeHandle(ref, () => ({ submit: () => form.handleSubmit() }))
-
-    // StepCreator에서 새로운 스탭을 추가할 때 호출되는 콜백 함수
-    const handleAddStep = (name: string, time: number) => {
-      form.pushFieldValue('steps', {
-        id: Date.now(),
-        name: name || 'Step',
-        time,
-      })
-      setNewStepTime(60)
+  // TimePicker에서 시간 선택 완료 시 호출되는 콜백 함수
+  const handlePickerComplete = (newTotalSeconds: number) => {
+    if (newTotalSeconds < 5) {
+      onError('시간은 5초 이상이어야 합니다.')
+      return
     }
-
-    // TimePicker에서 시간 선택 완료 시 호출되는 콜백 함수
-    const handlePickerComplete = (newTotalSeconds: number) => {
-      if (newTotalSeconds < 5) {
-        onError('시간은 5초 이상이어야 합니다.')
-        return
-      }
-      if (editingTimeIndex === -1) {
-        setNewStepTime(newTotalSeconds)
-      } else if (editingTimeIndex !== null) {
-        form.setFieldValue(`steps[${editingTimeIndex}].time`, newTotalSeconds)
-      }
-      setEditingTimeIndex(null)
+    if (editingTimeIndex === -1) {
+      setNewStepTime(newTotalSeconds)
+    } else if (editingTimeIndex !== null) {
+      form.setFieldValue(`steps[${editingTimeIndex}].time`, newTotalSeconds)
     }
+    setEditingTimeIndex(null)
+  }
 
-    // TimePicker에 전달할 초기 시간을 계산하는 함수
-    const getPickerInitialTime = () => {
-      const steps = form.getFieldValue('steps')
-      if (editingTimeIndex === null) return 0
-      return editingTimeIndex === -1
-        ? newStepTime
-        : (steps[editingTimeIndex]?.time ?? 60)
-    }
+  // TimePicker에 전달할 초기 시간을 계산하는 함수
+  const getPickerInitialTime = () => {
+    const steps = form.getFieldValue('steps')
+    if (editingTimeIndex === null) return 0
+    return editingTimeIndex === -1 ? newStepTime : (steps[editingTimeIndex]?.time ?? 60)
+  }
 
-    return (
-      <>
-        <form
-          className={styles['form']}
-          onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit(e)
-          }}
-        >
-          <div className={styles['title-section']}>
-            <form.Field name="title">
-              {(field) => (
-                <input
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                    }
-                  }}
-                  className={styles['title-input']}
-                  id={'title'}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  maxLength={100}
-                  placeholder="나만의 타이머 이름"
-                />
-              )}
-            </form.Field>
-          </div>
+  return (
+    <>
+      <form
+        className={styles['form']}
+        onSubmit={(e) => {
+          e.preventDefault()
+          form.handleSubmit(e)
+        }}
+      >
+        <div className={styles['title-section']}>
+          <form.Field name="title">
+            {(field) => (
+              <input
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                  }
+                }}
+                className={styles['title-input']}
+                id={'title'}
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                maxLength={100}
+                placeholder="나만의 타이머 이름"
+              />
+            )}
+          </form.Field>
+        </div>
 
-          <div className={styles['steps-section']}>
-            <form.Field name="steps">
-              {(field) => (
-                <StepList
-                  steps={field.state.value}
-                  onStepsChange={field.handleChange}
-                  onRemoveStep={field.removeValue}
-                  onTimeClick={setEditingTimeIndex}
-                  onAddStep={handleAddStep}
-                  newStepTime={newStepTime}
-                />
-              )}
-            </form.Field>
-          </div>
-        </form>
+        <div className={styles['steps-section']}>
+          <form.Field name="steps">
+            {(field) => (
+              <StepList
+                steps={field.state.value}
+                onStepsChange={field.handleChange}
+                onRemoveStep={field.removeValue}
+                onTimeClick={setEditingTimeIndex}
+                onAddStep={handleAddStep}
+                newStepTime={newStepTime}
+              />
+            )}
+          </form.Field>
+        </div>
+      </form>
 
-        {editingTimeIndex !== null && (
-          <TimePicker
-            time={getPickerInitialTime()}
-            onClose={() => setEditingTimeIndex(null)}
-            onComplete={handlePickerComplete}
-          />
-        )}
-      </>
-    )
-  },
-)
+      {editingTimeIndex !== null && <InputTimePicker initialTime={getPickerInitialTime()} onClose={() => setEditingTimeIndex(null)} onComplete={handlePickerComplete} />}
+    </>
+  )
+})
 CustomTimerForm.displayName = 'CustomTimerForm'
 export default CustomTimerForm

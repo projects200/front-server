@@ -2,18 +2,15 @@
 
 import { useState } from 'react'
 
-import {
-  usePatchSimpleTimer,
-  useDeleteSimpleTimer,
-} from '@/hooks/api/useTimerApi'
+import { usePatchSimpleTimer, useDeleteSimpleTimer } from '@/hooks/api/useTimerApi'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { formatNumberToTime } from '@/utils/timer'
 import Typography from '@/components/ui/typography'
 import { SimpleTimer } from '@/types/timer'
 import { useToast } from '@/hooks/useToast'
 import KebabModal from '@/components/commons/kebabModal'
+import InputTimePicker from '@/components/commons/inputTimePicker'
 
-import TimePicker from '../../_components/timePicker'
 import styles from './presetCard.module.css'
 
 type Props = {
@@ -23,12 +20,7 @@ type Props = {
   onDelete: (deletedTimerId: number) => void
 }
 
-export default function PresetCard({
-  preset,
-  onPresetClick,
-  onUpdate,
-  onDelete,
-}: Props) {
+export default function PresetCard({ preset, onPresetClick, onUpdate, onDelete }: Props) {
   const { trigger: timerUpdate } = usePatchSimpleTimer()
   const { trigger: timerDelete } = useDeleteSimpleTimer()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -51,7 +43,7 @@ export default function PresetCard({
   }
 
   const handleEditComplete = async (editedTime: number) => {
-    if (editedTime === 0) {
+    if (editedTime < 1) {
       showToast('0초는 선택할 수 없습니다.', 'info')
       return
     }
@@ -83,10 +75,7 @@ export default function PresetCard({
 
   return (
     <div className={styles['container']}>
-      <button
-        className={styles['timer-button']}
-        onClick={() => onPresetClick(preset.time)}
-      >
+      <button className={styles['timer-button']} onClick={() => onPresetClick(preset.time)}>
         <Typography as="span" variant="title-medium" weight="bold">
           {formatNumberToTime(preset.time)}
         </Typography>
@@ -111,13 +100,7 @@ export default function PresetCard({
         )}
       </div>
 
-      {isTimePickerOpen && (
-        <TimePicker
-          time={preset.time}
-          onClose={() => setIsTimePickerOpen(false)}
-          onComplete={handleEditComplete}
-        />
-      )}
+      {isTimePickerOpen && <InputTimePicker initialTime={preset.time} onClose={() => setIsTimePickerOpen(false)} onComplete={handleEditComplete} />}
     </div>
   )
 }

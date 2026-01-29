@@ -4,10 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { formatNumberToTime } from '@/utils/timer'
 import Header from '@/components/commons/header'
-import {
-  usePostSimpleTimer,
-  useReadSimpleTimerList,
-} from '@/hooks/api/useTimerApi'
+import { usePostSimpleTimer, useReadSimpleTimerList } from '@/hooks/api/useTimerApi'
 import StartIcon from '@/assets/icon_start.svg'
 import PauseIcon from '@/assets/icon_pause.svg'
 import PlusIcon from '@/assets/icon_plus.svg'
@@ -15,10 +12,10 @@ import SortIcon from '@/assets/icon_sort.svg'
 import Typography from '@/components/ui/typography'
 import { useToast } from '@/hooks/useToast'
 import { SimpleTimer } from '@/types/timer'
+import InputTimePicker from '@/components/commons/inputTimePicker'
 
 import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
-import TimePicker from '../_components/timePicker'
 import { simpleTimerEndSound } from '../_utils/timerEndSound'
 import PresetCard from './_components/presetCard'
 import styles from './simple.module.css'
@@ -55,10 +52,11 @@ export default function Simple() {
   }
 
   const handleComplete = async (time: number) => {
-    if (time === 0) {
+    if (time < 1) {
       showToast('0초는 선택할 수 없습니다.', 'info')
       return
     }
+
     try {
       const res = await timerCreate({ time: time })
       const newTimer: SimpleTimer = {
@@ -66,23 +64,16 @@ export default function Simple() {
         simpleTimerId: res.data.simpleTimerId,
       }
       setDisplayedTimers((currentTimers) => [...currentTimers, newTimer])
+      setIsTimePickerOpen(false)
     } catch {}
   }
 
   const handleUpdate = (updatedTimer: SimpleTimer) => {
-    setDisplayedTimers((currentTimers) =>
-      currentTimers.map((timer) =>
-        timer.simpleTimerId === updatedTimer.simpleTimerId
-          ? updatedTimer
-          : timer,
-      ),
-    )
+    setDisplayedTimers((currentTimers) => currentTimers.map((timer) => (timer.simpleTimerId === updatedTimer.simpleTimerId ? updatedTimer : timer)))
   }
 
   const handleDelete = (deletedTimerId: number) => {
-    setDisplayedTimers((currentTimers) =>
-      currentTimers.filter((timer) => timer.simpleTimerId !== deletedTimerId),
-    )
+    setDisplayedTimers((currentTimers) => currentTimers.filter((timer) => timer.simpleTimerId !== deletedTimerId))
   }
 
   const handlePresetClick = (seconds: number) => {
@@ -99,8 +90,7 @@ export default function Simple() {
     }
   }
 
-  const progressBarValue =
-    initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
+  const progressBarValue = initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
 
   return (
     <div className={styles['container']}>
@@ -110,16 +100,8 @@ export default function Simple() {
         <div className={styles['indicator']}>
           <CircularTimerDisplay value={progressBarValue}>
             <div className={styles['inside-section']}>
-              <div className={styles['timer-text']}>
-                {formatNumberToTime(Math.ceil(timeLeft / 1000))}
-              </div>
-              <button onClick={handleToggleIconClick}>
-                {isActive ? (
-                  <PauseIcon className={styles['timer-icon']} />
-                ) : (
-                  <StartIcon className={styles['timer-icon']} />
-                )}
-              </button>
+              <div className={styles['timer-text']}>{formatNumberToTime(Math.ceil(timeLeft / 1000))}</div>
+              <button onClick={handleToggleIconClick}>{isActive ? <PauseIcon className={styles['timer-icon']} /> : <StartIcon className={styles['timer-icon']} />}</button>
             </div>
           </CircularTimerDisplay>
         </div>
@@ -135,13 +117,7 @@ export default function Simple() {
       <div className={styles['timer-preset-section']}>
         <div className={styles['timer-preset-grid']}>
           {displayedTimers.map((preset) => (
-            <PresetCard
-              key={preset.simpleTimerId}
-              preset={preset}
-              onPresetClick={handlePresetClick}
-              onUpdate={handleUpdate}
-              onDelete={handleDelete}
-            />
+            <PresetCard key={preset.simpleTimerId} preset={preset} onPresetClick={handlePresetClick} onUpdate={handleUpdate} onDelete={handleDelete} />
           ))}
           {displayedTimers && displayedTimers.length < 6 && (
             <button
@@ -155,13 +131,7 @@ export default function Simple() {
           )}
         </div>
 
-        {isTimePickerOpen && (
-          <TimePicker
-            time={0}
-            onClose={() => setIsTimePickerOpen(false)}
-            onComplete={handleComplete}
-          />
-        )}
+        {isTimePickerOpen && <InputTimePicker onClose={() => setIsTimePickerOpen(false)} onComplete={handleComplete} />}
       </div>
     </div>
   )
