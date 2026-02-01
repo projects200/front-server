@@ -121,7 +121,7 @@ export default function Match() {
               className={styles['descript-button']}
               onClick={() => {
                 localStorage.setItem(MATCH_GUIDE_KEY, 'true')
-                router.push(SITE_MAP.MATCH_OPEN_CHAT_CREATE)
+                router.push(SITE_MAP.MATCH_PLACE_LIST)
               }}
             >
               <Typography as="div" variant="content-large" weight="bold">
