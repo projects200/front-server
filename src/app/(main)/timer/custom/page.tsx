@@ -16,12 +16,7 @@ import { useReadCustomTimerDetail } from '@/hooks/api/useTimerApi'
 
 import { useTimer } from '../_hooks/useTimer'
 import CircularTimerDisplay from '../_components/circularTimer'
-import {
-  playCustomTimerEndSound,
-  pauseCustomTimerEndSound,
-  resumeCustomTimerEndSound,
-  stopCustomTimerEndSound,
-} from '../_utils/timerEndSound'
+import { playCustomTimerEndSound, pauseCustomTimerEndSound, resumeCustomTimerEndSound, stopCustomTimerEndSound } from '../_utils/timerEndSound'
 import KebabModal from './_components/kebabModal'
 import styles from './custom.module.css'
 
@@ -41,10 +36,9 @@ export default function Custom() {
     }
   }, [])
 
-  const { timeLeft, isActive, isFinished, start, pause, resume, reset } =
-    useTimer({
-      onSecondChange: handleSecondChange,
-    })
+  const { timeLeft, isActive, isFinished, start, pause, resume, reset } = useTimer({
+    onSecondChange: handleSecondChange,
+  })
 
   // 종료 버튼 핸들러
   const handleStopButton = useCallback(() => {
@@ -65,8 +59,7 @@ export default function Custom() {
 
     // 다음 스텝 진행
     if (nextStepIndex < data.customTimerStepCount) {
-      const nextStepTime =
-        data.customTimerStepList[nextStepIndex].customTimerStepTime
+      const nextStepTime = data.customTimerStepList[nextStepIndex].customTimerStepTime
 
       setCurrentStepIndex(nextStepIndex)
       start(nextStepTime)
@@ -98,8 +91,7 @@ export default function Custom() {
 
     if (!isTimerStarted) {
       setIsTimerStarted(true)
-      const firstStepTime =
-        data.customTimerStepList[currentStepIndex].customTimerStepTime
+      const firstStepTime = data.customTimerStepList[currentStepIndex].customTimerStepTime
       start(firstStepTime)
     } else {
       if (isActive) {
@@ -115,8 +107,7 @@ export default function Custom() {
   }
 
   // 데이터 로드 시 첫 스텝의 시간으로 타이머를 리셋
-  const initialTime =
-    data?.customTimerStepList[currentStepIndex]?.customTimerStepTime || 0
+  const initialTime = data?.customTimerStepList[currentStepIndex]?.customTimerStepTime || 0
 
   useEffect(() => {
     if (data && data.customTimerStepCount > 0) {
@@ -138,8 +129,7 @@ export default function Custom() {
     [data],
   )
 
-  const progressBarValue =
-    initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
+  const progressBarValue = initialTime > 0 ? (timeLeft / (initialTime * 1000)) * 100 : 0
 
   // 현재 활성화된 스텝이 화면에 보이도록 자동 스크롤
   useEffect(() => {
@@ -157,8 +147,11 @@ export default function Custom() {
   return (
     <div className={styles['container']}>
       <Header
-        rightIcon={<KebabIcon className={styles['header-icon']} />}
-        onClick={() => setIsBottomModalOpen(true)}
+        right={
+          <button type="button" onClick={() => setIsBottomModalOpen(true)}>
+            <KebabIcon className={styles['header-icon']} />
+          </button>
+        }
       >
         {data.customTimerName}
       </Header>
@@ -167,38 +160,19 @@ export default function Custom() {
         <div className={styles['indicator']}>
           <CircularTimerDisplay value={progressBarValue}>
             <div className={styles['inside-section']}>
-              <div className={styles['timer-text']}>
-                {formatNumberToTime(Math.ceil(timeLeft / 1000))}
-              </div>
+              <div className={styles['timer-text']}>{formatNumberToTime(Math.ceil(timeLeft / 1000))}</div>
             </div>
           </CircularTimerDisplay>
         </div>
       </div>
 
       <div className={styles['controls-section']}>
-        <Button
-          className={clsx(
-            styles['control-button'],
-            styles['control-button-end'],
-          )}
-          onClick={handleStopButton}
-          disabled={!isTimerStarted}
-        >
+        <Button className={clsx(styles['control-button'], styles['control-button-end'])} onClick={handleStopButton} disabled={!isTimerStarted}>
           종료
         </Button>
-        <button onClick={() => setIsLooping(!isLooping)}>
-          {isLooping ? (
-            <LoopOnIcon className={styles['loop-icon']} />
-          ) : (
-            <LoopOffIcon className={styles['loop-icon']} />
-          )}
-        </button>
+        <button onClick={() => setIsLooping(!isLooping)}>{isLooping ? <LoopOnIcon className={styles['loop-icon']} /> : <LoopOffIcon className={styles['loop-icon']} />}</button>
 
-        <Button
-          className={styles['control-button']}
-          onClick={handleStartPauseButton}
-          variant={isActive ? 'warning' : 'primary'}
-        >
+        <Button className={styles['control-button']} onClick={handleStartPauseButton} variant={isActive ? 'warning' : 'primary'}>
           {isActive ? '일시정지' : '시작'}
         </Button>
       </div>
@@ -232,11 +206,7 @@ export default function Custom() {
         ))}
       </div>
 
-      <KebabModal
-        isOpen={isBottomModalOpen}
-        onClose={() => setIsBottomModalOpen(false)}
-        customTimerId={customTimerId}
-      />
+      <KebabModal isOpen={isBottomModalOpen} onClose={() => setIsBottomModalOpen(false)} customTimerId={customTimerId} />
     </div>
   )
 }

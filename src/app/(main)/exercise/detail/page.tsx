@@ -37,23 +37,18 @@ export default function Detail() {
   return (
     <>
       <Header
-        rightIcon={<KebabIcon className={styles['header-icon']} />}
-        onClick={() => setIsBottomModalOpen(true)}
+        right={
+          <button type="button" onClick={() => setIsBottomModalOpen(true)}>
+            <KebabIcon className={styles['header-icon']} />
+          </button>
+        }
       >
         기록 상세
       </Header>
-      <div className={styles['img-section']}>
-        {data.images?.length ? <ImageField images={data.images} /> : <></>}
-      </div>
+      <div className={styles['img-section']}>{data.images?.length ? <ImageField images={data.images} /> : <></>}</div>
 
       <div className={styles['field-section']}>
-        <InputField
-          className={styles['data-field']}
-          value={data.title}
-          label="제목"
-          id="title"
-          readonly={true}
-        />
+        <InputField className={styles['data-field']} value={data.title} label="제목" id="title" readonly={true} />
 
         <div className={styles['data-field']}>
           <Typography variant="content-large" weight="medium">
@@ -74,40 +69,11 @@ export default function Detail() {
           </div>
         </div>
 
-        {data.category && (
-          <InputField
-            className={styles['data-field']}
-            value={data.category}
-            label="운동 종류"
-            id="category"
-            readonly={true}
-          />
-        )}
-        {data.location && (
-          <InputField
-            className={styles['data-field']}
-            value={data.location}
-            label="장소"
-            id="location"
-            readonly={true}
-          />
-        )}
-        {data.content && (
-          <TextareaField
-            className={styles['text-field']}
-            value={data.content}
-            label="내용"
-            id="content"
-            readonly={true}
-          />
-        )}
+        {data.category && <InputField className={styles['data-field']} value={data.category} label="운동 종류" id="category" readonly={true} />}
+        {data.location && <InputField className={styles['data-field']} value={data.location} label="장소" id="location" readonly={true} />}
+        {data.content && <TextareaField className={styles['text-field']} value={data.content} label="내용" id="content" readonly={true} />}
       </div>
-      <KebabModal
-        isOpen={isBottomModalOpen}
-        setIsOpen={setIsBottomModalOpen}
-        exerciseId={exerciseId}
-        startedAt={data.startedAt}
-      />
+      <KebabModal isOpen={isBottomModalOpen} setIsOpen={setIsBottomModalOpen} exerciseId={exerciseId} startedAt={data.startedAt} />
     </>
   )
 }

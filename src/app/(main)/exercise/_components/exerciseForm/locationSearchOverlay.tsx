@@ -57,15 +57,9 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
     name: '',
     address: '',
   })
-  const [searchResults, setSearchResults] = useState<KakaoSearchResultItem[]>(
-    [],
-  )
+  const [searchResults, setSearchResults] = useState<KakaoSearchResultItem[]>([])
   const [isResultListVisible, setIsResultListVisible] = useState(false)
-  const {
-    location,
-    isLoading: locationLoading,
-    getLocation,
-  } = useCurrentLocation()
+  const { location, isLoading: locationLoading, getLocation } = useCurrentLocation()
   const showToast = useToast()
 
   // 좌표 이동시 도로명 주소 변경
@@ -77,16 +71,12 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
 
       const geocoder = new window.kakao.maps.services.Geocoder()
 
-      const callback = (
-        result: KakaoAddressResult[],
-        status: kakao.maps.services.Status,
-      ) => {
+      const callback = (result: KakaoAddressResult[], status: kakao.maps.services.Status) => {
         if (status === window.kakao.maps.services.Status.OK && result[0]) {
           const data = result[0]
           setAddressInfo({
             name: '',
-            address:
-              data.road_address?.address_name || data.address.address_name,
+            address: data.road_address?.address_name || data.address.address_name,
           })
         } else {
           setAddressInfo({ name: '', address: '주소를 찾을 수 없습니다.' })
@@ -202,19 +192,13 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
   // 화면을 확대, 축소해도 중앙의 위치는 바뀌지 않도록 고정
   const handleZoomChanged = (map: kakao.maps.Map) => {
     setMapLevel(map.getLevel())
-    const currentCenter = new window.kakao.maps.LatLng(
-      mapCenter.lat,
-      mapCenter.lng,
-    )
+    const currentCenter = new window.kakao.maps.LatLng(mapCenter.lat, mapCenter.lng)
     map.setCenter(currentCenter)
   }
 
   // 등록버튼 핸들러
   const handleRegister = () => {
-    if (
-      !addressInfo.address ||
-      addressInfo.address === '주소를 찾을 수 없습니다.'
-    ) {
+    if (!addressInfo.address || addressInfo.address === '주소를 찾을 수 없습니다.') {
       showToast('정확한 장소를 선택해주세요.', 'info')
       return
     }
@@ -240,20 +224,17 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
     <Portal>
       <div className={styles['container']}>
         <Header
-          className="fill-space-title"
-          rightIcon={<CompleteButton>검색</CompleteButton>}
-          onClick={handleSearch}
+          classNames="fill-space-title"
+          right={
+            <button type="button" onClick={handleSearch}>
+              <CompleteButton>검색</CompleteButton>
+            </button>
+          }
           onBack={isResultListVisible ? handleBackFromSearch : onClose}
         >
           <div className={styles['search-section']}>
             <SearchIcon className={styles['search-icon']} />
-            <input
-              className={styles['input']}
-              value={searchValue}
-              onChange={handleSearchChange}
-              onKeyDown={handleKeyDown}
-              placeholder="운동하는 장소 검색"
-            />
+            <input className={styles['input']} value={searchValue} onChange={handleSearchChange} onKeyDown={handleKeyDown} placeholder="운동하는 장소 검색" />
           </div>
         </Header>
 
@@ -261,19 +242,11 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
           // --- 검색 목록 뷰 ---
           <div className={styles['search-results-container']}>
             {searchResults.map((place) => (
-              <div
-                key={place.id}
-                className={styles['result-item']}
-                onClick={() => handleSelectPlace(place)}
-              >
+              <div key={place.id} className={styles['result-item']} onClick={() => handleSelectPlace(place)}>
                 <Typography as="div" variant="title-small" weight="medium">
                   {place.place_name}
                 </Typography>
-                <Typography
-                  variant="content-medium"
-                  className={styles['result-address']}
-                  as="div"
-                >
+                <Typography variant="content-medium" className={styles['result-address']} as="div">
                   {place.road_address_name || place.address_name}
                 </Typography>
               </div>
@@ -283,13 +256,7 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
           // --- 지도 뷰 ---
           <div className={styles['map-view-container']}>
             <div className={styles['map-section']}>
-              <Map
-                center={mapCenter}
-                level={mapLevel}
-                className={styles['map']}
-                onDragEnd={handleMapDragEnd}
-                onZoomChanged={handleZoomChanged}
-              ></Map>
+              <Map center={mapCenter} level={mapLevel} className={styles['map']} onDragEnd={handleMapDragEnd} onZoomChanged={handleZoomChanged}></Map>
               <CenterMarker className={styles['center-icon']} />
             </div>
             <div className={styles['bottom-section']}>
@@ -298,11 +265,7 @@ export default function LocationSearchOverlay({ onClose, onConfirm }: Props) {
                   <Typography as="span" variant="title-small" weight="medium">
                     {addressInfo.name}
                   </Typography>
-                  <Typography
-                    className={styles['address-sub-text']}
-                    as="span"
-                    variant="content-large"
-                  >
+                  <Typography className={styles['address-sub-text']} as="span" variant="content-large">
                     {addressInfo.address}
                   </Typography>
                 </div>

@@ -9,10 +9,7 @@ import { useToast } from '@/hooks/useToast'
 import { usePostCustomTimer } from '@/hooks/api/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import CustomTimerForm, {
-  CustomTimerFormHandle,
-  CustomTimerFormValues,
-} from '../_components/customTimerForm/customTimerForm'
+import CustomTimerForm, { CustomTimerFormHandle, CustomTimerFormValues } from '../_components/customTimerForm/customTimerForm'
 
 export default function Create() {
   const { trigger: createCustomTimer } = usePostCustomTimer()
@@ -43,8 +40,11 @@ export default function Create() {
   return (
     <>
       <Header
-        rightIcon={<CompleteButton>완료</CompleteButton>}
-        onClick={triggerFormSubmit}
+        right={
+          <button type="button" onClick={triggerFormSubmit}>
+            <CompleteButton>완료</CompleteButton>
+          </button>
+        }
       >
         타이머 생성
       </Header>

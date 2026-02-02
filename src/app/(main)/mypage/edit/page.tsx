@@ -3,18 +3,12 @@
 import { useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
-import {
-  useReadUserFullProfile,
-  usePutUserProfile,
-} from '@/hooks/api/useMypageApi'
+import { useReadUserFullProfile, usePutUserProfile } from '@/hooks/api/useMypageApi'
 import { usePostProfilePicture } from '@/hooks/api/useProfileApi'
 import { useToast } from '@/hooks/useToast'
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
-import ProfileEditForm, {
-  ProfileEditFormHandle,
-  ProfileEditFormValues,
-} from '@/components/commons/profileForm/profileEditForm'
+import ProfileEditForm, { ProfileEditFormHandle, ProfileEditFormValues } from '@/components/commons/profileForm/profileEditForm'
 
 import styles from './edit.module.css'
 
@@ -55,8 +49,11 @@ export default function Edit() {
   return (
     <div className={styles['page-container']}>
       <Header
-        rightIcon={<CompleteButton>완료</CompleteButton>}
-        onClick={triggerFormSubmit}
+        right={
+          <button type="button" onClick={triggerFormSubmit}>
+            <CompleteButton>완료</CompleteButton>
+          </button>
+        }
       >
         프로필 수정
       </Header>
@@ -64,10 +61,7 @@ export default function Edit() {
       <ProfileEditForm
         ref={formRef}
         defaultValues={{
-          profileImageUrl:
-            profileData.profileThumbnailUrl ||
-            profileData.profileImageUrl ||
-            null,
+          profileImageUrl: profileData.profileThumbnailUrl || profileData.profileImageUrl || null,
           nickname: profileData.nickname,
           gender: profileData.gender,
           bio: profileData.bio || '',

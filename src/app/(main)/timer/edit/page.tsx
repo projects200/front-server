@@ -7,33 +7,17 @@ import { useRouter } from 'next/navigation'
 import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
 import { useToast } from '@/hooks/useToast'
-import {
-  useReadCustomTimerDetail,
-  usePutCustomTimer,
-  usePatchCustomTimer,
-} from '@/hooks/api/useTimerApi'
+import { useReadCustomTimerDetail, usePutCustomTimer, usePatchCustomTimer } from '@/hooks/api/useTimerApi'
 import SITE_MAP from '@/constants/siteMap.constant'
 
-import CustomTimerForm, {
-  CustomTimerFormHandle,
-  CustomTimerFormValues,
-} from '../_components/customTimerForm/customTimerForm'
+import CustomTimerForm, { CustomTimerFormHandle, CustomTimerFormValues } from '../_components/customTimerForm/customTimerForm'
 import styles from './edit.module.css'
 
-function isStepsEqual(
-  oldSteps: CustomTimerFormValues['steps'],
-  newSteps: CustomTimerFormValues['steps'],
-): boolean {
+function isStepsEqual(oldSteps: CustomTimerFormValues['steps'], newSteps: CustomTimerFormValues['steps']): boolean {
   if (oldSteps.length !== newSteps.length) {
     return false
   }
-  return oldSteps.every(
-    (oldStep, index) =>
-      newSteps[index] &&
-      oldStep.id === newSteps[index].id &&
-      oldStep.name === newSteps[index].name &&
-      oldStep.time === newSteps[index].time,
-  )
+  return oldSteps.every((oldStep, index) => newSteps[index] && oldStep.id === newSteps[index].id && oldStep.name === newSteps[index].name && oldStep.time === newSteps[index].time)
 }
 
 export default function Edit() {
@@ -92,18 +76,16 @@ export default function Edit() {
   return (
     <div className={styles['page-container']}>
       <Header
-        rightIcon={<CompleteButton>완료</CompleteButton>}
-        onClick={triggerFormSubmit}
+        right={
+          <button type="button" onClick={triggerFormSubmit}>
+            <CompleteButton>완료</CompleteButton>
+          </button>
+        }
       >
         타이머 수정
       </Header>
 
-      <CustomTimerForm
-        ref={formRef}
-        defaultValues={initialValues}
-        onSubmit={handleSubmit}
-        onError={(message) => showToast(message, 'info')}
-      />
+      <CustomTimerForm ref={formRef} defaultValues={initialValues} onSubmit={handleSubmit} onError={(message) => showToast(message, 'info')} />
     </div>
   )
 }

@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import {
-  useReadNotificationSettingList,
-  usePatchNotificationSettingItems,
-} from '@/hooks/api/useFcmApi'
+import { useReadNotificationSettingList, usePatchNotificationSettingItems } from '@/hooks/api/useFcmApi'
 import Header from '@/components/commons/header'
 import ToggleSwitch from '@/components/ui/toggleSwitch'
 import Typography from '@/components/ui/typography'
@@ -17,22 +14,16 @@ export default function Alert() {
   const fcmToken = sessionStorage.getItem('fcm_token')
   const [exerciseAlert, setExerciseAlert] = useState(false)
   const [chatAlert, setChatAlert] = useState(false)
-  const [notificationPermission, setNotificationPermission] =
-    useState('default')
+  const [notificationPermission, setNotificationPermission] = useState('default')
 
   const { data } = useReadNotificationSettingList(fcmToken)
-  const { trigger: updateNotificationSetting } =
-    usePatchNotificationSettingItems(fcmToken)
+  const { trigger: updateNotificationSetting } = usePatchNotificationSettingItems(fcmToken)
 
-  const handleSettingChange = async (
-    typeToChange: NotificationType,
-    newEnabled: boolean,
-  ) => {
+  const handleSettingChange = async (typeToChange: NotificationType, newEnabled: boolean) => {
     const payload: NotificationSetting[] = [
       {
         type: 'WORKOUT_REMINDER',
-        enabled:
-          typeToChange === 'WORKOUT_REMINDER' ? newEnabled : exerciseAlert,
+        enabled: typeToChange === 'WORKOUT_REMINDER' ? newEnabled : exerciseAlert,
       },
       {
         type: 'CHAT_MESSAGE',
@@ -51,8 +42,7 @@ export default function Alert() {
     } catch {}
   }
 
-  const handleExerciseToggle = () =>
-    handleSettingChange('WORKOUT_REMINDER', !exerciseAlert)
+  const handleExerciseToggle = () => handleSettingChange('WORKOUT_REMINDER', !exerciseAlert)
   const handleChatToggle = () => handleSettingChange('CHAT_MESSAGE', !chatAlert)
 
   useEffect(() => {
@@ -81,7 +71,7 @@ export default function Alert() {
 
   return (
     <div className={styles['container']}>
-      <Header className="left-title">알림</Header>
+      <Header classNames="left">알림</Header>
 
       {notificationPermission !== 'granted' && (
         <div className={styles['notice-container']}>
@@ -92,28 +82,18 @@ export default function Alert() {
       )}
 
       <div className={styles['item-container']}>
-        {notificationPermission !== 'granted' && (
-          <span className={styles['menu-item-block']} />
-        )}
+        {notificationPermission !== 'granted' && <span className={styles['menu-item-block']} />}
         <div className={styles['menu-item']}>
           <Typography as="p" variant="content-large">
             운동 독려 알림
           </Typography>
-          <ToggleSwitch
-            id="exercise-toggle"
-            checked={exerciseAlert}
-            onChange={handleExerciseToggle}
-          />
+          <ToggleSwitch id="exercise-toggle" checked={exerciseAlert} onChange={handleExerciseToggle} />
         </div>
         <div className={styles['menu-item']}>
           <Typography as="p" variant="content-large">
             채팅 알림
           </Typography>
-          <ToggleSwitch
-            id="chat-toggle"
-            checked={chatAlert}
-            onChange={handleChatToggle}
-          />
+          <ToggleSwitch id="chat-toggle" checked={chatAlert} onChange={handleChatToggle} />
         </div>
       </div>
     </div>

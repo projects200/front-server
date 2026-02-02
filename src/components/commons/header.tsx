@@ -9,50 +9,31 @@ import styles from './header.module.css'
 import Typography from '../ui/typography'
 
 type Props = {
-  children: ReactNode
-  className?: string
-  rightIcon?: React.ReactNode
-  onClick?: () => void
+  children?: ReactNode
+  classNames?: string
+  showBack?: boolean
   onBack?: () => void
+  right?: ReactNode
 }
 
-const Header = ({
-  children,
-  className = 'center-title',
-  rightIcon,
-  onClick,
-  onBack,
-}: Props) => {
+const Header = ({ children = '', classNames = 'center', showBack = true, onBack, right }: Props) => {
   const router = useRouter()
 
-  const handleBack = () => {
-    if (onBack) {
-      onBack()
-    } else {
-      router.back()
-    }
-  }
+  const handleBack = () => (onBack ? onBack() : router.back())
 
   return (
     <header className={styles['header']}>
-      <div className={styles['left']}>
-        <button className={styles['back-button']} onClick={handleBack}>
+      {showBack && (
+        <button type="button" className={styles['left-section']} onClick={handleBack}>
           <LeftArrow className={styles['back-icon']} />
         </button>
-      </div>
-      <Typography
-        className={styles[className]}
-        as="h1"
-        variant="content-large"
-        weight="bold"
-      >
+      )}
+
+      <Typography className={styles[classNames]} as="h1" variant="content-large" weight="bold">
         {children}
       </Typography>
-      {rightIcon && (
-        <button className={styles['right-icon']} onClick={onClick}>
-          {rightIcon}
-        </button>
-      )}
+
+      <div className={styles['right-section']}>{right}</div>
     </header>
   )
 }

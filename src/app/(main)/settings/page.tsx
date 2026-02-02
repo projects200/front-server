@@ -58,7 +58,7 @@ export default function Settings() {
 
   return (
     <>
-      <Header className="left-title">설정</Header>
+      <Header classNames="left">설정</Header>
       <div className={styles['container']}>
         <MenuItem
           icon={<HelpIcon className={styles['icon']} />}

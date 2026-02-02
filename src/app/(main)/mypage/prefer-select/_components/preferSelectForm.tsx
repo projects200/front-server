@@ -9,11 +9,7 @@ import Header from '@/components/commons/header'
 import CompleteButton from '@/components/commons/completeButton'
 import { useToast } from '@/hooks/useToast'
 import type { ExerciseItem, PreferExercise } from '@/types/mypage'
-import {
-  usePostPreferredExerciseFormList,
-  usePatchPreferredExerciseFormList,
-  useDeletePreferredExerciseFormList,
-} from '@/hooks/api/useMypageApi'
+import { usePostPreferredExerciseFormList, usePatchPreferredExerciseFormList, useDeletePreferredExerciseFormList } from '@/hooks/api/useMypageApi'
 
 import SelectionStep from './selectionStep'
 import DetailStep from './detailStep'
@@ -28,12 +24,7 @@ const preferSelectSchema = z.object({
         name: z.string(),
         imageUrl: z.string().nullable(),
         skillLevel: z.string().min(1, '모든 운동의 숙련도를 선택해주세요.'),
-        daysOfWeek: z
-          .array(z.boolean())
-          .refine(
-            (days) => days.some((day) => day),
-            '모든 운동의 주기를 하나 이상 선택해주세요.',
-          ),
+        daysOfWeek: z.array(z.boolean()).refine((days) => days.some((day) => day), '모든 운동의 주기를 하나 이상 선택해주세요.'),
       }),
     )
     .min(1, '최소 1개 이상의 운동을 선택해주세요.')
@@ -54,32 +45,23 @@ type Props = {
   initialPreferredExercise: PreferExercise[]
 }
 
-export default function PreferSelectForm({
-  exerciseItemList,
-  initialPreferredExercise,
-}: Props) {
+export default function PreferSelectForm({ exerciseItemList, initialPreferredExercise }: Props) {
   const router = useRouter()
   const showToast = useToast()
   const searchParams = useSearchParams()
   const nickName = searchParams.get('nickName') || '회원'
   const [step, setStep] = useState<'select' | 'detail'>('select')
 
-  const { trigger: createExercise, isMutating: isCreateMutating } =
-    usePostPreferredExerciseFormList()
-  const { trigger: updateExercise, isMutating: isUpdateMutating } =
-    usePatchPreferredExerciseFormList()
-  const { trigger: deleteExercise, isMutating: isDeleteMutating } =
-    useDeletePreferredExerciseFormList()
+  const { trigger: createExercise, isMutating: isCreateMutating } = usePostPreferredExerciseFormList()
+  const { trigger: updateExercise, isMutating: isUpdateMutating } = usePatchPreferredExerciseFormList()
+  const { trigger: deleteExercise, isMutating: isDeleteMutating } = useDeletePreferredExerciseFormList()
 
   const form = useForm({
     defaultValues: { myExercises: initialPreferredExercise },
     validators: { onSubmit: preferSelectSchema },
     canSubmitWhenInvalid: true,
     onSubmitInvalid: ({ formApi }) => {
-      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
-        string,
-        z.ZodIssue[]
-      >
+      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<string, z.ZodIssue[]>
       const firstIssueArr = Object.values(fieldErrorMap)[0]
       showToast(firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.', 'info')
     },
@@ -87,14 +69,7 @@ export default function PreferSelectForm({
       const currentExercises = value.myExercises
 
       // 삭제 : 초기 데이터에는 있으나 현재 데이터에 없는 항목
-      const deleteIds = initialPreferredExercise
-        .filter(
-          (init) =>
-            !currentExercises.some(
-              (curr) => curr.preferredExerciseId === init.preferredExerciseId,
-            ),
-        )
-        .map((item) => item.preferredExerciseId)
+      const deleteIds = initialPreferredExercise.filter((init) => !currentExercises.some((curr) => curr.preferredExerciseId === init.preferredExerciseId)).map((item) => item.preferredExerciseId)
 
       let deletePromise = null
 
@@ -103,9 +78,7 @@ export default function PreferSelectForm({
       }
 
       // 생성 : preferredExerciseId가 -1인 항목
-      const newItems = currentExercises.filter(
-        (curr) => curr.preferredExerciseId === -1,
-      )
+      const newItems = currentExercises.filter((curr) => curr.preferredExerciseId === -1)
 
       let createPromise = null
 
@@ -122,15 +95,11 @@ export default function PreferSelectForm({
       const updatedItems = currentExercises.filter((curr) => {
         if (curr.preferredExerciseId === -1) return false
 
-        const original = initialPreferredExercise.find(
-          (init) => init.preferredExerciseId === curr.preferredExerciseId,
-        )
+        const original = initialPreferredExercise.find((init) => init.preferredExerciseId === curr.preferredExerciseId)
 
         if (!original) return false
 
-        const isDaysChanged =
-          JSON.stringify(curr.daysOfWeek) !==
-          JSON.stringify(original.daysOfWeek)
+        const isDaysChanged = JSON.stringify(curr.daysOfWeek) !== JSON.stringify(original.daysOfWeek)
         const isSkillChanged = curr.skillLevel !== original.skillLevel
 
         return isDaysChanged || isSkillChanged
@@ -165,15 +134,10 @@ export default function PreferSelectForm({
     },
   })
 
-  const myExercises = useStore(
-    form.baseStore,
-    (state) => state.values.myExercises,
-  )
+  const myExercises = useStore(form.baseStore, (state) => state.values.myExercises)
 
   const handleToggleExercise = (exerciseItem: ExerciseItem) => {
-    const existingIndex = myExercises.findIndex(
-      (e) => e.exerciseTypeId === exerciseItem.exerciseTypeId,
-    )
+    const existingIndex = myExercises.findIndex((e) => e.exerciseTypeId === exerciseItem.exerciseTypeId)
 
     if (existingIndex > -1) {
       form.removeFieldValue('myExercises', existingIndex)
@@ -183,14 +147,9 @@ export default function PreferSelectForm({
         return
       }
 
-      const prevData = initialPreferredExercise.find(
-        (e) => e.exerciseTypeId === exerciseItem.exerciseTypeId,
-      )
+      const prevData = initialPreferredExercise.find((e) => e.exerciseTypeId === exerciseItem.exerciseTypeId)
 
-      form.pushFieldValue(
-        'myExercises',
-        prevData || createNewExercise(exerciseItem),
-      )
+      form.pushFieldValue('myExercises', prevData || createNewExercise(exerciseItem))
     }
   }
 
@@ -222,26 +181,19 @@ export default function PreferSelectForm({
     <div className={styles['container']}>
       <Header
         onBack={() => (step === 'select' ? router.back() : setStep('select'))}
-        rightIcon={
-          <CompleteButton>{step === 'select' ? '다음' : '완료'}</CompleteButton>
+        right={
+          <button type="button" onClick={step === 'select' ? handleNext : handleComplete}>
+            {' '}
+            <CompleteButton>{step === 'select' ? '다음' : '완료'}</CompleteButton>
+          </button>
         }
-        onClick={step === 'select' ? handleNext : handleComplete}
       >
         선호운동
       </Header>
       {step === 'select' ? (
-        <SelectionStep
-          nickName={nickName}
-          allExercises={exerciseItemList}
-          selectedExercises={myExercises}
-          onToggle={handleToggleExercise}
-        />
+        <SelectionStep nickName={nickName} allExercises={exerciseItemList} selectedExercises={myExercises} onToggle={handleToggleExercise} />
       ) : (
-        <DetailStep
-          myExercises={myExercises}
-          onUpdateDay={handleUpdateDay}
-          onUpdateSkill={handleUpdateSkill}
-        />
+        <DetailStep myExercises={myExercises} onUpdateDay={handleUpdateDay} onUpdateSkill={handleUpdateSkill} />
       )}
     </div>
   )

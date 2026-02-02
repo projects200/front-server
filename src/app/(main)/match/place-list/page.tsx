@@ -29,24 +29,21 @@ export default function PlaceList() {
   return (
     <div className={styles['container']}>
       <Header
-        onClick={handleLinkClick}
-        rightIcon={<CompleteButton>추가</CompleteButton>}
+        right={
+          <button type="button" onClick={handleLinkClick}>
+            <CompleteButton>추가</CompleteButton>
+          </button>
+        }
       >
         운동장소
       </Header>
 
       <div className={styles['list-section']}>
         {locationList && locationList.length ? (
-          locationList.map((data) => (
-            <ListCard key={`list-item-${data.id}`} placeData={data} />
-          ))
+          locationList.map((data) => <ListCard key={`list-item-${data.id}`} placeData={data} />)
         ) : (
           <div className={styles['empty-section']}>
-            <Typography
-              as="span"
-              variant="content-large"
-              className={styles['empty-text']}
-            >
+            <Typography as="span" variant="content-large" className={styles['empty-text']}>
               등록된 운동 장소가 없습니다
             </Typography>
           </div>

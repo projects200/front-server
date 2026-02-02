@@ -20,10 +20,7 @@ const placeRegisterSchema = z.object({
     .string()
     .min(1, '장소명을 입력해주세요.')
     .max(100, '장소명은 최대 100자까지 입력 가능합니다.')
-    .refine(
-      (val) => val.trim().length > 0,
-      '장소명을 공백만으로 입력할 수 없습니다.',
-    ),
+    .refine((val) => val.trim().length > 0, '장소명을 공백만으로 입력할 수 없습니다.'),
 })
 
 export default function PlaceRegisterDetail() {
@@ -45,10 +42,7 @@ export default function PlaceRegisterDetail() {
     },
     canSubmitWhenInvalid: true,
     onSubmitInvalid: ({ formApi }) => {
-      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<
-        string,
-        z.ZodIssue[]
-      >
+      const fieldErrorMap = formApi.state.errorMap.onSubmit as Record<string, z.ZodIssue[]>
       const firstIssueArr = Object.values(fieldErrorMap)[0]
       showToast(firstIssueArr?.[0]?.message ?? '입력값을 확인해주세요.', 'info')
     },
@@ -78,7 +72,7 @@ export default function PlaceRegisterDetail() {
 
   return (
     <div className={styles['container']}>
-      <Header onBack={() => router.back()}>운동장소 등록</Header>
+      <Header>운동장소 등록</Header>
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -92,9 +86,7 @@ export default function PlaceRegisterDetail() {
             <MarkerIcon className={styles['marker-icon']} />
             <div className={styles['place-text']}>
               <Typography variant="content-large" weight="bold">
-                <form.Subscribe selector={(state) => state.values.placeName}>
-                  {(placeName) => placeName || '장소명을 입력해주세요'}
-                </form.Subscribe>
+                <form.Subscribe selector={(state) => state.values.placeName}>{(placeName) => placeName || '장소명을 입력해주세요'}</form.Subscribe>
               </Typography>
 
               <Typography variant="content-large">{address}</Typography>
@@ -108,13 +100,7 @@ export default function PlaceRegisterDetail() {
             </Typography>
             <form.Field name="placeName">
               {(field) => (
-                <input
-                  className={styles['place-input']}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="장소명을 입력해주세요"
-                  maxLength={100}
-                />
+                <input className={styles['place-input']} value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} placeholder="장소명을 입력해주세요" maxLength={100} />
               )}
             </form.Field>
           </div>
@@ -127,14 +113,9 @@ export default function PlaceRegisterDetail() {
                 등록하신 운동 장소는 다른 이용자에게 공개됩니다.
               </Typography>
             </div>
-            <Typography
-              as="span"
-              variant="content-small"
-              className={styles['info-margin']}
-            >
+            <Typography as="span" variant="content-small" className={styles['info-margin']}>
               회원님이 등록하는 운동 장소 정보는
-              <br /> 운동 메이트를 찾기 위한 목적으로 다른 이용자들에게
-              공개됩니다.
+              <br /> 운동 메이트를 찾기 위한 목적으로 다른 이용자들에게 공개됩니다.
             </Typography>
             <div className={styles['info-content']}>
               <Typography as="span" variant="content-small">

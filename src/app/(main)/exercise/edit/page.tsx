@@ -8,20 +8,13 @@ import { mutate } from 'swr'
 import Header from '@/components/commons/header'
 import LoadingScreen from '@/components/commons/loadingScreen'
 import { useToast } from '@/hooks/useToast'
-import {
-  useReadExercise,
-  usePatchExercise,
-  useDeleteExercisePictures,
-  usePostExercisePictures,
-} from '@/hooks/api/useExerciseApi'
+import { useReadExercise, usePatchExercise, useDeleteExercisePictures, usePostExercisePictures } from '@/hooks/api/useExerciseApi'
 import { ExerciseRecordReq } from '@/types/exercise'
 import { isValidExerciseId } from '@/utils/validation'
 import SITE_MAP from '@/constants/siteMap.constant'
 import CompleteButton from '@/components/commons/completeButton'
 
-import ExerciseForm, {
-  ExerciseFormHandle,
-} from '../_components/exerciseForm/exerciseForm'
+import ExerciseForm, { ExerciseFormHandle } from '../_components/exerciseForm/exerciseForm'
 
 export default function Edit() {
   const formRef = useRef<ExerciseFormHandle>(null)
@@ -30,13 +23,9 @@ export default function Edit() {
   const [exerciseId] = useQueryState('id', parseAsInteger)
   const invalidParam = !exerciseId || !isValidExerciseId(exerciseId)
   const { data, isLoading } = useReadExercise(exerciseId!, !invalidParam)
-  const { trigger: patchExercise, isMutating: isPatching } = usePatchExercise(
-    exerciseId!,
-  )
-  const { trigger: deletePictures, isMutating: isDeletingPics } =
-    useDeleteExercisePictures(exerciseId!)
-  const { trigger: uploadPictures, isMutating: isUploadingPics } =
-    usePostExercisePictures()
+  const { trigger: patchExercise, isMutating: isPatching } = usePatchExercise(exerciseId!)
+  const { trigger: deletePictures, isMutating: isDeletingPics } = useDeleteExercisePictures(exerciseId!)
+  const { trigger: uploadPictures, isMutating: isUploadingPics } = usePostExercisePictures()
   const loading = isLoading || isPatching || isDeletingPics || isUploadingPics
 
   useEffect(() => {
@@ -60,9 +49,7 @@ export default function Edit() {
       data.startedAt !== value.startedAt ||
       data.endedAt !== value.endedAt
 
-    const imagesChanged =
-      (value.deletedIds && value.deletedIds.length > 0) ||
-      (value.images && value.images.length > 0)
+    const imagesChanged = (value.deletedIds && value.deletedIds.length > 0) || (value.images && value.images.length > 0)
 
     if (!formValuesChanged && !imagesChanged) {
       showToast('변경사항이 없습니다.', 'info')
@@ -101,9 +88,7 @@ export default function Edit() {
     await Promise.all([
       mutate(['exercise/detail', exerciseId]),
       mutate(['exercise/list', value.startedAt.substring(0, 10)]),
-      ...(data.startedAt !== value.startedAt
-        ? [mutate(['exercise/list', data.startedAt.substring(0, 10)])]
-        : []),
+      ...(data.startedAt !== value.startedAt ? [mutate(['exercise/list', data.startedAt.substring(0, 10)])] : []),
     ])
 
     router.back()
@@ -117,8 +102,11 @@ export default function Edit() {
   return (
     <>
       <Header
-        rightIcon={<CompleteButton>완료</CompleteButton>}
-        onClick={triggerFormSubmit}
+        right={
+          <button type="button" onClick={triggerFormSubmit}>
+            <CompleteButton>완료</CompleteButton>
+          </button>
+        }
       >
         운동 기록 수정
       </Header>

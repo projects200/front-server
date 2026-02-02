@@ -271,7 +271,13 @@ export default function ChatRoom() {
   return (
     <div className={styles['container']}>
       {/* 헤더 영역 */}
-      <Header rightIcon={<KebabIcon />} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+      <Header
+        right={
+          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <KebabIcon />
+          </button>
+        }
+      >
         {nickName}
       </Header>
 

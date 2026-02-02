@@ -7,12 +7,7 @@ import { useAuth } from 'react-oidc-context'
 import Header from '@/components/commons/header'
 import KebabIcon from '@/assets/icon_kebab.svg'
 import { isSameMinute } from '@/utils/dataFormatting'
-import {
-  usePostChatMessage,
-  useReadChatMessages,
-  useReadNewChatMessages,
-  useDeleteChatRoom,
-} from '@/hooks/api/useChatApi'
+import { usePostChatMessage, useReadChatMessages, useReadNewChatMessages, useDeleteChatRoom } from '@/hooks/api/useChatApi'
 import { ChatContent } from '@/types/chat'
 import { logAnalyticsEvent } from '@/lib/firebase/analytics'
 
@@ -47,15 +42,7 @@ export default function ChatRoom() {
   const prevScrollHeightRef = useRef<number | null>(null)
 
   // API Hooks
-  const {
-    messages,
-    hasNextPage,
-    opponentActive,
-    blockActive,
-    setSize,
-    mutate,
-    isFetchingPrevMessages,
-  } = useReadChatMessages(chatRoomId)
+  const { messages, hasNextPage, opponentActive, blockActive, setSize, mutate, isFetchingPrevMessages } = useReadChatMessages(chatRoomId)
   const { data: newMessagesData } = useReadNewChatMessages(chatRoomId)
   const { trigger: sendMessage } = usePostChatMessage(chatRoomId)
   const { trigger: leaveChatRoom } = useDeleteChatRoom(chatRoomId)
@@ -100,14 +87,10 @@ export default function ChatRoom() {
           content: [...page.content],
         }))
 
-        const pageWithTempMessage = newData.find((page) =>
-          page.content.some((chat) => chat.chatId === tempChatId),
-        )
+        const pageWithTempMessage = newData.find((page) => page.content.some((chat) => chat.chatId === tempChatId))
 
         if (pageWithTempMessage) {
-          const messageToUpdate = pageWithTempMessage.content.find(
-            (chat) => chat.chatId === tempChatId,
-          )
+          const messageToUpdate = pageWithTempMessage.content.find((chat) => chat.chatId === tempChatId)
           if (messageToUpdate) {
             messageToUpdate.chatId = realChatId
           }
@@ -189,15 +172,10 @@ export default function ChatRoom() {
         }))
 
         const existingChatIds = new Set(newData[0].content.map((c) => c.chatId))
-        const chatsToAdd = newMessagesData.newChats.filter(
-          (newChat) => !existingChatIds.has(newChat.chatId),
-        )
+        const chatsToAdd = newMessagesData.newChats.filter((newChat) => !existingChatIds.has(newChat.chatId))
 
         if (chatsToAdd.length > 0) {
-          chatsToAdd.sort(
-            (a, b) =>
-              new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime(),
-          )
+          chatsToAdd.sort((a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime())
           newData[0].content.push(...chatsToAdd)
         }
 
@@ -259,8 +237,11 @@ export default function ChatRoom() {
     <div className={styles['container']}>
       {/* 헤더 영역 */}
       <Header
-        rightIcon={<KebabIcon />}
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        right={
+          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <KebabIcon />
+          </button>
+        }
       >
         {nickName}
       </Header>
@@ -271,22 +252,11 @@ export default function ChatRoom() {
         <div className={styles['message-container']} ref={messageContainerRef}>
           {messages.map((chat, index) => {
             const prevChat = index > 0 ? messages[index - 1] : null
-            const nextChat =
-              index < messages.length - 1 ? messages[index + 1] : null
+            const nextChat = index < messages.length - 1 ? messages[index + 1] : null
 
-            const isContinuous = !!(
-              prevChat &&
-              prevChat.senderId === chat.senderId &&
-              prevChat.chatType === 'USER' &&
-              chat.chatType === 'USER' &&
-              isSameMinute(prevChat.sentAt, chat.sentAt)
-            )
+            const isContinuous = !!(prevChat && prevChat.senderId === chat.senderId && prevChat.chatType === 'USER' && chat.chatType === 'USER' && isSameMinute(prevChat.sentAt, chat.sentAt))
 
-            const shouldShowTime =
-              !nextChat ||
-              nextChat.senderId !== chat.senderId ||
-              nextChat.chatType !== 'USER' ||
-              !isSameMinute(nextChat.sentAt, chat.sentAt)
+            const shouldShowTime = !nextChat || nextChat.senderId !== chat.senderId || nextChat.chatType !== 'USER' || !isSameMinute(nextChat.sentAt, chat.sentAt)
 
             if (chat.chatType === 'SYSTEM') {
               return (
@@ -298,20 +268,11 @@ export default function ChatRoom() {
 
             return chat.mine ? (
               <div key={chat.chatId} data-date={chat.sentAt}>
-                <MyMessage
-                  chat={chat}
-                  isContinuous={isContinuous}
-                  shouldShowTime={shouldShowTime}
-                />
+                <MyMessage chat={chat} isContinuous={isContinuous} shouldShowTime={shouldShowTime} />
               </div>
             ) : (
               <div key={chat.chatId} data-date={chat.sentAt}>
-                <OtherMessage
-                  chat={chat}
-                  isContinuous={isContinuous}
-                  shouldShowTime={shouldShowTime}
-                  memberId={memberId}
-                />
+                <OtherMessage chat={chat} isContinuous={isContinuous} shouldShowTime={shouldShowTime} memberId={memberId} />
               </div>
             )
           })}
@@ -320,11 +281,7 @@ export default function ChatRoom() {
       </div>
 
       {/* 채팅 입력 영역 */}
-      <ChatInput
-        onSend={handleSendMessage}
-        disabled={otherUserLeft}
-        blocked={isBlockActive}
-      />
+      <ChatInput onSend={handleSendMessage} disabled={otherUserLeft} blocked={isBlockActive} />
 
       {isMenuOpen && (
         <KebabModal

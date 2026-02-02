@@ -26,8 +26,7 @@ export default function Profile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { trigger: createBlockMember } = usePostBlockMember()
-  const { data: profileData, isLoading: profileLoading } =
-    useReadOtherUserFullProfile(memberId!)
+  const { data: profileData, isLoading: profileLoading } = useReadOtherUserFullProfile(memberId!)
   const todayString = format(new Date(), 'yyyy-MM-dd')
 
   const handleBlock = async () => {
@@ -39,7 +38,6 @@ export default function Profile() {
       router.back()
     } catch {}
   }
-
 
   const menuRef = (node: HTMLDivElement) => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,64 +58,38 @@ export default function Profile() {
   return (
     <>
       <Header
-        rightIcon={<KebabIcon />}
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        {''}
-      </Header>
+        right={
+          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <KebabIcon />
+          </button>
+        }
+      ></Header>
 
       {/* 프로필 영역 */}
       <section className={styles['profile-section']}>
-        <ProfileImg
-          profileThumbnailUrl={profileData.profileThumbnailUrl}
-          profileImageUrl={profileData.profileImageUrl}
-          mode="view"
-        />
+        <ProfileImg profileThumbnailUrl={profileData.profileThumbnailUrl} profileImageUrl={profileData.profileImageUrl} mode="view" />
 
-        <Typography
-          className={styles['nickname']}
-          as="span"
-          variant="title-medium"
-          weight="bold"
-        >
+        <Typography className={styles['nickname']} as="span" variant="title-medium" weight="bold">
           {profileData.nickname}
         </Typography>
-        <Typography
-          className={styles['birth']}
-          as="span"
-          variant="content-medium"
-        >
-          {formatGenderToKR(profileData.gender)} |{' '}
-          {formatDateToKR(profileData.birthDate)}
+        <Typography className={styles['birth']} as="span" variant="content-medium">
+          {formatGenderToKR(profileData.gender)} | {formatDateToKR(profileData.birthDate)}
         </Typography>
         <div className={styles['user-info']}>
           <div className={styles['info-item']}>
             <Typography as="span" variant="title-medium" weight="bold">
               {profileData.exerciseCountInLast30Days}
             </Typography>
-            <Typography
-              as="span"
-              variant="content-small"
-              className={styles['info-label']}
-            >
+            <Typography as="span" variant="content-small" className={styles['info-label']}>
               최근 30일 운동 횟수
             </Typography>
           </div>
           <div className={styles['info-item']}>
-            <Typography
-              as="span"
-              variant="title-medium"
-              weight="bold"
-              className={styles['info-value-container']}
-            >
+            <Typography as="span" variant="title-medium" weight="bold" className={styles['info-value-container']}>
               {profileData.yearlyExerciseDays}
               <span className={styles['info-value-suffix']}>/ 365</span>
             </Typography>
-            <Typography
-              as="span"
-              variant="content-small"
-              className={styles['info-label']}
-            >
+            <Typography as="span" variant="content-small" className={styles['info-label']}>
               올해 운동 일수
             </Typography>
           </div>
@@ -125,11 +97,7 @@ export default function Profile() {
             <Typography as="span" variant="title-medium" weight="bold">
               {profileData.exerciseScore}
             </Typography>
-            <Typography
-              as="span"
-              variant="content-small"
-              className={styles['info-label']}
-            >
+            <Typography as="span" variant="content-small" className={styles['info-label']}>
               운동 점수
             </Typography>
           </div>
@@ -142,7 +110,7 @@ export default function Profile() {
       </section>
 
       {/* 선호운동 영역 */}
-      { profileData.preferredExercises.length > 0 && (
+      {profileData.preferredExercises.length > 0 && (
         <section className={styles['prefer-exercise-section']}>
           <div className={styles['prefer-exercise-title']}>
             <Typography as="p" variant="content-large" weight="bold">
@@ -151,10 +119,7 @@ export default function Profile() {
           </div>
           <div className={styles['prefer-exercise-list']}>
             {profileData.preferredExercises.map((data) => (
-              <PreferExerciseItem
-                key={`prefer-${data.preferredExerciseId}`}
-                data={data}
-              />
+              <PreferExerciseItem key={`prefer-${data.preferredExerciseId}`} data={data} />
             ))}
           </div>
         </section>
@@ -162,11 +127,7 @@ export default function Profile() {
 
       {/* 달력 영역 */}
       <section className={styles['calender-section']}>
-        <ExerciseCalendar
-          selectedDate={todayString}
-          isReadOnly={true}
-          isOthers={true}
-        />
+        <ExerciseCalendar selectedDate={todayString} isReadOnly={true} isOthers={true} />
       </section>
 
       {/* 케밥 버튼 */}
@@ -186,27 +147,14 @@ export default function Profile() {
           <Typography as="p" variant="content-large" weight="bold">
             회원 차단
           </Typography>
-          <Typography
-            className={styles['dialog-content']}
-            as="p"
-            variant="content-small"
-          >
-            차단하면 차단한 회원이 보내는 메세지를 받을 수 없습니다. 또한, 매칭
-            지도에서 차단한 회원을 조회할 수 없습니다.
+          <Typography className={styles['dialog-content']} as="p" variant="content-small">
+            차단하면 차단한 회원이 보내는 메세지를 받을 수 없습니다. 또한, 매칭 지도에서 차단한 회원을 조회할 수 없습니다.
           </Typography>
           <div className={styles['dialog-button-group']}>
-            <Button
-              className={styles['dialog-button']}
-              variant="secondary"
-              onClick={() => setIsDialogOpen(false)}
-            >
+            <Button className={styles['dialog-button']} variant="secondary" onClick={() => setIsDialogOpen(false)}>
               취소
             </Button>
-            <Button
-              className={styles['dialog-button']}
-              variant="warning"
-              onClick={() => handleBlock()}
-            >
+            <Button className={styles['dialog-button']} variant="warning" onClick={() => handleBlock()}>
               차단
             </Button>
           </div>
